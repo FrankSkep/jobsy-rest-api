@@ -13,6 +13,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -42,6 +43,7 @@ public class UserController {
             @ApiResponse(responseCode = "404", description = "User not found")
     })
     @PutMapping("/{id}/role")
+    @PreAuthorize("hasRole('ADMIN')")
     public void updateRole(
             @Parameter(description = "User's ID") @PathVariable Long id,
             @RequestBody Role role) {
@@ -54,6 +56,7 @@ public class UserController {
             @ApiResponse(responseCode = "404", description = "User not found")
     })
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public void deleteUserById(@Parameter(description = "User's ID") @PathVariable Long id) {
         userService.deleteUser(id);
     }
@@ -64,6 +67,7 @@ public class UserController {
             @ApiResponse(responseCode = "404", description = "User not found")
     })
     @DeleteMapping("/by-username/{username}")
+    @PreAuthorize("hasRole('ADMIN')")
     public void deleteUserByUsername(@Parameter(description = "User's username") @PathVariable String username) {
         userService.deleteUser(username);
     }
