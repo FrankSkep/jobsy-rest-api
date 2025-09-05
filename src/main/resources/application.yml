@@ -1,6 +1,6 @@
 spring:
   application:
-    name: MarketplaceRestAPI
+    name: JobsyApplication
   config:
     import: optional:file:src/main/resources/.env[.properties]
   datasource:

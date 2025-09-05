@@ -9,10 +9,10 @@
         <relativePath/>
     </parent>
     <groupId>com.fran</groupId>
-    <artifactId>marketplace-appsweb</artifactId>
+    <artifactId>jobsy</artifactId>
     <version>1.0</version>
-    <name>Marketplace Web</name>
-    <description>REST API for local services marketplace</description>
+    <name>Jobsy</name>
+    <description>platform for offering and consuming local services.</description>
     <url/>
     <licenses>
         <license/>
