@@ -9,7 +9,7 @@
         <relativePath/>
     </parent>
     <groupId>com.fran</groupId>
-    <artifactId>jobsy</artifactId>
+    <artifactId>jobsy-rest-api</artifactId>
     <version>1.0</version>
     <name>Jobsy</name>
     <description>platform for offering and consuming local services.</description>
