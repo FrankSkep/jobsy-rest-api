@@ -2,7 +2,7 @@ package com.fran.jobsy.auth.controller;
 
 import com.fran.jobsy.auth.dto.PasswordRequest;
 import com.fran.jobsy.auth.dto.UserRequest;
-import com.fran.jobsy.auth.dto.UserResponse;
+import com.fran.jobsy.auth.dto.UserDTO;
 import com.fran.jobsy.auth.entity.Role;
 import com.fran.jobsy.auth.utils.AuthenticatedUserProvider;
 import com.fran.jobsy.auth.service.UserService;
@@ -91,7 +91,7 @@ public class UserController {
             @ApiResponse(responseCode = "404", description = "User not found")
     })
     @GetMapping("/me")
-    public ResponseEntity<UserResponse> getAuthenticatedUserInfo() {
+    public ResponseEntity<UserDTO> getAuthenticatedUserInfo() {
         String username = authenticatedUserProvider.getAuthenticatedUser().getUsername();
         return ResponseEntity.ok(userService.getUserInfoByUsername(username));
     }
