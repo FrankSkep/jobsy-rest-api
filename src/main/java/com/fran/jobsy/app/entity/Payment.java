@@ -1,5 +1,6 @@
 package com.fran.jobsy.app.entity;
 
+import com.fran.jobsy.app.enums.PaymentStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

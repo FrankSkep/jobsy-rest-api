@@ -18,8 +18,8 @@ public class Certification {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "provider_id", nullable = false)
-    private ProviderProfile providerProfile;
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 
     private String name;
     private String issuer;

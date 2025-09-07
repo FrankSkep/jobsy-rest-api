@@ -1,6 +1,5 @@
 package com.fran.jobsy.app.entity;
 
-import com.fran.jobsy.auth.entity.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -54,7 +53,7 @@ public class ProviderProfile {
 
     // Provider photos
     @OneToMany(mappedBy = "providerProfile", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<ProviderPhoto> photos;
+    private List<UserPhoto> photos;
 
     // Certifications
     @OneToMany(mappedBy = "providerProfile", cascade = CascadeType.ALL, orphanRemoval = true)

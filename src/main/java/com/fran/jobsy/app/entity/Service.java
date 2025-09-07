@@ -18,8 +18,8 @@ public class Service {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "provider_id", nullable = false)
-    private ProviderProfile providerProfile;
+    @JoinColumn(name = "owner_id", nullable = false)
+    private User owner;
 
     @ManyToOne
     @JoinColumn(name = "category_id")

@@ -1,6 +1,5 @@
 package com.fran.jobsy.app.entity;
 
-import com.fran.jobsy.auth.entity.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -22,13 +21,13 @@ public class Conversation {
 
     // Client participating
     @ManyToOne
-    @JoinColumn(name = "client_id", nullable = false)
-    private User client;
+    @JoinColumn(name = "user_a_id", nullable = false)
+    private User userA;
 
     // Provider participating
     @ManyToOne
-    @JoinColumn(name = "provider_id", nullable = false)
-    private User provider;
+    @JoinColumn(name = "user_b_id", nullable = false)
+    private User userB;
 
     // Relationship with appointment/booking (optional, to link chat with Booking)
     @OneToOne

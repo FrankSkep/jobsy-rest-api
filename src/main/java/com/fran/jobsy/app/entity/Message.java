@@ -1,6 +1,5 @@
 package com.fran.jobsy.app.entity;
 
-import com.fran.jobsy.auth.entity.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

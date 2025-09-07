@@ -1,6 +1,5 @@
 package com.fran.jobsy.app.entity;
 
-import com.fran.jobsy.auth.entity.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -30,7 +29,7 @@ public class Review {
 
     @ManyToOne
     @JoinColumn(name = "provider_id", nullable = false)
-    private ProviderProfile provider;
+    private User provider;
 
     private Integer rating; // 1-5
     private String comment;

@@ -1,6 +1,6 @@
 package com.fran.jobsy.app.entity;
 
-import com.fran.jobsy.auth.entity.User;
+import com.fran.jobsy.app.enums.BookingStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -24,10 +24,6 @@ public class Booking {
     @ManyToOne
     @JoinColumn(name = "client_id", nullable = false)
     private User client;
-
-    @ManyToOne
-    @JoinColumn(name = "provider_id", nullable = false)
-    private ProviderProfile provider;
 
     @ManyToOne
     @JoinColumn(name = "service_id", nullable = false)

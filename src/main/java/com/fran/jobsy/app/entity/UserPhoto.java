@@ -7,12 +7,12 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "availability_slots")
+@Table(name = "user_photos")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class AvailabilitySlot {
+public class UserPhoto {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -21,12 +21,5 @@ public class AvailabilitySlot {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @Column(nullable = false)
-    private Integer weekday; // 1=Monday, 7=Sunday
-
-    @Column(nullable = false)
-    private String startTime; // HH:mm
-
-    @Column(nullable = false)
-    private String endTime;
+    private String url;
 }
