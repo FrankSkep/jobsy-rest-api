@@ -1,5 +1,6 @@
 package com.fran.jobsy.auth.entity;
 
+import com.fran.jobsy.app.entity.ProviderProfile;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,6 +10,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
 
@@ -17,21 +19,38 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "users", uniqueConstraints = {@UniqueConstraint(columnNames = {"username"})})
+@Table(name = "users", uniqueConstraints = {@UniqueConstraint(columnNames = {"username"}), @UniqueConstraint(columnNames = {"email"})})
 public class User implements UserDetails {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id;
-    @Basic
+    private Long id;
+
     @Column(nullable = false)
-    String username;
+    private String username;
+
     @Column(nullable = false)
-    String lastname;
-    String firstname;
-    String country;
-    String password;
+    private String password;
+
+    @Column(nullable = false)
+    private String email;
+
+    @Column(nullable = false)
+    private String lastName;
+
+    private String firstName;
+
+    private String country;
+
     @Enumerated(EnumType.STRING)
-    Role role;
+    @Column(nullable = false)
+    private Role role;
+
+    private LocalDateTime createdAt;
+
+    // Relationship with provider profile (if applicable)
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    private ProviderProfile providerProfile;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
