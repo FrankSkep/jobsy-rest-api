@@ -1,4 +1,4 @@
-package com.fran.jobsy.app.dto.auth;
+package com.fran.jobsy.app.dto.user;
 
 import com.fran.jobsy.app.enums.Role;
 import lombok.AllArgsConstructor;

@@ -1,4 +1,4 @@
-package com.fran.jobsy.app.dto.auth;
+package com.fran.jobsy.app.dto.user;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
