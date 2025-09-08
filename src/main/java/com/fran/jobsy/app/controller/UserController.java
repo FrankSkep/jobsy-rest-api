@@ -1,5 +1,6 @@
 package com.fran.jobsy.app.controller;
 
+import com.fran.jobsy.app.dto.ProviderProfileRequest;
 import com.fran.jobsy.app.dto.auth.PasswordRequest;
 import com.fran.jobsy.app.dto.user.UserDTO;
 import com.fran.jobsy.app.dto.user.UserRequest;
@@ -11,6 +12,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -94,5 +96,12 @@ public class UserController {
     public ResponseEntity<UserDTO> getAuthenticatedUserInfo() {
         String username = authenticatedUserProvider.getAuthenticatedUser().getUsername();
         return ResponseEntity.ok(userServiceImpl.getUserInfoByUsername(username));
+    }
+
+    @PostMapping("/provider-profile")
+    public ResponseEntity<Void> createProviderProfile(@RequestBody @Valid ProviderProfileRequest providerProfileRequest) {
+        Long userId = authenticatedUserProvider.getAuthenticatedUser().getId();
+        userServiceImpl.createProviderProfile(providerProfileRequest, userId);
+        return ResponseEntity.ok().build();
     }
 }

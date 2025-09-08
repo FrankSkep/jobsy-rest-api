@@ -1,5 +1,6 @@
 package com.fran.jobsy.app.service.impl;
 
+import com.fran.jobsy.app.dto.ProviderProfileRequest;
 import com.fran.jobsy.app.dto.auth.PasswordRequest;
 import com.fran.jobsy.app.dto.user.UserDTO;
 import com.fran.jobsy.app.dto.user.UserRequest;
@@ -83,5 +84,19 @@ public class UserServiceImpl implements com.fran.jobsy.app.service.UserService {
                 user.getCountry(),
                 user.getRole()
         );
+    }
+
+    public void createProviderProfile(ProviderProfileRequest providerProfileRequest, Long userId) {
+        User userEntity = getById(userId);
+
+        userEntity.setBio(providerProfileRequest.getBio());
+        userEntity.setHourlyRate(providerProfileRequest.getHourlyRate());
+        userEntity.setYearsExperience(providerProfileRequest.getYearsExperience());
+        userEntity.setAddressText(providerProfileRequest.getAddressText());
+        userEntity.setLat(providerProfileRequest.getLat());
+        userEntity.setLng(providerProfileRequest.getLng());
+        userEntity.setServiceRadiusKm(providerProfileRequest.getServiceRadiusKm());
+        userEntity.setVerifiedCert(providerProfileRequest.getVerifiedCert());
+        userRepository.save(userEntity);
     }
 }
