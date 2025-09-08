@@ -4,7 +4,7 @@ import com.fran.jobsy.app.dto.auth.PasswordRequest;
 import com.fran.jobsy.app.dto.user.UserDTO;
 import com.fran.jobsy.app.dto.user.UserRequest;
 import com.fran.jobsy.app.enums.Role;
-import com.fran.jobsy.app.service.UserService;
+import com.fran.jobsy.app.service.impl.UserServiceImpl;
 import com.fran.jobsy.security.utils.AuthenticatedUserProvider;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.*;
 @Tag(name = "Users", description = "Operations related to user management")
 public class UserController {
 
-    private final UserService userService;
+    private final UserServiceImpl userServiceImpl;
     private final AuthenticatedUserProvider authenticatedUserProvider;
 
     @Operation(summary = "Update user", description = "Updates a user's data by their username")
@@ -34,7 +34,7 @@ public class UserController {
     public void updateUser(
             @Parameter(description = "User's username") @PathVariable String username,
             @RequestBody UserRequest user) {
-        userService.updateUser(username, user);
+        userServiceImpl.updateUser(username, user);
     }
 
     @Operation(summary = "Update role", description = "Updates a user's role by their ID")
@@ -47,7 +47,7 @@ public class UserController {
     public void updateRole(
             @Parameter(description = "User's ID") @PathVariable Long id,
             @RequestBody Role role) {
-        userService.updateRole(id, role);
+        userServiceImpl.updateRole(id, role);
     }
 
     @Operation(summary = "Delete user by ID", description = "Deletes a user by their ID")
@@ -58,7 +58,7 @@ public class UserController {
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public void deleteUserById(@Parameter(description = "User's ID") @PathVariable Long id) {
-        userService.deleteUser(id);
+        userServiceImpl.deleteUser(id);
     }
 
     @Operation(summary = "Delete user by username", description = "Deletes a user by their username")
@@ -69,7 +69,7 @@ public class UserController {
     @DeleteMapping("/by-username/{username}")
     @PreAuthorize("hasRole('ADMIN')")
     public void deleteUserByUsername(@Parameter(description = "User's username") @PathVariable String username) {
-        userService.deleteUser(username);
+        userServiceImpl.deleteUser(username);
     }
 
     @Operation(summary = "Update password", description = "Updates a user's password")
@@ -82,7 +82,7 @@ public class UserController {
     public void updatePassword(
             @Parameter(description = "User's username") @PathVariable String username,
             @RequestBody PasswordRequest password) {
-        userService.updatePassword(username, password);
+        userServiceImpl.updatePassword(username, password);
     }
 
     @Operation(summary = "Get authenticated user info", description = "Retrieves information about the currently authenticated user")
@@ -93,6 +93,6 @@ public class UserController {
     @GetMapping("/me")
     public ResponseEntity<UserDTO> getAuthenticatedUserInfo() {
         String username = authenticatedUserProvider.getAuthenticatedUser().getUsername();
-        return ResponseEntity.ok(userService.getUserInfoByUsername(username));
+        return ResponseEntity.ok(userServiceImpl.getUserInfoByUsername(username));
     }
 }

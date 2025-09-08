@@ -3,7 +3,7 @@ package com.fran.jobsy.app.controller;
 import com.fran.jobsy.app.dto.auth.AuthResponse;
 import com.fran.jobsy.app.dto.auth.LoginRequest;
 import com.fran.jobsy.app.dto.auth.RegisterRequest;
-import com.fran.jobsy.app.service.AuthService;
+import com.fran.jobsy.app.service.impl.AuthServiceImpl;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Tag(name = "Authentication", description = "Registration and login operations")
 public class AuthController {
 
-    private final AuthService authService;
+    private final AuthServiceImpl authServiceImpl;
 
     @Operation(
             summary = "Sign in",
@@ -34,7 +34,7 @@ public class AuthController {
     })
     @PostMapping("/signin")
     public ResponseEntity<AuthResponse> login(@RequestBody @Valid LoginRequest request) {
-        return ResponseEntity.ok(authService.login(request));
+        return ResponseEntity.ok(authServiceImpl.login(request));
     }
 
     @Operation(
@@ -47,6 +47,6 @@ public class AuthController {
     })
     @PostMapping("/signup")
     public ResponseEntity<AuthResponse> register(@RequestBody @Valid RegisterRequest request) {
-        return ResponseEntity.ok(authService.register(request));
+        return ResponseEntity.ok(authServiceImpl.register(request));
     }
 }

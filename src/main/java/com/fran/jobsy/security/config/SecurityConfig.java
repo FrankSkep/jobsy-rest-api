@@ -36,10 +36,10 @@ public class SecurityConfig {
                 .cors(cors -> cors.configurationSource(request -> {
                     CorsConfiguration config = new CorsConfiguration();
                     config.setAllowedOrigins(List.of(
-                            "http://localhost:5173",
-                            "https://jobsy-two.vercel.app"));
+                            "http://localhost:5173"));
                     config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
                     config.setAllowedHeaders(List.of("Authorization", "Content-Type"));
+                    config.setAllowCredentials(false);
                     return config;
                 }))
                 .authorizeHttpRequests(authRequest ->
