@@ -9,16 +9,19 @@ import com.fran.jobsy.app.enums.Role;
 import com.fran.jobsy.app.exception.auth.IncorrectPasswordException;
 import com.fran.jobsy.app.exception.auth.UserNotFoundException;
 import com.fran.jobsy.app.repository.UserRepository;
+import com.fran.jobsy.app.service.UserService;
+import com.fran.jobsy.security.utils.AuthenticatedUserProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class UserServiceImpl implements com.fran.jobsy.app.service.UserService {
+public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final AuthenticatedUserProvider authenticatedUserProvider;
 
     private User getById(Long id) {
         return userRepository.findById(id)
@@ -74,8 +77,9 @@ public class UserServiceImpl implements com.fran.jobsy.app.service.UserService {
     }
 
     @Override
-    public UserDTO getUserInfoByUsername(String username) {
-        User user = getByUsername(username);
+    public UserDTO getUserInfo() {
+        User user = authenticatedUserProvider.getAuthenticatedUser();
+
         return new UserDTO(
                 user.getId(),
                 user.getUsername(),
@@ -86,8 +90,8 @@ public class UserServiceImpl implements com.fran.jobsy.app.service.UserService {
         );
     }
 
-    public void createProviderProfile(ProviderProfileRequest providerProfileRequest, Long userId) {
-        User userEntity = getById(userId);
+    public void createProviderProfile(ProviderProfileRequest providerProfileRequest) {
+        User userEntity = authenticatedUserProvider.getAuthenticatedUser();
 
         userEntity.setBio(providerProfileRequest.getBio());
         userEntity.setHourlyRate(providerProfileRequest.getHourlyRate());

@@ -6,7 +6,6 @@ import com.fran.jobsy.app.dto.user.UserDTO;
 import com.fran.jobsy.app.dto.user.UserRequest;
 import com.fran.jobsy.app.enums.Role;
 import com.fran.jobsy.app.service.impl.UserServiceImpl;
-import com.fran.jobsy.security.utils.AuthenticatedUserProvider;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -25,7 +24,6 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
 
     private final UserServiceImpl userServiceImpl;
-    private final AuthenticatedUserProvider authenticatedUserProvider;
 
     @Operation(summary = "Update user", description = "Updates a user's data by their username")
     @ApiResponses({
@@ -94,14 +92,12 @@ public class UserController {
     })
     @GetMapping("/me")
     public ResponseEntity<UserDTO> getAuthenticatedUserInfo() {
-        String username = authenticatedUserProvider.getAuthenticatedUser().getUsername();
-        return ResponseEntity.ok(userServiceImpl.getUserInfoByUsername(username));
+        return ResponseEntity.ok(userServiceImpl.getUserInfo());
     }
 
     @PostMapping("/provider-profile")
     public ResponseEntity<Void> createProviderProfile(@RequestBody @Valid ProviderProfileRequest providerProfileRequest) {
-        Long userId = authenticatedUserProvider.getAuthenticatedUser().getId();
-        userServiceImpl.createProviderProfile(providerProfileRequest, userId);
+        userServiceImpl.createProviderProfile(providerProfileRequest);
         return ResponseEntity.ok().build();
     }
 }
