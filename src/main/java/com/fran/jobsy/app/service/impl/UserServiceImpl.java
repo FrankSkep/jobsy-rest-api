@@ -2,7 +2,7 @@ package com.fran.jobsy.app.service.impl;
 
 import com.fran.jobsy.app.dto.ProviderProfileRequest;
 import com.fran.jobsy.app.dto.auth.PasswordRequest;
-import com.fran.jobsy.app.dto.user.UserDTO;
+import com.fran.jobsy.app.dto.user.UserFullDTO;
 import com.fran.jobsy.app.dto.user.UserRequest;
 import com.fran.jobsy.app.entity.User;
 import com.fran.jobsy.app.enums.Role;
@@ -77,16 +77,24 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDTO getUserInfo() {
+    public UserFullDTO getUserInfo() {
         User user = authenticatedUserProvider.getAuthenticatedUser();
 
-        return new UserDTO(
+        return new UserFullDTO(
                 user.getId(),
                 user.getUsername(),
                 user.getLastname(),
                 user.getFirstname(),
                 user.getCountry(),
-                user.getRole()
+                user.getRole(),
+                user.getBio(),
+                user.getHourlyRate(),
+                user.getYearsExperience(),
+                user.getAddressText(),
+                user.getLat(),
+                user.getLng(),
+                user.getServiceRadiusKm(),
+                user.getVerifiedCert()
         );
     }
 
