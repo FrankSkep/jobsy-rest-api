@@ -22,8 +22,7 @@ import java.util.List;
 @Table(
         name = "users",
         uniqueConstraints = {
-                @UniqueConstraint(columnNames = {"username"}),
-                @UniqueConstraint(columnNames = {"email"})
+                @UniqueConstraint(columnNames = {"username"})
         }
 )
 public class User implements UserDetails {
@@ -86,6 +85,10 @@ public class User implements UserDetails {
     // Como cliente → sus reservas
     @OneToMany(mappedBy = "client")
     private List<Booking> bookingsAsClient;
+
+    // Como proveedor → sus reservas
+    @OneToMany(mappedBy = "provider")
+    private List<Booking> bookingsAsProvider;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

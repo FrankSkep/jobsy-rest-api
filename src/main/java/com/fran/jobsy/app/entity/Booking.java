@@ -26,6 +26,10 @@ public class Booking {
     private User client;
 
     @ManyToOne
+    @JoinColumn(name = "provider_id", nullable = false)
+    private User provider;
+
+    @ManyToOne
     @JoinColumn(name = "service_id", nullable = false)
     private Service service;
 
