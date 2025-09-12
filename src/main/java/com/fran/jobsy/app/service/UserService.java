@@ -4,6 +4,7 @@ import com.fran.jobsy.app.dto.ProviderProfileRequest;
 import com.fran.jobsy.app.dto.auth.PasswordRequest;
 import com.fran.jobsy.app.dto.user.UserDTO;
 import com.fran.jobsy.app.dto.user.UserFullDTO;
+import com.fran.jobsy.app.dto.user.UserPublicDTO;
 import com.fran.jobsy.app.dto.user.UserRequest;
 import com.fran.jobsy.app.enums.Role;
 
@@ -17,6 +18,8 @@ public interface UserService {
     void deleteUser(String username);
 
     void updatePassword(String username, PasswordRequest password);
+
+    UserPublicDTO getUser(Long id);
 
     UserFullDTO getUserInfo();
 

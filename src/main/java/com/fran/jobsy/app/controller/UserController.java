@@ -3,6 +3,7 @@ package com.fran.jobsy.app.controller;
 import com.fran.jobsy.app.dto.ProviderProfileRequest;
 import com.fran.jobsy.app.dto.auth.PasswordRequest;
 import com.fran.jobsy.app.dto.user.UserFullDTO;
+import com.fran.jobsy.app.dto.user.UserPublicDTO;
 import com.fran.jobsy.app.dto.user.UserRequest;
 import com.fran.jobsy.app.enums.Role;
 import com.fran.jobsy.app.service.impl.UserServiceImpl;
@@ -85,6 +86,13 @@ public class UserController {
         userServiceImpl.updatePassword(username, password);
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<UserPublicDTO> getUserById(@PathVariable Long id) {
+        return ResponseEntity.ok(userServiceImpl.getUser(id));
+    }
+
+    //=== Authenticated User Endpoints ===//
+
     @Operation(summary = "Get authenticated user info", description = "Retrieves information about the currently authenticated user")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "User information retrieved successfully"),
@@ -95,9 +103,15 @@ public class UserController {
         return ResponseEntity.ok(userServiceImpl.getUserInfo());
     }
 
-    @PostMapping("/provider-profile")
+    @PutMapping("/me")
     public ResponseEntity<Void> createProviderProfile(@RequestBody @Valid ProviderProfileRequest providerProfileRequest) {
         userServiceImpl.createProviderProfile(providerProfileRequest);
+        return ResponseEntity.ok().build();
+    }
+
+    @DeleteMapping
+    public ResponseEntity<Void> deleteMyAccount() {
+        userServiceImpl.deleteMyAccount();
         return ResponseEntity.ok().build();
     }
 }
