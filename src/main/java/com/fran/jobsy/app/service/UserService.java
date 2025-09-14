@@ -8,7 +8,12 @@ import com.fran.jobsy.app.dto.user.UserPublicDTO;
 import com.fran.jobsy.app.dto.user.UserRequest;
 import com.fran.jobsy.app.enums.Role;
 
+import java.util.List;
+
 public interface UserService {
+
+    List<UserDTO> getAllUsers();
+
     void updateUser(String username, UserRequest user);
 
     void updateRole(Long userId, Role role);

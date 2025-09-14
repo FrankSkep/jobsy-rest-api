@@ -2,6 +2,7 @@ package com.fran.jobsy.app.service.impl;
 
 import com.fran.jobsy.app.dto.ProviderProfileRequest;
 import com.fran.jobsy.app.dto.auth.PasswordRequest;
+import com.fran.jobsy.app.dto.user.UserDTO;
 import com.fran.jobsy.app.dto.user.UserFullDTO;
 import com.fran.jobsy.app.dto.user.UserPublicDTO;
 import com.fran.jobsy.app.dto.user.UserRequest;
@@ -15,6 +16,8 @@ import com.fran.jobsy.security.utils.AuthenticatedUserProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -32,6 +35,11 @@ public class UserServiceImpl implements UserService {
     private User getByUsername(String username) {
         return userRepository.findByUsername(username)
                 .orElseThrow(() -> new UserNotFoundException("User not found."));
+    }
+
+    @Override
+    public List<UserDTO> getAllUsers() {
+        return userRepository.findAllAsUserDTO();
     }
 
     @Override
