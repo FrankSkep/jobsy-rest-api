@@ -28,9 +28,15 @@ public class UserController {
 
     private final UserServiceImpl userServiceImpl;
 
+    // General User Endpoints
     @GetMapping
     public ResponseEntity<List<UserDTO>> getAllUsers() {
         return ResponseEntity.ok(userServiceImpl.getAllUsers());
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<UserPublicDTO> getUserById(@PathVariable Long id) {
+        return ResponseEntity.ok(userServiceImpl.getUser(id));
     }
 
     @Operation(summary = "Update user", description = "Updates a user's data by their username")
@@ -69,37 +75,7 @@ public class UserController {
         userServiceImpl.deleteUser(id);
     }
 
-//    @Operation(summary = "Delete user by username", description = "Deletes a user by their username")
-//    @ApiResponses({
-//            @ApiResponse(responseCode = "200", description = "User deleted successfully"),
-//            @ApiResponse(responseCode = "404", description = "User not found")
-//    })
-//    @DeleteMapping("/by-username/{username}")
-//    @PreAuthorize("hasRole('ADMIN')")
-//    public void deleteUserByUsername(@Parameter(description = "User's username") @PathVariable String username) {
-//        userServiceImpl.deleteUser(username);
-//    }
-
-//    @Operation(summary = "Update password", description = "Updates a user's password")
-//    @ApiResponses({
-//            @ApiResponse(responseCode = "200", description = "Password updated successfully"),
-//            @ApiResponse(responseCode = "400", description = "Incorrect old password"),
-//            @ApiResponse(responseCode = "404", description = "User not found")
-//    })
-//    @PutMapping("/{username}/password")
-//    public void updatePassword(
-//            @Parameter(description = "User's username") @PathVariable String username,
-//            @RequestBody PasswordRequest password) {
-//        userServiceImpl.updatePassword(username, password);
-//    }
-
-    @GetMapping("/{id}")
-    public ResponseEntity<UserPublicDTO> getUserById(@PathVariable Long id) {
-        return ResponseEntity.ok(userServiceImpl.getUser(id));
-    }
-
     //=== Authenticated User Endpoints ===//
-
     @Operation(summary = "Get authenticated user info", description = "Retrieves information about the currently authenticated user")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "User information retrieved successfully"),
@@ -121,4 +97,17 @@ public class UserController {
         userServiceImpl.deleteMyAccount();
         return ResponseEntity.ok().build();
     }
+
+//    @Operation(summary = "Update password", description = "Updates a user's password")
+//    @ApiResponses({
+//            @ApiResponse(responseCode = "200", description = "Password updated successfully"),
+//            @ApiResponse(responseCode = "400", description = "Incorrect old password"),
+//            @ApiResponse(responseCode = "404", description = "User not found")
+//    })
+//    @PutMapping("/{username}/password")
+//    public void updatePassword(
+//            @Parameter(description = "User's username") @PathVariable String username,
+//            @RequestBody PasswordRequest password) {
+//        userServiceImpl.updatePassword(username, password);
+//    }
 }

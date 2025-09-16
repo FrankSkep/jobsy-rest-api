@@ -10,7 +10,7 @@ import lombok.Data;
 public class ServiceDTO {
     private Long id;
     private UserDTO user;
-    private Category category;
+    private String category;
     private String title;
     private String description;
     private String basePrice;
