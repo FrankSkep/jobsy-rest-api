@@ -1,4 +1,4 @@
-package com.fran.jobsy.security.utils;
+package com.fran.jobsy.app.utils;
 
 import io.jsonwebtoken.security.Keys;
 

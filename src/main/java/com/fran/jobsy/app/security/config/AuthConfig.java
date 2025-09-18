@@ -1,4 +1,4 @@
-package com.fran.jobsy.security.config;
+package com.fran.jobsy.app.security.config;
 
 import com.fran.jobsy.app.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -15,7 +15,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Configuration
 @RequiredArgsConstructor
-public class AppConfig {
+public class AuthConfig {
 
     private final UserRepository userRepository;
 

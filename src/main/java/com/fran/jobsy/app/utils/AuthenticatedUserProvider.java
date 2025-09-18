@@ -1,4 +1,4 @@
-package com.fran.jobsy.security.utils;
+package com.fran.jobsy.app.utils;
 
 import com.fran.jobsy.app.entity.User;
 import com.fran.jobsy.app.exception.auth.UserNotFoundException;

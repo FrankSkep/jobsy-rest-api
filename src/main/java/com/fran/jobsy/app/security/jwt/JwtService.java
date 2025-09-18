@@ -1,4 +1,4 @@
-package com.fran.jobsy.security.jwt;
+package com.fran.jobsy.app.security.jwt;
 
 import com.fran.jobsy.app.entity.User;
 import io.jsonwebtoken.Claims;

@@ -9,7 +9,7 @@ import com.fran.jobsy.app.exception.auth.AuthenticationException;
 import com.fran.jobsy.app.exception.auth.UserNotFoundException;
 import com.fran.jobsy.app.repository.UserRepository;
 import com.fran.jobsy.app.service.AuthService;
-import com.fran.jobsy.security.jwt.JwtService;
+import com.fran.jobsy.app.security.jwt.JwtService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

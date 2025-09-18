@@ -1,4 +1,4 @@
-package com.fran.jobsy.app.dto;
+package com.fran.jobsy.app.dto.user;
 
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
