@@ -17,7 +17,6 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponse> handleGenericException(Exception e) {
         ErrorResponse error = new ErrorResponse(
                 e.getMessage(),
-                "INTERNAL_SERVER_ERROR",
                 List.of(e.getMessage())
         );
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
@@ -31,7 +30,6 @@ public class GlobalExceptionHandler {
                 .collect(Collectors.toList());
         ErrorResponse error = new ErrorResponse(
                 "Validation failed",
-                "BAD_REQUEST",
                 details
         );
         return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);

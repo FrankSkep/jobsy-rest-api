@@ -9,11 +9,9 @@ import java.util.List;
 @AllArgsConstructor
 public class ErrorResponse {
     private String message;
-    private String code;
     private List<String> details;
 
-    public ErrorResponse(String message, String code) {
+    public ErrorResponse(String message) {
         this.message = message;
-        this.code = code;
     }
 }
