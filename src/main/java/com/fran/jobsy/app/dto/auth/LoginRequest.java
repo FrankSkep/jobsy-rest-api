@@ -1,20 +1,12 @@
 package com.fran.jobsy.app.dto.auth;
 
 import jakarta.validation.constraints.NotBlank;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 
-@Data
-@Builder
-@AllArgsConstructor
-@NoArgsConstructor
-public class LoginRequest {
+public record LoginRequest(
+        @NotBlank(message = "Enter a valid username")
+        String username,
 
-    @NotBlank(message = "Enter a valid username")
-    private String username;
-
-    @NotBlank(message = "Enter a valid password")
-    private String password;
+        @NotBlank(message = "Enter a valid password")
+        String password
+) {
 }
