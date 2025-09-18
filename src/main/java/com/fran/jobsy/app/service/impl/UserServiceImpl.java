@@ -1,12 +1,8 @@
 package com.fran.jobsy.app.service.impl;
 
-import com.fran.jobsy.app.dto.user.ProviderProfileRequest;
 import com.fran.jobsy.app.dto.auth.PasswordRequest;
 import com.fran.jobsy.app.dto.service.ServiceDTO;
-import com.fran.jobsy.app.dto.user.UserDTO;
-import com.fran.jobsy.app.dto.user.UserFullDTO;
-import com.fran.jobsy.app.dto.user.UserPublicDTO;
-import com.fran.jobsy.app.dto.user.UserRequest;
+import com.fran.jobsy.app.dto.user.*;
 import com.fran.jobsy.app.entity.User;
 import com.fran.jobsy.app.enums.Role;
 import com.fran.jobsy.app.exception.auth.IncorrectPasswordException;
