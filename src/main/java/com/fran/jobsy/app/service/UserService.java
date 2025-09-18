@@ -2,6 +2,7 @@ package com.fran.jobsy.app.service;
 
 import com.fran.jobsy.app.dto.ProviderProfileRequest;
 import com.fran.jobsy.app.dto.auth.PasswordRequest;
+import com.fran.jobsy.app.dto.service.ServiceDTO;
 import com.fran.jobsy.app.dto.user.UserDTO;
 import com.fran.jobsy.app.dto.user.UserFullDTO;
 import com.fran.jobsy.app.dto.user.UserPublicDTO;
@@ -14,7 +15,7 @@ public interface UserService {
 
     List<UserDTO> getAllUsers();
 
-    void updateUser(String username, UserRequest user);
+    void updateUser(UserRequest user);
 
     void updateRole(Long userId, Role role);
 
@@ -28,6 +29,7 @@ public interface UserService {
 
     UserFullDTO getUserInfo();
 
-    void createProviderProfile(ProviderProfileRequest request);
+    void updateProviderInfo(ProviderProfileRequest request);
 
+    List<ServiceDTO> getUserServices(Long userId);
 }

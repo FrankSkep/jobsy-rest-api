@@ -17,4 +17,6 @@ public interface ServService {
 
     Page<ServiceDTO> getServicesWithFiltersPaged(ServiceFilterDTO filters, Pageable pageable);
 
+    List<ServiceDTO> getServicesByUserId(Long userId);
+
 }

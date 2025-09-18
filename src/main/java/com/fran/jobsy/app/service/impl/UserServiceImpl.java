@@ -2,6 +2,7 @@ package com.fran.jobsy.app.service.impl;
 
 import com.fran.jobsy.app.dto.ProviderProfileRequest;
 import com.fran.jobsy.app.dto.auth.PasswordRequest;
+import com.fran.jobsy.app.dto.service.ServiceDTO;
 import com.fran.jobsy.app.dto.user.UserDTO;
 import com.fran.jobsy.app.dto.user.UserFullDTO;
 import com.fran.jobsy.app.dto.user.UserPublicDTO;
@@ -11,6 +12,7 @@ import com.fran.jobsy.app.enums.Role;
 import com.fran.jobsy.app.exception.auth.IncorrectPasswordException;
 import com.fran.jobsy.app.exception.auth.UserNotFoundException;
 import com.fran.jobsy.app.repository.UserRepository;
+import com.fran.jobsy.app.service.ServService;
 import com.fran.jobsy.app.service.UserService;
 import com.fran.jobsy.security.utils.AuthenticatedUserProvider;
 import lombok.RequiredArgsConstructor;
@@ -26,6 +28,7 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticatedUserProvider authenticatedUserProvider;
+    private final ServService servService;
 
     private User getById(Long id) {
         return userRepository.findById(id)
@@ -43,10 +46,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void updateUser(String username, UserRequest user) {
-        User userEntity = getByUsername(username);
+    public void updateUser(UserRequest user) {
+        User userEntity = authenticatedUserProvider.getAuthenticatedUser();
 
-        userEntity.setUsername(user.getUsername());
         userEntity.setFirstname(user.getFirstname());
         userEntity.setLastname(user.getLastname());
         userEntity.setCountry(user.getCountry());
@@ -123,7 +125,7 @@ public class UserServiceImpl implements UserService {
         );
     }
 
-    public void createProviderProfile(ProviderProfileRequest providerProfileRequest) {
+    public void updateProviderInfo(ProviderProfileRequest providerProfileRequest) {
         User userEntity = authenticatedUserProvider.getAuthenticatedUser();
 
         userEntity.setBio(providerProfileRequest.getBio());
@@ -135,6 +137,12 @@ public class UserServiceImpl implements UserService {
         userEntity.setServiceRadiusKm(providerProfileRequest.getServiceRadiusKm());
         userEntity.setVerifiedCert(providerProfileRequest.getVerifiedCert());
         userRepository.save(userEntity);
+    }
+
+    @Override
+    public List<ServiceDTO> getUserServices(Long userId) {
+        getById(userId);
+        return servService.getServicesByUserId(userId);
     }
 
     public void deleteMyAccount() {

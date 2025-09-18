@@ -1,11 +1,13 @@
 package com.fran.jobsy.app.controller;
 
 import com.fran.jobsy.app.dto.ProviderProfileRequest;
+import com.fran.jobsy.app.dto.service.ServiceDTO;
 import com.fran.jobsy.app.dto.user.UserDTO;
 import com.fran.jobsy.app.dto.user.UserFullDTO;
 import com.fran.jobsy.app.dto.user.UserPublicDTO;
 import com.fran.jobsy.app.dto.user.UserRequest;
 import com.fran.jobsy.app.enums.Role;
+import com.fran.jobsy.app.service.impl.ServServiceImpl;
 import com.fran.jobsy.app.service.impl.UserServiceImpl;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -27,6 +29,7 @@ import java.util.List;
 public class UserController {
 
     private final UserServiceImpl userServiceImpl;
+    private final ServServiceImpl servServiceImpl;
 
     // General User Endpoints
     @GetMapping
@@ -44,11 +47,12 @@ public class UserController {
             @ApiResponse(responseCode = "200", description = "User updated successfully"),
             @ApiResponse(responseCode = "404", description = "User not found")
     })
-    @PutMapping("/{username}")
-    public void updateUser(
-            @Parameter(description = "User's username") @PathVariable String username,
-            @RequestBody UserRequest user) {
-        userServiceImpl.updateUser(username, user);
+    @PutMapping("/me/basic")
+    public ResponseEntity<Void> updateMyBasicInfo(
+            @Parameter(description = "User's username")
+            @Valid @RequestBody UserRequest userRequest) {
+        userServiceImpl.updateUser(userRequest);
+        return ResponseEntity.noContent().build();
     }
 
     @Operation(summary = "Update role", description = "Updates a user's role by their ID")
@@ -56,12 +60,13 @@ public class UserController {
             @ApiResponse(responseCode = "200", description = "Role updated successfully"),
             @ApiResponse(responseCode = "404", description = "User not found")
     })
-    @PutMapping("/{id}/role")
+    @PatchMapping("/{id}/role")
     @PreAuthorize("hasRole('ADMIN')")
-    public void updateRole(
+    public ResponseEntity<Void> updateRole(
             @Parameter(description = "User's ID") @PathVariable Long id,
             @RequestBody Role role) {
         userServiceImpl.updateRole(id, role);
+        return ResponseEntity.noContent().build();
     }
 
     @Operation(summary = "Delete user by ID", description = "Deletes a user by their ID")
@@ -71,8 +76,9 @@ public class UserController {
     })
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public void deleteUserById(@Parameter(description = "User's ID") @PathVariable Long id) {
+    public ResponseEntity<Void> deleteUserById(@Parameter(description = "User's ID") @PathVariable Long id) {
         userServiceImpl.deleteUser(id);
+        return ResponseEntity.noContent().build();
     }
 
     //=== Authenticated User Endpoints ===//
@@ -86,16 +92,21 @@ public class UserController {
         return ResponseEntity.ok(userServiceImpl.getUserInfo());
     }
 
-    @PutMapping("/me")
-    public ResponseEntity<Void> createProviderProfile(@RequestBody @Valid ProviderProfileRequest providerProfileRequest) {
-        userServiceImpl.createProviderProfile(providerProfileRequest);
-        return ResponseEntity.ok().build();
+    @PutMapping("/me/provider")
+    public ResponseEntity<Void> updateMyProviderProfile(@RequestBody @Valid ProviderProfileRequest providerProfileRequest) {
+        userServiceImpl.updateProviderInfo(providerProfileRequest);
+        return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("/me")
     public ResponseEntity<Void> deleteMyAccount() {
         userServiceImpl.deleteMyAccount();
-        return ResponseEntity.ok().build();
+        return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("{id}/services")
+    public ResponseEntity<List<ServiceDTO>> getUserServices(@PathVariable Long id) {
+        return ResponseEntity.ok(servServiceImpl.getServicesByUserId(id));
     }
 
 //    @Operation(summary = "Update password", description = "Updates a user's password")

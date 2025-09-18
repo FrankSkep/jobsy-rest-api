@@ -56,4 +56,11 @@ public interface ServiceRepository extends JpaRepository<Service, Long> {
             @Param("minRating") Double minRating,
             @Param("location") String location
     );
+
+    @Query("SELECT new com.fran.jobsy.app.dto.service.ServiceDTO(s.id, " +
+            "new com.fran.jobsy.app.dto.user.UserDTO(s.owner.id, s.owner.username, s.owner.lastname, s.owner.firstname, s.owner.country, s.owner.role), " +
+            "s.category, s.title, s.description, s.basePrice) FROM Service s " +
+            "WHERE s.owner.id = :ownerId")
+    List<ServiceDTO> findByOwnerId(@Param("ownerId") Long ownerId);
+
 }

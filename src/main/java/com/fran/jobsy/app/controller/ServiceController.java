@@ -42,12 +42,12 @@ public class ServiceController {
         Pageable pageable = PageRequest.of(page, size, sort);
 
         if (hasFilters) {
-            ServiceFilterDTO filters = new ServiceFilterDTO();
-            filters.setCategoryId(categoryId);
-            filters.setMinPrice(minPrice);
-            filters.setMaxPrice(maxPrice);
-            filters.setMinRating(minRating);
-            filters.setLocation(location);
+            ServiceFilterDTO filters = ServiceFilterDTO.builder()
+                    .categoryId(categoryId)
+                    .minPrice(minPrice)
+                    .maxPrice(maxPrice)
+                    .minRating(minRating)
+                    .location(location).build();
 
             Page<ServiceDTO> result = servService.getServicesWithFiltersPaged(filters, pageable);
             return ResponseEntity.ok(result);

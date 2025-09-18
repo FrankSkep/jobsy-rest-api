@@ -48,4 +48,9 @@ public class ServServiceImpl implements ServService {
                 pageable
         );
     }
+
+    @Override
+    public List<ServiceDTO> getServicesByUserId(Long userId) {
+        return serviceRepository.findByOwnerId(userId);
+    }
 }
