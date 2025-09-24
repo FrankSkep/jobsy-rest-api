@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Entity
 @Table(name = "services")
 @Data
@@ -31,4 +33,7 @@ public class Service {
     private String description;
 
     private Double basePrice;
+
+    @OneToMany(mappedBy = "service", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ServicePhoto> photos;
 }
