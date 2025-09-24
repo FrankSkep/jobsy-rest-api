@@ -1,16 +1,12 @@
 package com.fran.jobsy.app.dto.service;
 
-import com.fran.jobsy.app.dto.user.UserDTO;
-import lombok.AllArgsConstructor;
-import lombok.Data;
+import com.fran.jobsy.app.dto.user.UserServiceDTO;
 
-@Data
-@AllArgsConstructor
-public class ServiceDTO {
-    private Long id;
-    private UserDTO user;
-    private String category;
-    private String title;
-    private String description;
-    private String basePrice;
-}
+public record ServiceDTO(
+        Long id,
+        UserServiceDTO user,
+        String category,
+        String title,
+        String description,
+        Double basePrice
+) {}

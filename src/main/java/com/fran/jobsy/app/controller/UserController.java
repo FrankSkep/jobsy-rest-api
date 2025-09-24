@@ -29,6 +29,7 @@ public class UserController {
 
     // General User Endpoints
     @GetMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<UserDTO>> getAllUsers() {
         return ResponseEntity.ok(userServiceImpl.getAllUsers());
     }

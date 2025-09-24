@@ -15,18 +15,18 @@ import java.util.List;
 public interface ServiceRepository extends JpaRepository<Service, Long> {
 
     @Query("SELECT new com.fran.jobsy.app.dto.service.ServiceDTO(s.id, " +
-            "new com.fran.jobsy.app.dto.user.UserDTO(s.owner.id, s.owner.username, s.owner.lastname, s.owner.firstname, s.owner.country, s.owner.role), " +
-            "s.category, s.title, s.description, s.basePrice) FROM Service s")
+            "new com.fran.jobsy.app.dto.user.UserServiceDTO(s.owner.id, s.owner.lastname, s.owner.firstname), " +
+            "s.category.name, s.title, s.description, s.basePrice) FROM Service s")
     List<ServiceDTO> findAllServices();
 
     @Query("SELECT new com.fran.jobsy.app.dto.service.ServiceDTO(s.id, " +
-            "new com.fran.jobsy.app.dto.user.UserDTO(s.owner.id, s.owner.username, s.owner.lastname, s.owner.firstname, s.owner.country, s.owner.role), " +
-            "s.category, s.title, s.description, s.basePrice) FROM Service s")
+            "new com.fran.jobsy.app.dto.user.UserServiceDTO(s.owner.id, s.owner.lastname, s.owner.firstname), " +
+            "s.category.name, s.title, s.description, s.basePrice) FROM Service s")
     Page<ServiceDTO> findAllServicesPaged(Pageable pageable);
 
     @Query("SELECT new com.fran.jobsy.app.dto.service.ServiceDTO(s.id, " +
-            "new com.fran.jobsy.app.dto.user.UserDTO(s.owner.id, s.owner.username, s.owner.lastname, s.owner.firstname, s.owner.country, s.owner.role), " +
-            "s.category, s.title, s.description, s.basePrice) FROM Service s " +
+            "new com.fran.jobsy.app.dto.user.UserServiceDTO(s.owner.id, s.owner.lastname, s.owner.firstname), " +
+            "s.category.name, s.title, s.description, s.basePrice) FROM Service s " +
             "WHERE (:categoryId IS NULL OR s.category.id = :categoryId) " +
             "AND (:minPrice IS NULL OR s.basePrice >= :minPrice) " +
             "AND (:maxPrice IS NULL OR s.basePrice <= :maxPrice) " +
@@ -42,8 +42,8 @@ public interface ServiceRepository extends JpaRepository<Service, Long> {
     );
 
     @Query("SELECT new com.fran.jobsy.app.dto.service.ServiceDTO(s.id, " +
-            "new com.fran.jobsy.app.dto.user.UserDTO(s.owner.id, s.owner.username, s.owner.lastname, s.owner.firstname, s.owner.country, s.owner.role), " +
-            "s.category, s.title, s.description, s.basePrice) FROM Service s " +
+            "new com.fran.jobsy.app.dto.user.UserServiceDTO(s.owner.id, s.owner.lastname, s.owner.firstname), " +
+            "s.category.name, s.title, s.description, s.basePrice) FROM Service s " +
             "WHERE (:categoryId IS NULL OR s.category.id = :categoryId) " +
             "AND (:minPrice IS NULL OR s.basePrice >= :minPrice) " +
             "AND (:maxPrice IS NULL OR s.basePrice <= :maxPrice) " +
@@ -58,8 +58,8 @@ public interface ServiceRepository extends JpaRepository<Service, Long> {
     );
 
     @Query("SELECT new com.fran.jobsy.app.dto.service.ServiceDTO(s.id, " +
-            "new com.fran.jobsy.app.dto.user.UserDTO(s.owner.id, s.owner.username, s.owner.lastname, s.owner.firstname, s.owner.country, s.owner.role), " +
-            "s.category, s.title, s.description, s.basePrice) FROM Service s " +
+            "new com.fran.jobsy.app.dto.user.UserServiceDTO(s.owner.id, s.owner.lastname, s.owner.firstname), " +
+            "s.category.name, s.title, s.description, s.basePrice) FROM Service s " +
             "WHERE s.owner.id = :ownerId")
     List<ServiceDTO> findByOwnerId(@Param("ownerId") Long ownerId);
 
