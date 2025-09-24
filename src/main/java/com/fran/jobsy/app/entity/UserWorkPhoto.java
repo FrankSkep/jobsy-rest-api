@@ -7,24 +7,29 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @Entity
-@Table(name = "user_photos")
+@Table(name = "user_work_photos")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class UserPhoto {
+public class UserWorkPhoto {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @NotBlank
-    private String imageId; // reference to the image in the cloud storage
+    private String imageId;
 
     @NotBlank
-    private String url; // public URL to access the image
+    private String url;
 
-    @OneToOne
-    @JoinColumn(name = "user_id", nullable = false, unique = true)
+    private LocalDateTime uploadedAt;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
 }
+

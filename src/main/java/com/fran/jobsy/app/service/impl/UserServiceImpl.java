@@ -4,27 +4,36 @@ import com.fran.jobsy.app.dto.auth.PasswordRequest;
 import com.fran.jobsy.app.dto.service.ServiceDTO;
 import com.fran.jobsy.app.dto.user.*;
 import com.fran.jobsy.app.entity.User;
+import com.fran.jobsy.app.entity.UserPhoto;
 import com.fran.jobsy.app.enums.Role;
 import com.fran.jobsy.app.exception.auth.IncorrectPasswordException;
 import com.fran.jobsy.app.exception.auth.UserNotFoundException;
+import com.fran.jobsy.app.repository.UserPhotoRepository;
 import com.fran.jobsy.app.repository.UserRepository;
+import com.fran.jobsy.app.service.CloudinaryService;
 import com.fran.jobsy.app.service.ServService;
 import com.fran.jobsy.app.service.UserService;
 import com.fran.jobsy.app.utils.AuthenticatedUserProvider;
+import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
+    private final UserPhotoRepository UserPhotoRepository;
+    private final CloudinaryService cloudinaryService;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticatedUserProvider authenticatedUserProvider;
     private final ServService servService;
+    private final EntityManager entityManager;
 
     private User getById(Long id) {
         return userRepository.findById(id)
@@ -144,5 +153,22 @@ public class UserServiceImpl implements UserService {
     public void deleteMyAccount() {
         User user = authenticatedUserProvider.getAuthenticatedUser();
         userRepository.delete(user);
+    }
+
+    public void updateProfileImage(MultipartFile file) {
+        User user = authenticatedUserProvider.getAuthenticatedUser();
+
+        try {
+            Map uploadResult = cloudinaryService.upload(file);
+            String imageUrl = (String) uploadResult.get("url");
+            String imageId = (String) uploadResult.get("public_id");
+
+            UserPhoto userPhoto = UserPhoto.builder().imageId(imageId).url(imageUrl).user(entityManager.getReference(User.class, user.getId())).build();
+            UserPhotoRepository.save(userPhoto);
+
+        } catch (
+                Exception e) {
+            throw new RuntimeException("Image upload failed.", e);
+        }
     }
 }

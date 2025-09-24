@@ -4,6 +4,7 @@ import com.fran.jobsy.app.dto.auth.PasswordRequest;
 import com.fran.jobsy.app.dto.service.ServiceDTO;
 import com.fran.jobsy.app.dto.user.*;
 import com.fran.jobsy.app.enums.Role;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -28,4 +29,6 @@ public interface UserService {
     void updateProviderInfo(ProviderProfileRequest request);
 
     List<ServiceDTO> getUserServices(Long userId);
+
+    void updateProfileImage(MultipartFile file);
 }

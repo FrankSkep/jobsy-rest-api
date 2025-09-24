@@ -15,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -104,6 +105,12 @@ public class UserController {
     @GetMapping("{id}/services")
     public ResponseEntity<List<ServiceDTO>> getUserServices(@PathVariable Long id) {
         return ResponseEntity.ok(servServiceImpl.getServicesByUserId(id));
+    }
+
+    @PostMapping
+    public ResponseEntity<Void> uploadPhoto(@RequestPart MultipartFile photo) {
+        userServiceImpl.updateProfileImage(photo);
+        return ResponseEntity.noContent().build();
     }
 
 //    @Operation(summary = "Update password", description = "Updates a user's password")

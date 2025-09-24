@@ -76,11 +76,17 @@ public class User implements UserDetails {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<AvailabilitySlot> availabilitySlots;
 
+    // Foto de perfil única
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Certification> certifications;
 
+
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private UserPhoto photo;
+
+    // Portfolio (múltiples fotos de trabajos)
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<UserPhoto> photos;
+    private List<UserWorkPhoto> workPhotos;
 
     // Como cliente → sus reservas
     @OneToMany(mappedBy = "client")
