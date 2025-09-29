@@ -20,4 +20,8 @@ public class UserRequest {
     @NotBlank(message = "Country is mandatory")
     @Pattern(regexp = "^[A-Za-z ]+$", message = "Country must contain only letters and spaces")
     private String country;
+
+    @NotBlank(message = "Phone is mandatory")
+    @Pattern(regexp = "^\\d{14}$", message = "Phone must contain exactly 14 digits")
+    private String phone;
 }

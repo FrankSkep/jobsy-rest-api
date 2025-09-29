@@ -42,7 +42,10 @@ public class User implements UserDetails {
 
     private String firstname;
 
+    // --- Basic optional info ---
     private String country;
+
+    private String phone;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
@@ -50,7 +53,7 @@ public class User implements UserDetails {
 
     private LocalDateTime createdAt;
 
-    // --- ProviderProfile ---
+    // --- Provider optional info ---
     private String bio;
 
     private Double hourlyRate;
@@ -76,10 +79,8 @@ public class User implements UserDetails {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<AvailabilitySlot> availabilitySlots;
 
-    // Foto de perfil única
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Certification> certifications;
-
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private UserPhoto photo;
