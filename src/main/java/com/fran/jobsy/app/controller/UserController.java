@@ -108,7 +108,7 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> uploadPhoto(@RequestPart MultipartFile photo) {
+    public ResponseEntity<Void> updateProfileImage(@RequestPart MultipartFile photo) {
         userServiceImpl.updateProfileImage(photo);
         return ResponseEntity.noContent().build();
     }
