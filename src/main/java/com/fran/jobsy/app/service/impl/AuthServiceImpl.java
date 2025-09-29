@@ -54,7 +54,7 @@ public class AuthServiceImpl implements AuthService {
                 .password(passwordEncoder.encode(request.getPassword()))
                 .firstname(request.getFirstname())
                 .lastname(request.getLastname())
-                .country(request.getCountry())
+//                .country(request.getCountry())
                 .role(Role.USER)
                 .build();
 

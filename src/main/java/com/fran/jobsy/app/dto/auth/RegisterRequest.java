@@ -31,8 +31,8 @@ public class RegisterRequest {
     @Size(max = 50, message = "Last name must not exceed 50 characters")
     private String lastname;
 
-    @NotBlank(message = "Country is mandatory")
-    @Pattern(regexp = "^[\\p{L} ]+$", message = "Country must contain only letters (including accents) and spaces")
-    @Size(max = 100, message = "Country must not exceed 100 characters")
-    private String country;
+//    @NotBlank(message = "Country is mandatory")
+//    @Pattern(regexp = "^[\\p{L} ]+$", message = "Country must contain only letters (including accents) and spaces")
+//    @Size(max = 100, message = "Country must not exceed 100 characters")
+//    private String country;
 }
