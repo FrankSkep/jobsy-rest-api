@@ -1,26 +1,26 @@
 package com.fran.jobsy.app.dto.user;
 
 import com.fran.jobsy.app.enums.Role;
-import lombok.AllArgsConstructor;
-import lombok.Data;
 
-@Data
-@AllArgsConstructor
-public class UserFullDTO {
-    private Long id;
-    private String username;
-    private String lastname;
-    private String firstname;
-    private String country;
-    private Role role;
-
-    // Provider-specific fields
-    private String bio;
-    private Double hourlyRate;
-    private Integer yearsExperience;
-    private String addressText;
-    private Double lat;
-    private Double lng;
-    private Double serviceRadiusKm;
-    private Boolean verifiedCert = false;
+public record UserFullDTO(
+        Long id,
+        String username,
+        String lastname,
+        String firstname,
+        String country,
+        Role role,
+        String bio,
+        Double hourlyRate,
+        Integer yearsExperience,
+        String addressText,
+        Double lat,
+        Double lng,
+        Double serviceRadiusKm,
+        Boolean verifiedCert
+) {
+    public UserFullDTO {
+        if (verifiedCert == null) {
+            verifiedCert = false;
+        }
+    }
 }

@@ -2,26 +2,20 @@ package com.fran.jobsy.app.dto.user;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
 
-@Getter
-@Setter
-@AllArgsConstructor
-public class UserRequest {
+public record UserRequest(
+        @NotBlank(message = "First name is mandatory")
+        String firstname,
 
-    @NotBlank(message = "First name is mandatory")
-    private String firstname;
+        @NotBlank(message = "Last name is mandatory")
+        String lastname,
 
-    @NotBlank(message = "Last name is mandatory")
-    private String lastname;
+        @NotBlank(message = "Country is mandatory")
+        @Pattern(regexp = "^[A-Za-z ]+$", message = "Country must contain only letters and spaces")
+        String country,
 
-    @NotBlank(message = "Country is mandatory")
-    @Pattern(regexp = "^[A-Za-z ]+$", message = "Country must contain only letters and spaces")
-    private String country;
-
-    @NotBlank(message = "Phone is mandatory")
-    @Pattern(regexp = "^\\d{14}$", message = "Phone must contain exactly 14 digits")
-    private String phone;
+        @NotBlank(message = "Phone is mandatory")
+        @Pattern(regexp = "^\\d{14}$", message = "Phone must contain exactly 14 digits")
+        String phone
+) {
 }

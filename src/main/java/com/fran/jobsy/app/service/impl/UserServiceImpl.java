@@ -133,14 +133,14 @@ public class UserServiceImpl implements UserService {
     public void updateProviderInfo(ProviderProfileRequest providerProfileRequest) {
         User userEntity = authenticatedUserProvider.getAuthenticatedUser();
 
-        userEntity.setBio(providerProfileRequest.getBio());
-        userEntity.setHourlyRate(providerProfileRequest.getHourlyRate());
-        userEntity.setYearsExperience(providerProfileRequest.getYearsExperience());
-        userEntity.setAddressText(providerProfileRequest.getAddressText());
-        userEntity.setLat(providerProfileRequest.getLat());
-        userEntity.setLng(providerProfileRequest.getLng());
-        userEntity.setServiceRadiusKm(providerProfileRequest.getServiceRadiusKm());
-        userEntity.setVerifiedCert(providerProfileRequest.getVerifiedCert());
+        userEntity.setBio(providerProfileRequest.bio());
+        userEntity.setHourlyRate(providerProfileRequest.hourlyRate());
+        userEntity.setYearsExperience(providerProfileRequest.yearsExperience());
+        userEntity.setAddressText(providerProfileRequest.addressText());
+        userEntity.setLat(providerProfileRequest.lat());
+        userEntity.setLng(providerProfileRequest.lng());
+        userEntity.setServiceRadiusKm(providerProfileRequest.serviceRadiusKm());
+        userEntity.setVerifiedCert(providerProfileRequest.verifiedCert());
         userRepository.save(userEntity);
     }
 

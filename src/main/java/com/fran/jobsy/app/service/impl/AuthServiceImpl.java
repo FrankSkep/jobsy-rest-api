@@ -33,9 +33,7 @@ public class AuthServiceImpl implements AuthService {
             UserDetails user = userRepository.findByUsername(request.username())
                     .orElseThrow(() -> new UserNotFoundException("User not found."));
             String token = jwtService.getToken(user);
-            return AuthResponse.builder()
-                    .token(token)
-                    .build();
+            return new AuthResponse(token);
         } catch (
                 Exception e) {
             throw new AuthenticationException("Incorrect user or password.");
@@ -45,23 +43,20 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public AuthResponse register(RegisterRequest request) {
 
-        if (userRepository.existsByUsername(request.getUsername())) {
+        if (userRepository.existsByUsername(request.username())) {
             throw new AuthenticationException("User already exists.");
         }
 
         User user = User.builder()
-                .username(request.getUsername())
-                .password(passwordEncoder.encode(request.getPassword()))
-                .firstname(request.getFirstname())
-                .lastname(request.getLastname())
-//                .country(request.getCountry())
+                .username(request.username())
+                .password(passwordEncoder.encode(request.password()))
+                .firstname(request.firstname())
+                .lastname(request.lastname())
                 .role(Role.USER)
                 .build();
 
         userRepository.save(user);
 
-        return AuthResponse.builder()
-                .token(jwtService.getToken(user))
-                .build();
+        return new AuthResponse(jwtService.getToken(user));
     }
 }

@@ -2,19 +2,14 @@ package com.fran.jobsy.app.service.impl;
 
 import com.fran.jobsy.app.dto.service.ServiceDTO;
 import com.fran.jobsy.app.dto.service.ServiceFilterDTO;
-import com.fran.jobsy.app.entity.User;
-import com.fran.jobsy.app.entity.UserPhoto;
 import com.fran.jobsy.app.repository.ServiceRepository;
 import com.fran.jobsy.app.service.ServService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -34,22 +29,22 @@ public class ServServiceImpl implements ServService {
     @Override
     public List<ServiceDTO> getServicesWithFilters(ServiceFilterDTO filters) {
         return serviceRepository.findServicesWithFilters(
-                filters.getCategoryId(),
-                filters.getMinPrice(),
-                filters.getMaxPrice(),
-                filters.getMinRating(),
-                filters.getLocation()
+                filters.categoryId(),
+                filters.minPrice(),
+                filters.maxPrice(),
+                filters.minRating(),
+                filters.location()
         );
     }
 
     @Override
     public Page<ServiceDTO> getServicesWithFiltersPaged(ServiceFilterDTO filters, Pageable pageable) {
         return serviceRepository.findServicesWithFiltersPaged(
-                filters.getCategoryId(),
-                filters.getMinPrice(),
-                filters.getMaxPrice(),
-                filters.getMinRating(),
-                filters.getLocation(),
+                filters.categoryId(),
+                filters.minPrice(),
+                filters.maxPrice(),
+                filters.minRating(),
+                filters.location(),
                 pageable
         );
     }
