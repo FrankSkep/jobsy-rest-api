@@ -54,9 +54,9 @@ public class UserServiceImpl implements UserService {
     public void updateUser(UserRequest user) {
         User userEntity = authenticatedUserProvider.getAuthenticatedUser();
 
-        userEntity.setFirstname(user.getFirstname());
-        userEntity.setLastname(user.getLastname());
-        userEntity.setCountry(user.getCountry());
+        userEntity.setFirstname(user.firstname());
+        userEntity.setLastname(user.lastname());
+        userEntity.setCountry(user.country());
         userRepository.save(userEntity);
     }
 
