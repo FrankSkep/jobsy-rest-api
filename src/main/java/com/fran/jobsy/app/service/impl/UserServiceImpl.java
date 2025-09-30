@@ -155,7 +155,7 @@ public class UserServiceImpl implements UserService {
         userRepository.delete(user);
     }
 
-    public void updateProfileImage(MultipartFile file) {
+    public UserPhoto updateProfileImage(MultipartFile file) {
         User user = authenticatedUserProvider.getAuthenticatedUser();
 
         try {
@@ -164,11 +164,24 @@ public class UserServiceImpl implements UserService {
             String imageId = (String) uploadResult.get("public_id");
 
             UserPhoto userPhoto = UserPhoto.builder().imageId(imageId).url(imageUrl).user(entityManager.getReference(User.class, user.getId())).build();
-            UserPhotoRepository.save(userPhoto);
-
+            return UserPhotoRepository.save(userPhoto);
         } catch (
                 Exception e) {
             throw new RuntimeException("Image upload failed.", e);
+        }
+    }
+
+    public void deleteMyProfileImage() {
+        User user = authenticatedUserProvider.getAuthenticatedUser();
+        UserPhoto userPhoto = UserPhotoRepository.findByUserId(user.getId())
+                .orElseThrow(() -> new RuntimeException("No profile image to delete."));
+
+        try {
+            cloudinaryService.delete(userPhoto.getImageId());
+            UserPhotoRepository.delete(userPhoto);
+        } catch (
+                Exception e) {
+            throw new RuntimeException("Failed to delete profile image.", e);
         }
     }
 }

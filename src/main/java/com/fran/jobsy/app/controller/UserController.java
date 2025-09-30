@@ -2,6 +2,7 @@ package com.fran.jobsy.app.controller;
 
 import com.fran.jobsy.app.dto.service.ServiceDTO;
 import com.fran.jobsy.app.dto.user.*;
+import com.fran.jobsy.app.entity.UserPhoto;
 import com.fran.jobsy.app.enums.Role;
 import com.fran.jobsy.app.service.impl.ServServiceImpl;
 import com.fran.jobsy.app.service.impl.UserServiceImpl;
@@ -107,9 +108,14 @@ public class UserController {
         return ResponseEntity.ok(servServiceImpl.getServicesByUserId(id));
     }
 
-    @PostMapping
-    public ResponseEntity<Void> updateProfileImage(@RequestPart MultipartFile photo) {
-        userServiceImpl.updateProfileImage(photo);
+    @PostMapping("/me/photo")
+    public ResponseEntity<UserPhoto> updateProfileImage(@RequestPart MultipartFile photo) {
+        return ResponseEntity.ok(userServiceImpl.updateProfileImage(photo));
+    }
+
+    @DeleteMapping
+    public ResponseEntity<Void> deleteMyProfileImage() {
+        userServiceImpl.deleteMyProfileImage();
         return ResponseEntity.noContent().build();
     }
 
