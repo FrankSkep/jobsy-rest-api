@@ -8,6 +8,7 @@ import com.fran.jobsy.app.entity.UserPhoto;
 import com.fran.jobsy.app.enums.Role;
 import com.fran.jobsy.app.exception.auth.IncorrectPasswordException;
 import com.fran.jobsy.app.exception.auth.UserNotFoundException;
+import com.fran.jobsy.app.repository.CertificationRepository;
 import com.fran.jobsy.app.repository.UserPhotoRepository;
 import com.fran.jobsy.app.repository.UserRepository;
 import com.fran.jobsy.app.service.CloudinaryService;
@@ -34,6 +35,7 @@ public class UserServiceImpl implements UserService {
     private final AuthenticatedUserProvider authenticatedUserProvider;
     private final ServService servService;
     private final EntityManager entityManager;
+    private final CertificationRepository certificationRepository;
 
     private User getById(Long id) {
         return userRepository.findById(id)
