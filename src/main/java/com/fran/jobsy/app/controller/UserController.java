@@ -1,5 +1,7 @@
 package com.fran.jobsy.app.controller;
 
+import com.fran.jobsy.app.dto.CertificationDTO;
+import com.fran.jobsy.app.dto.CertificationRequest;
 import com.fran.jobsy.app.dto.service.ServiceDTO;
 import com.fran.jobsy.app.dto.user.*;
 import com.fran.jobsy.app.entity.UserPhoto;
@@ -13,6 +15,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -113,11 +116,18 @@ public class UserController {
         return ResponseEntity.ok(userServiceImpl.updateProfileImage(photo));
     }
 
-    @DeleteMapping
+    @DeleteMapping("/me/photo")
     public ResponseEntity<Void> deleteMyProfileImage() {
         userServiceImpl.deleteMyProfileImage();
         return ResponseEntity.noContent().build();
     }
+
+    // esto mover a CertificationController
+//    @PostMapping("/me/certifications")
+//    public ResponseEntity<CertificationDTO> addMyCertification(@RequestBody @Valid CertificationRequest certificationRequest) {
+//        CertificationDTO certification = userServiceImpl.addCertification(certificationRequest);
+//        return ResponseEntity.status(HttpStatus.CREATED).body(certification);
+//    }
 
 //    @Operation(summary = "Update password", description = "Updates a user's password")
 //    @ApiResponses({
