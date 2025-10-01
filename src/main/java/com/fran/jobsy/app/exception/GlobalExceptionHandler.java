@@ -1,13 +1,10 @@
-package com.fran.jobsy.app.exception.handler;
+package com.fran.jobsy.app.exception;
 
-import com.fran.jobsy.app.exception.auth.*;
+import com.fran.jobsy.app.exception.custom.*;
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.http.HttpServletRequest;
-import org.springframework.core.Ordered;
-import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -18,7 +15,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RestControllerAdvice
-@Order(Ordered.HIGHEST_PRECEDENCE)
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
@@ -82,19 +78,8 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler(IncorrectPasswordException.class)
-    public ResponseEntity<ErrorResponse> handleIncorrectPasswordException(
-            IncorrectPasswordException ex, HttpServletRequest request) {
-        ErrorResponse error = new ErrorResponse(
-                HttpStatus.UNAUTHORIZED.value(),
-                ex.getMessage()
-        );
-        error.setPath(request.getRequestURI());
-        return new ResponseEntity<>(error, HttpStatus.UNAUTHORIZED);
-    }
-
-    @ExceptionHandler({UserNotFoundException.class, UsernameNotFoundException.class})
-    public ResponseEntity<ErrorResponse> handleUserNotFoundException(
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleResourceNotFoundException(
             Exception ex, HttpServletRequest request) {
         ErrorResponse error = new ErrorResponse(
                 HttpStatus.NOT_FOUND.value(),
@@ -121,6 +106,17 @@ public class GlobalExceptionHandler {
         ErrorResponse error = new ErrorResponse(
                 HttpStatus.INTERNAL_SERVER_ERROR.value(),
                 "Ha ocurrido un error interno del servidor"
+        );
+        error.setPath(request.getRequestURI());
+        return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @ExceptionHandler(CloudinaryException.class)
+    public ResponseEntity<ErrorResponse> handleCloudinaryException(
+            CloudinaryException ex, HttpServletRequest request) {
+        ErrorResponse error = new ErrorResponse(
+                HttpStatus.INTERNAL_SERVER_ERROR.value(),
+                ex.getMessage()
         );
         error.setPath(request.getRequestURI());
         return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR);
