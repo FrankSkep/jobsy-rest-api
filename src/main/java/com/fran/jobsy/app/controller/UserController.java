@@ -1,13 +1,12 @@
 package com.fran.jobsy.app.controller;
 
-import com.fran.jobsy.app.dto.CertificationDTO;
-import com.fran.jobsy.app.dto.CertificationRequest;
 import com.fran.jobsy.app.dto.service.ServiceDTO;
 import com.fran.jobsy.app.dto.user.*;
 import com.fran.jobsy.app.entity.UserPhoto;
 import com.fran.jobsy.app.enums.Role;
-import com.fran.jobsy.app.service.impl.ServServiceImpl;
-import com.fran.jobsy.app.service.impl.UserServiceImpl;
+import com.fran.jobsy.app.service.ServService;
+import com.fran.jobsy.app.service.UserPhotoService;
+import com.fran.jobsy.app.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -15,7 +14,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -29,8 +27,9 @@ import java.util.List;
 @Tag(name = "Users", description = "Operations related to user management")
 public class UserController {
 
-    private final UserServiceImpl userServiceImpl;
-    private final ServServiceImpl servServiceImpl;
+    private final UserService userServiceImpl;
+    private final ServService servServiceImpl;
+    private final UserPhotoService userPhotoService;
 
     // General User Endpoints
     @GetMapping
@@ -113,21 +112,14 @@ public class UserController {
 
     @PostMapping("/me/photo")
     public ResponseEntity<UserPhoto> updateProfileImage(@RequestPart MultipartFile photo) {
-        return ResponseEntity.ok(userServiceImpl.updateProfileImage(photo));
+        return ResponseEntity.ok(userPhotoService.updateUserPhoto(photo));
     }
 
     @DeleteMapping("/me/photo")
     public ResponseEntity<Void> deleteMyProfileImage() {
-        userServiceImpl.deleteMyProfileImage();
+        userPhotoService.deleteUserPhoto();
         return ResponseEntity.noContent().build();
     }
-
-    // esto mover a CertificationController
-//    @PostMapping("/me/certifications")
-//    public ResponseEntity<CertificationDTO> addMyCertification(@RequestBody @Valid CertificationRequest certificationRequest) {
-//        CertificationDTO certification = userServiceImpl.addCertification(certificationRequest);
-//        return ResponseEntity.status(HttpStatus.CREATED).body(certification);
-//    }
 
 //    @Operation(summary = "Update password", description = "Updates a user's password")
 //    @ApiResponses({

@@ -1,4 +1,4 @@
-package com.fran.jobsy.app.exception.handler;
+package com.fran.jobsy.app.exception;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;

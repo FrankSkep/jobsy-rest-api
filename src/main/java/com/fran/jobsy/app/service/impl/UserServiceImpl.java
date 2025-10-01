@@ -4,11 +4,9 @@ import com.fran.jobsy.app.dto.auth.PasswordRequest;
 import com.fran.jobsy.app.dto.service.ServiceDTO;
 import com.fran.jobsy.app.dto.user.*;
 import com.fran.jobsy.app.entity.User;
-import com.fran.jobsy.app.entity.UserPhoto;
 import com.fran.jobsy.app.enums.Role;
-import com.fran.jobsy.app.exception.auth.IncorrectPasswordException;
-import com.fran.jobsy.app.exception.auth.UserNotFoundException;
-import com.fran.jobsy.app.repository.CertificationRepository;
+import com.fran.jobsy.app.exception.custom.AuthenticationException;
+import com.fran.jobsy.app.exception.custom.ResourceNotFoundException;
 import com.fran.jobsy.app.repository.UserPhotoRepository;
 import com.fran.jobsy.app.repository.UserRepository;
 import com.fran.jobsy.app.service.CloudinaryService;
@@ -19,10 +17,8 @@ import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
-import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -35,16 +31,15 @@ public class UserServiceImpl implements UserService {
     private final AuthenticatedUserProvider authenticatedUserProvider;
     private final ServService servService;
     private final EntityManager entityManager;
-    private final CertificationRepository certificationRepository;
 
     private User getById(Long id) {
         return userRepository.findById(id)
-                .orElseThrow(() -> new UserNotFoundException("User not found."));
+                .orElseThrow(() -> new ResourceNotFoundException("User not found."));
     }
 
     private User getByUsername(String username) {
         return userRepository.findByUsername(username)
-                .orElseThrow(() -> new UserNotFoundException("User not found."));
+                .orElseThrow(() -> new ResourceNotFoundException("User not found."));
     }
 
     @Override
@@ -89,11 +84,12 @@ public class UserServiceImpl implements UserService {
         if (passwordEncoder.matches(password.getOldPassword(), user.getPassword())) {
             user.setPassword(passwordEncoder.encode(password.getNewPassword()));
         } else {
-            throw new IncorrectPasswordException("Old password does not match.");
+            throw new AuthenticationException("Old password does not match.");
         }
         userRepository.save(user);
     }
 
+    @Override
     public UserPublicDTO getUser(Long id) {
         User user = getById(id);
 
@@ -132,6 +128,7 @@ public class UserServiceImpl implements UserService {
         );
     }
 
+    @Override
     public void updateProviderInfo(ProviderProfileRequest providerProfileRequest) {
         User userEntity = authenticatedUserProvider.getAuthenticatedUser();
 
@@ -155,35 +152,5 @@ public class UserServiceImpl implements UserService {
     public void deleteMyAccount() {
         User user = authenticatedUserProvider.getAuthenticatedUser();
         userRepository.delete(user);
-    }
-
-    public UserPhoto updateProfileImage(MultipartFile file) {
-        User user = authenticatedUserProvider.getAuthenticatedUser();
-
-        try {
-            Map uploadResult = cloudinaryService.upload(file);
-            String imageUrl = (String) uploadResult.get("url");
-            String imageId = (String) uploadResult.get("public_id");
-
-            UserPhoto userPhoto = UserPhoto.builder().imageId(imageId).url(imageUrl).user(entityManager.getReference(User.class, user.getId())).build();
-            return UserPhotoRepository.save(userPhoto);
-        } catch (
-                Exception e) {
-            throw new RuntimeException("Image upload failed.", e);
-        }
-    }
-
-    public void deleteMyProfileImage() {
-        User user = authenticatedUserProvider.getAuthenticatedUser();
-        UserPhoto userPhoto = UserPhotoRepository.findByUserId(user.getId())
-                .orElseThrow(() -> new RuntimeException("No profile image to delete."));
-
-        try {
-            cloudinaryService.delete(userPhoto.getImageId());
-            UserPhotoRepository.delete(userPhoto);
-        } catch (
-                Exception e) {
-            throw new RuntimeException("Failed to delete profile image.", e);
-        }
     }
 }

@@ -42,13 +42,6 @@ public class ServiceController {
         Pageable pageable = PageRequest.of(page, size, sort);
 
         if (hasFilters) {
-//            ServiceFilterDTO filters = ServiceFilterDTO.builder()
-//                    .categoryId(categoryId)
-//                    .minPrice(minPrice)
-//                    .maxPrice(maxPrice)
-//                    .minRating(minRating)
-//                    .location(location).build();
-
             ServiceFilterDTO filters = new ServiceFilterDTO(
                     categoryId, minPrice, maxPrice, minRating, null, null, null, location
             );

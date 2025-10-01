@@ -5,8 +5,8 @@ import com.fran.jobsy.app.dto.auth.LoginRequest;
 import com.fran.jobsy.app.dto.auth.RegisterRequest;
 import com.fran.jobsy.app.entity.User;
 import com.fran.jobsy.app.enums.Role;
-import com.fran.jobsy.app.exception.auth.AuthenticationException;
-import com.fran.jobsy.app.exception.auth.UserNotFoundException;
+import com.fran.jobsy.app.exception.custom.AuthenticationException;
+import com.fran.jobsy.app.exception.custom.ResourceNotFoundException;
 import com.fran.jobsy.app.repository.UserRepository;
 import com.fran.jobsy.app.security.jwt.JwtService;
 import com.fran.jobsy.app.service.AuthService;
@@ -31,7 +31,7 @@ public class AuthServiceImpl implements AuthService {
         try {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.username(), request.password()));
             UserDetails user = userRepository.findByUsername(request.username())
-                    .orElseThrow(() -> new UserNotFoundException("User not found."));
+                    .orElseThrow(() -> new ResourceNotFoundException("User not found."));
             String token = jwtService.getToken(user);
             return new AuthResponse(token);
         } catch (
