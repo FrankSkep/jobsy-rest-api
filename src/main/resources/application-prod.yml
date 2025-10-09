@@ -1,0 +1,20 @@
+spring:
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: false
+
+server:
+    port: ${PORT:8080}
+    compression:
+      enabled: true
+      mime-types: application/json,text/html,text/plain
+      min-response-size: 1024
+
+logging:
+  level:
+    root: INFO
+  file:
+    name: logs/jobsy.log
+  pattern:
+    file: "%d{yyyy-MM-dd HH:mm:ss} %-5level %logger{36} - %msg%n"
