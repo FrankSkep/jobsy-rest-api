@@ -10,9 +10,8 @@ To provide a scalable and secure platform that efficiently connects clients and 
 
 ## User Roles
 
-* **Client**: Searches for services, books appointments, makes payments, and leaves reviews
-* **Provider**: Offers services, manages availability and bookings
-* **Administrator**: Oversees users and system services
+* **User**: Can act as both client and service provider. As a client, they can search for services, book appointments, make payments, and leave reviews. As a provider, they can offer services, manage their availability, and handle bookings.
+* **Administrator**: Oversees users, manages system services, and has full access to platform administration.
 
 ## Main Features
 
@@ -60,8 +59,9 @@ To provide a scalable and secure platform that efficiently connects clients and 
 
 ### Dashboards
 
-* **Client**: Booking, payment, and review history
-* **Provider**: Schedule, completed services, and ratings
+* **As Client**: Booking, payment, and review history
+* **As Provider**: Schedule, completed services, and ratings
+* **Admin**: Complete system overview and user management
 
 ## Technologies
 
@@ -104,7 +104,10 @@ DB_URL=jdbc:postgresql://localhost:5432/jobsy
 DB_USERNAME=your_username
 DB_PASSWORD=your_password
 JWT_SECRET=your_secret_key
-CLOUDINARY_URL=your_cloudinary_url
+JWT_EXPIRATION_MS=your_expiration_time_in_ms
+CLOUDINARY_API_SECRET=your_cloudinary_api_secret
+CLOUDINARY_API_KEY=your_cloudinary_api_key
+CLOUDINARY_CLOUD_NAME=your_cloudinary_cloud_name
 MAIL_HOST=smtp.gmail.com
 MAIL_PORT=587
 MAIL_USERNAME=your_email
@@ -136,7 +139,7 @@ Once the application is running, access the interactive documentation:
 
 * JWT-based authentication
 * Passwords encrypted with BCrypt
-* Role-based access control
+* Role-based access control (USER, ADMIN)
 * Input data validation
 * CSRF protection
 * HTTP security headers
