@@ -1,64 +1,150 @@
-# Jobsy - Backend
+# Jobsy - REST API
 
-## Descripción general
+## Description
 
-El proyecto consiste en desarrollar una **API RESTful** que funcione como intermediario entre **proveedores de servicios locales** (plomeros, electricistas, tutores, etc.) y **clientes** que buscan contratarlos.
-La API permitirá el registro de usuarios, la publicación de servicios, la gestión de reservas, pagos simulados, reseñas y un sistema de mensajería.
+**Jobsy** is a platform that connects local service providers (plumbers, electricians, tutors, etc.) with clients looking to hire them. This RESTful API enables the management of users, services, bookings, payments, reviews, and real-time communication.
 
-## Objetivo
+## Objective
 
-Conectar de manera eficiente a clientes y proveedores mediante una plataforma escalable y segura, que soporte operaciones CRUD, autenticación con JWT y funcionalidades propias de un marketplace de servicios.
+To provide a scalable and secure platform that efficiently connects clients and service providers through CRUD operations, JWT authentication, and marketplace-specific functionalities.
 
-## Roles de usuario
+## User Roles
 
-* **Cliente**: busca servicios, reserva citas, paga anticipos, deja reseñas.
-* **Proveedor**: ofrece servicios, define disponibilidad, gestiona reservas y responde mensajes.
-* **Administrador**: supervisa usuarios y servicios.
+* **Client**: Searches for services, books appointments, makes payments, and leaves reviews
+* **Provider**: Offers services, manages availability and bookings
+* **Administrator**: Oversees users and system services
 
-## Funcionalidades expuestas por la API
+## Main Features
 
-1. **Autenticación y Roles**
+### Authentication and Authorization
 
-    * Registro e inicio de sesión con JWT.
-    * Gestión de roles y permisos.
+* Registration and login with JWT
+* Role-based access control (RBAC)
+* Endpoint-level permission management
 
-2. **Gestión de Proveedores y Servicios**
+### Provider and Service Management
 
-    * CRUD de perfiles de proveedores.
-    * CRUD de servicios (categorías, descripción, tarifas).
+* Full CRUD for provider profiles
+* Creation and management of services
+* Customizable categories, descriptions, and rates
 
-3. **Reservas / Agenda**
+### Booking System
 
-    * Crear y gestionar reservas.
-    * Estados de cita: pendiente, confirmada, completada, cancelada.
+* Creation and management of appointments
+* Statuses: pending, confirmed, completed, canceled
+* Configurable provider availability
 
-4. **Pagos (simulación)**
+### Payments (Simulation)
 
-    * Flujo de anticipos mediante Stripe/PayPal sandbox.
-    * Historial de pagos.
+* Integration with payment gateways (Stripe/PayPal sandbox)
+* Deposit system
+* Complete transaction history
 
-5. **Reseñas y Calificaciones**
+### Reviews and Ratings
 
-    * Registro de calificaciones y comentarios por parte del cliente.
-    * Cálculo de promedio de calificaciones por proveedor.
+* Customer rating system
+* Comments and feedback
+* Automatic average rating calculation per provider
 
-6. **Geolocalización y búsqueda**
+### Geolocation and Search
 
-    * Búsqueda de proveedores cercanos.
-    * Filtros por categoría, precio y calificación.
+* Search for nearby providers
+* Filters by category, price, and rating
+* Location-optimized results
 
-7. **Mensajería básica**
+### Real-Time Messaging
 
-    * Chat entre cliente y proveedor vinculado a una cita.
+* Chat between client and provider using WebSockets
+* Linked to specific bookings
+* Instant notifications
 
-8. **Paneles / Dashboards** (expuestos vía API para el frontend)
+### Dashboards
 
-    * Cliente: historial de reservas, pagos y reseñas.
-    * Proveedor: agenda, historial de servicios completados, calificaciones.
+* **Client**: Booking, payment, and review history
+* **Provider**: Schedule, completed services, and ratings
 
-## Diseño de la API REST
+## Technologies
 
-* **Estilo:** RESTful, recursos identificados por URL.
-* **Formato:** JSON para request/response.
-* **Seguridad:** JWT para autenticación, control de acceso por roles.
-* **Versionado:** `/api/v1/...`
+* **Framework**: Spring Boot 3.2.8
+* **Language**: Java 21
+* **Database**: PostgreSQL
+* **Authentication**: JWT (JSON Web Tokens)
+* **Security**: Spring Security
+* **Persistence**: Spring Data JPA
+* **Documentation**: SpringDoc OpenAPI (Swagger)
+* **Real-time communication**: WebSockets
+* **File management**: Cloudinary
+* **Email**: Spring Mail
+* **Validation**: Spring Boot Validation
+* **Build**: Maven
+
+## Installation and Setup
+
+### Prerequisites
+
+* Java 21+
+* Maven 3.6+
+* PostgreSQL 16+
+
+### Installation Steps
+
+1. **Clone the repository**
+
+```bash
+git clone https://github.com/FrankSkep/jobsy-rest-api.git
+cd jobsy-rest-api
+```
+
+2. **Configure environment variables**
+
+Create a `.env` file in the project root:
+
+```properties
+DB_URL=jdbc:postgresql://localhost:5432/jobsy
+DB_USERNAME=your_username
+DB_PASSWORD=your_password
+JWT_SECRET=your_secret_key
+CLOUDINARY_URL=your_cloudinary_url
+MAIL_HOST=smtp.gmail.com
+MAIL_PORT=587
+MAIL_USERNAME=your_email
+MAIL_PASSWORD=your_password
+```
+
+3. **Install dependencies**
+
+```bash
+./mvnw clean install
+```
+
+4. **Run the application**
+
+```bash
+./mvnw spring-boot:run
+```
+
+The API will be available at `http://localhost:8080`.
+
+## API Documentation
+
+Once the application is running, access the interactive documentation:
+
+* **Swagger UI**: `http://localhost:8080/swagger-ui.html`
+* **OpenAPI JSON**: `http://localhost:8080/v3/api-docs`
+
+## Security
+
+* JWT-based authentication
+* Passwords encrypted with BCrypt
+* Role-based access control
+* Input data validation
+* CSRF protection
+* HTTP security headers
+
+## License
+
+This project is licensed under the MIT License.
+
+## Author
+
+**FrankSkep** - [GitHub](https://github.com/FrankSkep)
