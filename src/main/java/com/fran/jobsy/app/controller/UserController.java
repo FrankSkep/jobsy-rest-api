@@ -110,17 +110,6 @@ public class UserController {
         return ResponseEntity.ok(servServiceImpl.getServicesByUserId(id));
     }
 
-    @PostMapping("/me/photo")
-    public ResponseEntity<UserPhoto> updateProfileImage(@RequestPart MultipartFile photo) {
-        return ResponseEntity.ok(userPhotoService.updateUserPhoto(photo));
-    }
-
-    @DeleteMapping("/me/photo")
-    public ResponseEntity<Void> deleteMyProfileImage() {
-        userPhotoService.deleteUserPhoto();
-        return ResponseEntity.noContent().build();
-    }
-
 //    @Operation(summary = "Update password", description = "Updates a user's password")
 //    @ApiResponses({
 //            @ApiResponse(responseCode = "200", description = "Password updated successfully"),
