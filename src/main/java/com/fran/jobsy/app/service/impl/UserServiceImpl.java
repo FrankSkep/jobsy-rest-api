@@ -50,7 +50,6 @@ public class UserServiceImpl implements UserService {
     @Override
     public void updateUser(UserRequest user) {
         User userEntity = authenticatedUserProvider.getAuthenticatedUser();
-
         userEntity.setFirstname(user.firstname());
         userEntity.setLastname(user.lastname());
         userEntity.setCountry(user.country());

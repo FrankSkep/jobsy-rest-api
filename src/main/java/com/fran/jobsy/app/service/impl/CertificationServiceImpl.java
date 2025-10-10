@@ -4,6 +4,8 @@ import com.fran.jobsy.app.dto.CertificationDTO;
 import com.fran.jobsy.app.dto.CertificationRequest;
 import com.fran.jobsy.app.entity.Certification;
 import com.fran.jobsy.app.entity.User;
+import com.fran.jobsy.app.exception.custom.AuthenticationException;
+import com.fran.jobsy.app.exception.custom.ResourceNotFoundException;
 import com.fran.jobsy.app.repository.CertificationRepository;
 import com.fran.jobsy.app.service.CertificationService;
 import com.fran.jobsy.app.utils.AuthenticatedUserProvider;
@@ -68,5 +70,26 @@ public class CertificationServiceImpl implements CertificationService {
     @Override
     public List<CertificationDTO> getMyCertifications() {
         return certificationRepository.findAllByUserId(authenticatedUserProvider.getAuthenticatedUser().getId());
+    }
+
+    @Override
+    public CertificationDTO updateCertification(Long id, CertificationRequest request) {
+        Certification cert = certificationRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Certificacion con id "+ id + "no encontrada."));
+
+        Long authenticatedUserId = authenticatedUserProvider.getAuthenticatedUser().getId();
+
+        if(authenticatedUserId != cert.getUser().getId()) {
+            throw new AuthenticationException("Certificacion con id "+ id + "no encontrada.");
+        }
+
+        cert.setName(request.name());
+        cert.setIssuer(request.issuer());
+        cert.setYear(request.year());
+
+        certificationRepository.save(cert);
+
+        return new CertificationDTO(cert.getId(), cert.getName(),
+                cert.getIssuer(), cert.getYear());
     }
 }

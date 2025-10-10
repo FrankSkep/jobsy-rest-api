@@ -11,4 +11,6 @@ public interface CertificationService {
     void deleteCertification(Long certId);
 
     List<CertificationDTO> getMyCertifications();
+
+    CertificationDTO updateCertification(Long id, CertificationRequest request);
 }

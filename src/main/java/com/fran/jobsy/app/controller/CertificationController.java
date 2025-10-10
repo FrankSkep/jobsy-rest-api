@@ -26,14 +26,20 @@ public class CertificationController {
     }
 
     @PostMapping("/users/me/certifications")
-    public ResponseEntity<CertificationDTO> addMyCertification(@RequestBody @Valid CertificationRequest certificationRequest) {
+    public ResponseEntity<CertificationDTO> addCertification(@RequestBody @Valid CertificationRequest certificationRequest) {
         CertificationDTO certification = certificationService.addCertification(certificationRequest);
         return ResponseEntity.status(HttpStatus.CREATED).body(certification);
     }
 
     @DeleteMapping("/users/me/certifications/{certId}")
-    public ResponseEntity<Void> deleteMyCertification(@org.springframework.web.bind.annotation.PathVariable Long certId) {
+    public ResponseEntity<Void> deleteCertification(@PathVariable Long certId) {
         certificationService.deleteCertification(certId);
         return ResponseEntity.noContent().build();
+    }
+
+    @PutMapping("/users/me/certifications/{certId}")
+    public ResponseEntity<CertificationDTO> updateCertification(@PathVariable Long certId, @RequestBody @Valid CertificationRequest certificationRequest) {
+        CertificationDTO updatedCert = certificationService.updateCertification(certId, certificationRequest);
+        return ResponseEntity.ok(updatedCert);
     }
 }
