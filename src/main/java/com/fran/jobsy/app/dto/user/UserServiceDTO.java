@@ -4,4 +4,5 @@ public record UserServiceDTO(
         Long id,
         String lastname,
         String firstname
-) { }
+) {
+}

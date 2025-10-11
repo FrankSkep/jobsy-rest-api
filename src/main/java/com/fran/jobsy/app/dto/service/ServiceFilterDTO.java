@@ -9,4 +9,5 @@ public record ServiceFilterDTO(
         Double lng,
         Double radiusKm,
         String location
-        ) {}
+) {
+}

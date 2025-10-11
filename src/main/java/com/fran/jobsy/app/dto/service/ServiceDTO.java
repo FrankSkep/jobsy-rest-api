@@ -9,4 +9,5 @@ public record ServiceDTO(
         String title,
         String description,
         Double basePrice
-) {}
+) {
+}

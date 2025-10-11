@@ -9,4 +9,5 @@ public record UserDTO(
         String firstname,
         String country,
         Role role
-) { }
+) {
+}

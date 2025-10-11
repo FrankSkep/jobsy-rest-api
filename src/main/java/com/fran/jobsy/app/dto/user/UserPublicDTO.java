@@ -13,4 +13,5 @@ public record UserPublicDTO(
         Integer yearsExperience,
         String addressText,
         Double serviceRadiusKm
-) {}
+) {
+}

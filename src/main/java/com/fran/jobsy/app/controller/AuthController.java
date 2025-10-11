@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Tag(name = "Authentication", description = "Registration and login operations")
 public class AuthController {
 
-    private final AuthServiceImpl authServiceImpl;
+    private final AuthServiceImpl authService;
 
     @Operation(
             summary = "Sign in",
@@ -35,7 +35,7 @@ public class AuthController {
     })
     @PostMapping("/signin")
     public ResponseEntity<AuthResponse> login(@RequestBody @Valid LoginRequest request) {
-        return ResponseEntity.ok(authServiceImpl.login(request));
+        return ResponseEntity.ok(authService.login(request));
     }
 
     @Operation(
@@ -48,6 +48,6 @@ public class AuthController {
     })
     @PostMapping("/signup")
     public ResponseEntity<AuthResponse> register(@RequestBody @Valid RegisterRequest request) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(authServiceImpl.register(request));
+        return ResponseEntity.status(HttpStatus.CREATED).body(authService.register(request));
     }
 }

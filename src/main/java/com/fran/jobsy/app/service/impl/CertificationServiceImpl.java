@@ -75,12 +75,12 @@ public class CertificationServiceImpl implements CertificationService {
     @Override
     public CertificationDTO updateCertification(Long id, CertificationRequest request) {
         Certification cert = certificationRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Certificacion con id "+ id + "no encontrada."));
+                .orElseThrow(() -> new ResourceNotFoundException("Certificacion con id " + id + "no encontrada."));
 
         Long authenticatedUserId = authenticatedUserProvider.getAuthenticatedUser().getId();
 
-        if(authenticatedUserId != cert.getUser().getId()) {
-            throw new AuthenticationException("Certificacion con id "+ id + "no encontrada.");
+        if (authenticatedUserId != cert.getUser().getId()) {
+            throw new AuthenticationException("Certificacion con id " + id + "no encontrada.");
         }
 
         cert.setName(request.name());
