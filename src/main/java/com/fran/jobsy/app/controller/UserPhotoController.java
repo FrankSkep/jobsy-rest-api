@@ -2,7 +2,6 @@ package com.fran.jobsy.app.controller;
 
 import com.fran.jobsy.app.dto.user.UserPhotoDTO;
 import com.fran.jobsy.app.service.UserPhotoService;
-import com.fran.jobsy.app.utils.AuthenticatedUserProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,7 +13,6 @@ import org.springframework.web.multipart.MultipartFile;
 public class UserPhotoController {
 
     private final UserPhotoService userPhotoService;
-    private final AuthenticatedUserProvider authenticatedUserProvider;
 
     @PostMapping("/me/photo")
     public ResponseEntity<UserPhotoDTO> updateProfileImage(@RequestPart MultipartFile photo) {

@@ -22,7 +22,7 @@ public class UserPhotoServiceImpl implements UserPhotoService {
 
     private final AuthenticatedUserProvider authenticatedUserProvider;
     private final CloudinaryService cloudinaryService;
-    private final UserPhotoRepository UserPhotoRepository;
+    private final UserPhotoRepository userPhotoRepository;
 
     @Override
     @Transactional
@@ -33,7 +33,7 @@ public class UserPhotoServiceImpl implements UserPhotoService {
 
         try {
             // Save reference to old photo (if exists)
-            UserPhoto oldPhoto = UserPhotoRepository.findByUserId(user.getId()).orElse(null);
+            UserPhoto oldPhoto = userPhotoRepository.findByUserId(user.getId()).orElse(null);
             if (oldPhoto != null) {
                 oldImageId = oldPhoto.getImageId();
             }
@@ -49,7 +49,7 @@ public class UserPhotoServiceImpl implements UserPhotoService {
                 // Update existing photo
                 oldPhoto.setImageId(newImageId);
                 oldPhoto.setUrl(imageUrl);
-                userPhoto = UserPhotoRepository.save(oldPhoto);
+                userPhoto = userPhotoRepository.save(oldPhoto);
             } else {
                 // Create new photo
                 userPhoto = UserPhoto.builder()
@@ -57,7 +57,7 @@ public class UserPhotoServiceImpl implements UserPhotoService {
                         .url(imageUrl)
                         .user(user)
                         .build();
-                userPhoto = UserPhotoRepository.save(userPhoto);
+                userPhoto = userPhotoRepository.save(userPhoto);
             }
 
             // Delete old photo from Cloudinary AFTER successful save
@@ -80,7 +80,7 @@ public class UserPhotoServiceImpl implements UserPhotoService {
                     cloudinaryService.delete(newImageId);
                 } catch (
                         Exception ex) {
-                    // Log rollback error
+                    throw new CloudinaryException("Error al eliminar la nueva foto durante el rollback: " + ex.getMessage());
                 }
             }
             throw new CloudinaryException("Error al actualizar la foto de perfil: " + e.getMessage());
@@ -89,7 +89,7 @@ public class UserPhotoServiceImpl implements UserPhotoService {
 
     @Override
     public UserPhotoDTO getUserPhoto(Long id) {
-        UserPhoto photo = UserPhotoRepository.findById(id)
+        UserPhoto photo = userPhotoRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("No se encontró la foto de perfil con id: " + id));
         return new UserPhotoDTO(photo.getId(), photo.getImageId(), photo.getUrl());
     }
@@ -98,12 +98,12 @@ public class UserPhotoServiceImpl implements UserPhotoService {
     @Transactional
     public void deleteUserPhoto() {
         User user = authenticatedUserProvider.getAuthenticatedUser();
-        UserPhoto userPhoto = UserPhotoRepository.findByUserId(user.getId())
+        UserPhoto userPhoto = userPhotoRepository.findByUserId(user.getId())
                 .orElseThrow(() -> new ResourceNotFoundException("No hay foto de perfil para eliminar."));
 
         try {
             cloudinaryService.delete(userPhoto.getImageId());
-            UserPhotoRepository.delete(userPhoto);
+            userPhotoRepository.delete(userPhoto);
         } catch (
                 Exception e) {
             throw new CloudinaryException("Error al eliminar la foto de perfil: " + e.getMessage());
