@@ -95,6 +95,7 @@ public class UserServiceImpl implements UserService {
         return new UserPublicDTO(
                 user.getFirstname(),
                 user.getLastname(),
+                user.getPhoto().getUrl(),
                 user.getCountry(),
                 user.getBio(),
                 user.getHourlyRate(),

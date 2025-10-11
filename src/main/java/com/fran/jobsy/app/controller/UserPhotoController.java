@@ -15,7 +15,7 @@ public class UserPhotoController {
     private final UserPhotoService userPhotoService;
 
     @PostMapping("/me/photo")
-    public ResponseEntity<UserPhotoDTO> updateProfileImage(@RequestPart MultipartFile photo) {
+    public ResponseEntity<UserPhotoDTO> updateProfileImage(@RequestParam("file") MultipartFile photo) {
         return ResponseEntity.ok(userPhotoService.updateUserPhoto(photo));
     }
 

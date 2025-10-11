@@ -16,7 +16,7 @@ public class UserWorkPhotoController {
     private final UserWorkPhotoService userWorkPhotoService;
 
     @PostMapping("/me/work-photos")
-    public void uploadWorkPhotos(List<MultipartFile> files) {
+    public void uploadWorkPhotos(@RequestParam("files") List<MultipartFile> files) {
         userWorkPhotoService.uploadWorkPhotos(files);
     }
 

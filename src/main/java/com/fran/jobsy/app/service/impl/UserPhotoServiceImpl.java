@@ -9,11 +9,12 @@ import com.fran.jobsy.app.repository.UserPhotoRepository;
 import com.fran.jobsy.app.service.CloudinaryService;
 import com.fran.jobsy.app.service.UserPhotoService;
 import com.fran.jobsy.app.utils.AuthenticatedUserProvider;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.Map;
 
 @Service
@@ -89,8 +90,8 @@ public class UserPhotoServiceImpl implements UserPhotoService {
 
     @Override
     public UserPhotoDTO getUserPhoto(Long id) {
-        UserPhoto photo = userPhotoRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("No se encontró la foto de perfil con id: " + id));
+        UserPhoto photo = userPhotoRepository.findByUserId(id)
+                .orElseThrow(() -> new ResourceNotFoundException("No se encontró la foto de perfil para el usuario con id: " + id));
         return new UserPhotoDTO(photo.getId(), photo.getImageId(), photo.getUrl());
     }
 
@@ -98,14 +99,17 @@ public class UserPhotoServiceImpl implements UserPhotoService {
     @Transactional
     public void deleteUserPhoto() {
         User user = authenticatedUserProvider.getAuthenticatedUser();
+
         UserPhoto userPhoto = userPhotoRepository.findByUserId(user.getId())
                 .orElseThrow(() -> new ResourceNotFoundException("No hay foto de perfil para eliminar."));
 
+        String imageId = userPhoto.getImageId();
+        userPhotoRepository.deleteByUserId(user.getId());
+
         try {
-            cloudinaryService.delete(userPhoto.getImageId());
-            userPhotoRepository.delete(userPhoto);
+            cloudinaryService.delete(imageId);
         } catch (
-                Exception e) {
+                IOException e) {
             throw new CloudinaryException("Error al eliminar la foto de perfil: " + e.getMessage());
         }
     }
