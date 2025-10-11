@@ -1,5 +1,6 @@
 package com.fran.jobsy.app.service.impl;
 
+import com.fran.jobsy.app.dto.user.UserWorkPhotoDTO;
 import com.fran.jobsy.app.entity.User;
 import com.fran.jobsy.app.entity.UserWorkPhoto;
 import com.fran.jobsy.app.exception.custom.CloudinaryException;
@@ -81,5 +82,10 @@ public class UserWorkPhotoServiceImpl implements UserWorkPhotoService {
                 Exception e) {
             throw new CloudinaryException("Error al eliminar foto: " + e.getMessage());
         }
+    }
+
+    @Override
+    public List<UserWorkPhotoDTO> getUserWorkPhotos(Long userId) {
+        return userWorkPhotoRepository.findWorkPhotosByUserId(userId);
     }
 }
