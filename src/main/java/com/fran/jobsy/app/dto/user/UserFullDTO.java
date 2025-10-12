@@ -7,6 +7,7 @@ public record UserFullDTO(
         String username,
         String lastname,
         String firstname,
+        UserPhotoDTO userPhotoDTO,
         String country,
         Role role,
         String bio,

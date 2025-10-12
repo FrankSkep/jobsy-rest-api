@@ -115,6 +115,7 @@ public class UserServiceImpl implements UserService {
                 user.getUsername(),
                 user.getLastname(),
                 user.getFirstname(),
+                new UserPhotoDTO(user.getPhoto().getId(), user.getPhoto().getImageId(), user.getPhoto().getUrl()),
                 user.getCountry(),
                 user.getRole(),
                 user.getBio(),
