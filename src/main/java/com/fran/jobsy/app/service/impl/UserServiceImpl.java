@@ -9,6 +9,7 @@ import com.fran.jobsy.app.exception.custom.AuthenticationException;
 import com.fran.jobsy.app.exception.custom.ResourceNotFoundException;
 import com.fran.jobsy.app.repository.UserPhotoRepository;
 import com.fran.jobsy.app.repository.UserRepository;
+import com.fran.jobsy.app.repository.UserWorkPhotoRepository;
 import com.fran.jobsy.app.service.CloudinaryService;
 import com.fran.jobsy.app.service.ServService;
 import com.fran.jobsy.app.service.UserService;
@@ -26,6 +27,7 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final UserPhotoRepository UserPhotoRepository;
+    private final UserWorkPhotoRepository userWorkPhotoRepository;
     private final CloudinaryService cloudinaryService;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticatedUserProvider authenticatedUserProvider;
@@ -96,6 +98,7 @@ public class UserServiceImpl implements UserService {
                 user.getFirstname(),
                 user.getLastname(),
                 user.getPhoto().getUrl(),
+                userWorkPhotoRepository.findWorkPhotosByUserId(id),
                 user.getCountry(),
                 user.getBio(),
                 user.getHourlyRate(),
