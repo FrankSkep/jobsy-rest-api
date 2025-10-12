@@ -34,6 +34,6 @@ public class Offering {
 
     private Double basePrice;
 
-    @OneToMany(mappedBy = "service", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "offering", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<OfferingPhoto> photos;
 }

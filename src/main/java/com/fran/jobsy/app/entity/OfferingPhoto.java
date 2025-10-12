@@ -26,7 +26,7 @@ public class OfferingPhoto {
     private String url; // public URL to access the image
 
     @ManyToOne
-    @JoinColumn(name = "service_id", nullable = false)
+    @JoinColumn(name = "offering_id", nullable = false)
     private Offering offering;
 }
 
