@@ -23,6 +23,6 @@ public class Category {
     private String name;
 
     @OneToMany(mappedBy = "category")
-    private List<Service> services;
+    private List<Offering> offerings;
 }
 

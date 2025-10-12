@@ -1,6 +1,6 @@
-package com.fran.jobsy.app.dto.service;
+package com.fran.jobsy.app.dto.offering;
 
-public record ServiceFilterDTO(
+public record OfferingFilterDTO(
         Long categoryId,
         Double minPrice,
         Double maxPrice,

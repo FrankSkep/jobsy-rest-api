@@ -10,7 +10,7 @@ public interface CertificationService {
 
     void deleteCertification(Long certId);
 
-    List<CertificationDTO> getMyCertifications();
+    List<CertificationDTO> getUserCertifications(Long id);
 
     CertificationDTO updateCertification(Long id, CertificationRequest request);
 }

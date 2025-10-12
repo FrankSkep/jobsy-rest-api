@@ -15,17 +15,17 @@ public class UserWorkPhotoController {
 
     private final UserWorkPhotoService userWorkPhotoService;
 
-    @PostMapping("/me/work-photos")
+    @PostMapping("/me/portfolio")
     public void uploadWorkPhotos(@RequestParam("files") List<MultipartFile> files) {
         userWorkPhotoService.uploadWorkPhotos(files);
     }
 
-    @GetMapping("/{id}/work-photos")
+    @GetMapping("/{id}/portfolio")
     public List<UserWorkPhotoDTO> getWorkPhotos(@PathVariable Long id) {
         return userWorkPhotoService.getUserWorkPhotos(id);
     }
 
-    @DeleteMapping("me/work-photos/{photoId}")
+    @DeleteMapping("me/portfolio/{photoId}")
     public void removeWorkPhoto(@PathVariable Long photoId) {
         userWorkPhotoService.removeWorkPhoto(photoId);
     }

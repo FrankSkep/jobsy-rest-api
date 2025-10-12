@@ -8,12 +8,12 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "service_photos")
+@Table(name = "offering_photos")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class ServicePhoto {
+public class OfferingPhoto {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,6 +27,6 @@ public class ServicePhoto {
 
     @ManyToOne
     @JoinColumn(name = "service_id", nullable = false)
-    private Service service;
+    private Offering offering;
 }
 

@@ -9,12 +9,12 @@ import lombok.NoArgsConstructor;
 import java.util.List;
 
 @Entity
-@Table(name = "services")
+@Table(name = "offerings")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Service {
+public class Offering {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -35,5 +35,5 @@ public class Service {
     private Double basePrice;
 
     @OneToMany(mappedBy = "service", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<ServicePhoto> photos;
+    private List<OfferingPhoto> photos;
 }

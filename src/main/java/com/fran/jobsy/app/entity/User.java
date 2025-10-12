@@ -74,7 +74,7 @@ public class User implements UserDetails {
 
     // Relaciones con otras entidades
     @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Service> services;
+    private List<Offering> offerings;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<AvailabilitySlot> availabilitySlots;

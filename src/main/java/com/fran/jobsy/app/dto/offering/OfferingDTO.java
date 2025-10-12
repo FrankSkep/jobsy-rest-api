@@ -1,8 +1,8 @@
-package com.fran.jobsy.app.dto.service;
+package com.fran.jobsy.app.dto.offering;
 
 import com.fran.jobsy.app.dto.user.UserServiceDTO;
 
-public record ServiceDTO(
+public record OfferingDTO(
         Long id,
         UserServiceDTO user,
         String category,

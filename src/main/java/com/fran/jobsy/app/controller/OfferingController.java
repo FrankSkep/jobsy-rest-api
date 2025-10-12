@@ -1,8 +1,8 @@
 package com.fran.jobsy.app.controller;
 
-import com.fran.jobsy.app.dto.service.ServiceDTO;
-import com.fran.jobsy.app.dto.service.ServiceFilterDTO;
-import com.fran.jobsy.app.service.ServService;
+import com.fran.jobsy.app.dto.offering.OfferingDTO;
+import com.fran.jobsy.app.dto.offering.OfferingFilterDTO;
+import com.fran.jobsy.app.service.OfferingService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -17,12 +17,12 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/v1/services")
 @RequiredArgsConstructor
-public class ServiceController {
+public class OfferingController {
 
-    private final ServService servService;
+    private final OfferingService offeringService;
 
     @GetMapping
-    public ResponseEntity<Page<ServiceDTO>> getServices(
+    public ResponseEntity<Page<OfferingDTO>> getOfferings(
             @RequestParam(required = false) Long categoryId,
             @RequestParam(required = false) Double minPrice,
             @RequestParam(required = false) Double maxPrice,
@@ -42,15 +42,15 @@ public class ServiceController {
         Pageable pageable = PageRequest.of(page, size, sort);
 
         if (hasFilters) {
-            ServiceFilterDTO filters = new ServiceFilterDTO(
+            OfferingFilterDTO filters = new OfferingFilterDTO(
                     categoryId, minPrice, maxPrice, minRating, null, null, null, location
             );
 
-            Page<ServiceDTO> result = servService.getServicesWithFiltersPaged(filters, pageable);
+            Page<OfferingDTO> result = offeringService.getServicesWithFiltersPaged(filters, pageable);
             return ResponseEntity.ok(result);
         }
 
-        Page<ServiceDTO> result = servService.getServicesPaged(pageable);
+        Page<OfferingDTO> result = offeringService.getServicesPaged(pageable);
         return ResponseEntity.ok(result);
     }
 }

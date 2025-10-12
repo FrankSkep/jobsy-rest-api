@@ -1,9 +1,9 @@
 package com.fran.jobsy.app.controller;
 
-import com.fran.jobsy.app.dto.service.ServiceDTO;
+import com.fran.jobsy.app.dto.offering.OfferingDTO;
 import com.fran.jobsy.app.dto.user.*;
 import com.fran.jobsy.app.enums.Role;
-import com.fran.jobsy.app.service.ServService;
+import com.fran.jobsy.app.service.OfferingService;
 import com.fran.jobsy.app.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -25,7 +25,7 @@ import java.util.List;
 public class UserController {
 
     private final UserService userService;
-    private final ServService servService;
+    private final OfferingService offeringService;
 
     // General User Endpoints
     @GetMapping
@@ -102,8 +102,8 @@ public class UserController {
     }
 
     @GetMapping("{id}/services")
-    public ResponseEntity<List<ServiceDTO>> getUserServices(@PathVariable Long id) {
-        return ResponseEntity.ok(servService.getServicesByUserId(id));
+    public ResponseEntity<List<OfferingDTO>> getUserServices(@PathVariable Long id) {
+        return ResponseEntity.ok(offeringService.getServicesByUserId(id));
     }
 
 //    @Operation(summary = "Update password", description = "Updates a user's password")

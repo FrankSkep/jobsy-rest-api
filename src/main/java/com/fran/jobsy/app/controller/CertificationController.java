@@ -19,9 +19,9 @@ public class CertificationController {
 
     private final CertificationService certificationService;
 
-    @GetMapping("users/me/certifications")
-    public ResponseEntity<List<CertificationDTO>> getMyCertifications() {
-        List<CertificationDTO> certifications = certificationService.getMyCertifications();
+    @GetMapping("users/{id}/certifications")
+    public ResponseEntity<List<CertificationDTO>> getMyCertifications(@PathVariable Long id) {
+        List<CertificationDTO> certifications = certificationService.getUserCertifications(id);
         return ResponseEntity.ok(certifications);
     }
 

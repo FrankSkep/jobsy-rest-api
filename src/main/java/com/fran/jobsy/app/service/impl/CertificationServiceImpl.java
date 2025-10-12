@@ -67,8 +67,8 @@ public class CertificationServiceImpl implements CertificationService {
     }
 
     @Override
-    public List<CertificationDTO> getMyCertifications() {
-        return certificationRepository.findAllByUserId(authenticatedUserProvider.getAuthenticatedUserId());
+    public List<CertificationDTO> getUserCertifications(Long id) {
+        return certificationRepository.findAllByUserId(id);
     }
 
     @Override

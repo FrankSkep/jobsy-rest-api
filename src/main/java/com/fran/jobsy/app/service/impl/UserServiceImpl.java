@@ -1,7 +1,7 @@
 package com.fran.jobsy.app.service.impl;
 
 import com.fran.jobsy.app.dto.auth.PasswordRequest;
-import com.fran.jobsy.app.dto.service.ServiceDTO;
+import com.fran.jobsy.app.dto.offering.OfferingDTO;
 import com.fran.jobsy.app.dto.user.*;
 import com.fran.jobsy.app.entity.User;
 import com.fran.jobsy.app.enums.Role;
@@ -11,7 +11,7 @@ import com.fran.jobsy.app.repository.UserPhotoRepository;
 import com.fran.jobsy.app.repository.UserRepository;
 import com.fran.jobsy.app.repository.UserWorkPhotoRepository;
 import com.fran.jobsy.app.service.CloudinaryService;
-import com.fran.jobsy.app.service.ServService;
+import com.fran.jobsy.app.service.OfferingService;
 import com.fran.jobsy.app.service.UserService;
 import com.fran.jobsy.app.utils.AuthenticatedUserProvider;
 import jakarta.persistence.EntityManager;
@@ -31,7 +31,7 @@ public class UserServiceImpl implements UserService {
     private final CloudinaryService cloudinaryService;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticatedUserProvider authenticatedUserProvider;
-    private final ServService servService;
+    private final OfferingService offeringService;
     private final EntityManager entityManager;
 
     private User getById(Long id) {
@@ -148,9 +148,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<ServiceDTO> getUserServices(Long userId) {
+    public List<OfferingDTO> getUserOfferings(Long userId) {
         getById(userId);
-        return servService.getServicesByUserId(userId);
+        return offeringService.getServicesByUserId(userId);
     }
 
     public void deleteMyAccount() {
