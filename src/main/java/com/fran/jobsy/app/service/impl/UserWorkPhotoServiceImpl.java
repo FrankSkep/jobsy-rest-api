@@ -1,7 +1,6 @@
 package com.fran.jobsy.app.service.impl;
 
 import com.fran.jobsy.app.dto.user.UserWorkPhotoDTO;
-import com.fran.jobsy.app.entity.User;
 import com.fran.jobsy.app.entity.UserWorkPhoto;
 import com.fran.jobsy.app.exception.custom.CloudinaryException;
 import com.fran.jobsy.app.exception.custom.FileOperationException;
@@ -30,7 +29,7 @@ public class UserWorkPhotoServiceImpl implements UserWorkPhotoService {
     @Override
     @Transactional
     public void uploadWorkPhotos(List<MultipartFile> files) {
-        User user = authenticatedUserProvider.getAuthenticatedUser();
+        Long userId = authenticatedUserProvider.getAuthenticatedUserId();
 
         List<String> uploadedImageIds = new ArrayList<>(); // To track uploaded images for rollback
 
@@ -44,7 +43,7 @@ public class UserWorkPhotoServiceImpl implements UserWorkPhotoService {
                 UserWorkPhoto workPhoto = UserWorkPhoto.builder()
                         .imageId(imageId)
                         .url(imageUrl)
-                        .user(user)
+                        .user(authenticatedUserProvider.getUserReference(userId))
                         .build();
                 userWorkPhotoRepository.save(workPhoto);
             }
@@ -69,9 +68,9 @@ public class UserWorkPhotoServiceImpl implements UserWorkPhotoService {
         UserWorkPhoto workPhoto = userWorkPhotoRepository.findById(workPhotoId)
                 .orElseThrow(() -> new ResourceNotFoundException("Foto no encontrada"));
 
-        User user = authenticatedUserProvider.getAuthenticatedUser();
+        Long userId = authenticatedUserProvider.getAuthenticatedUserId();
 
-        if (!workPhoto.getUser().getId().equals(user.getId())) {
+        if (!workPhoto.getUser().getId().equals(userId)) {
             throw new SecurityException("No tienes permiso para eliminar esta foto");
         }
 

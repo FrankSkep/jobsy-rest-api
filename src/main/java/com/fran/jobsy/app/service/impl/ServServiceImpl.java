@@ -53,27 +53,4 @@ public class ServServiceImpl implements ServService {
     public List<ServiceDTO> getServicesByUserId(Long userId) {
         return serviceRepository.findByOwnerId(userId);
     }
-
-    // services profile images
-//    public List<UserPhoto> updateProfileImage(List<MultipartFile> files) {
-//        User user = authenticatedUserProvider.getAuthenticatedUser();
-//
-//        List<UserPhoto> uploadedImages = new ArrayList<>();
-//
-//        for (MultipartFile file : files) {
-//            try {
-//                Map uploadResult = cloudinaryService.upload(file);
-//                String imageUrl = (String) uploadResult.get("url");
-//                String imageId = (String) uploadResult.get("public_id");
-//
-//                UserPhoto userPhoto = UserPhoto.builder().imageId(imageId).url(imageUrl).user(entityManager.getReference(User.class, user.getId())).build();
-//                uploadedImages.add(UserPhotoRepository.save(userPhoto));
-//
-//            } catch (
-//                    Exception e) {
-//                throw new RuntimeException("Image upload failed.", e);
-//            }
-//        }
-//        return uploadedImages;
-//    }
 }

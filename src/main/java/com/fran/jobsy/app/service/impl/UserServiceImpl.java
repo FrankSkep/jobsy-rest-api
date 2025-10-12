@@ -50,12 +50,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void updateUser(UserRequest user) {
-        User userEntity = authenticatedUserProvider.getAuthenticatedUser();
-        userEntity.setFirstname(user.firstname());
-        userEntity.setLastname(user.lastname());
-        userEntity.setCountry(user.country());
-        userRepository.save(userEntity);
+    public void updateUser(UserRequest userReq) {
+        User user = getById(authenticatedUserProvider.getAuthenticatedUserId());
+        user.setFirstname(userReq.firstname());
+        user.setLastname(userReq.lastname());
+        user.setCountry(userReq.country());
+        userRepository.save(user);
     }
 
 
@@ -111,7 +111,7 @@ public class UserServiceImpl implements UserService {
     // === Authenticated User Methods ===
     @Override
     public UserFullDTO getUserInfo() {
-        User user = authenticatedUserProvider.getAuthenticatedUser();
+        User user = getById(authenticatedUserProvider.getAuthenticatedUserId());
 
         return new UserFullDTO(
                 user.getId(),
@@ -134,17 +134,17 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void updateProviderInfo(ProviderProfileRequest providerProfileRequest) {
-        User userEntity = authenticatedUserProvider.getAuthenticatedUser();
+        User user = getById(authenticatedUserProvider.getAuthenticatedUserId());
 
-        userEntity.setBio(providerProfileRequest.bio());
-        userEntity.setHourlyRate(providerProfileRequest.hourlyRate());
-        userEntity.setYearsExperience(providerProfileRequest.yearsExperience());
-        userEntity.setAddressText(providerProfileRequest.addressText());
-        userEntity.setLat(providerProfileRequest.lat());
-        userEntity.setLng(providerProfileRequest.lng());
-        userEntity.setServiceRadiusKm(providerProfileRequest.serviceRadiusKm());
-        userEntity.setVerifiedCert(providerProfileRequest.verifiedCert());
-        userRepository.save(userEntity);
+        user.setBio(providerProfileRequest.bio());
+        user.setHourlyRate(providerProfileRequest.hourlyRate());
+        user.setYearsExperience(providerProfileRequest.yearsExperience());
+        user.setAddressText(providerProfileRequest.addressText());
+        user.setLat(providerProfileRequest.lat());
+        user.setLng(providerProfileRequest.lng());
+        user.setServiceRadiusKm(providerProfileRequest.serviceRadiusKm());
+        user.setVerifiedCert(providerProfileRequest.verifiedCert());
+        userRepository.save(user);
     }
 
     @Override
@@ -154,7 +154,6 @@ public class UserServiceImpl implements UserService {
     }
 
     public void deleteMyAccount() {
-        User user = authenticatedUserProvider.getAuthenticatedUser();
-        userRepository.delete(user);
+        userRepository.deleteById(authenticatedUserProvider.getAuthenticatedUserId());
     }
 }

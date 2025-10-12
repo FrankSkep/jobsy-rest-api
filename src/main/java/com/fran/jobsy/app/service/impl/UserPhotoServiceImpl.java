@@ -1,7 +1,6 @@
 package com.fran.jobsy.app.service.impl;
 
 import com.fran.jobsy.app.dto.user.UserPhotoDTO;
-import com.fran.jobsy.app.entity.User;
 import com.fran.jobsy.app.entity.UserPhoto;
 import com.fran.jobsy.app.exception.custom.CloudinaryException;
 import com.fran.jobsy.app.exception.custom.ResourceNotFoundException;
@@ -28,13 +27,13 @@ public class UserPhotoServiceImpl implements UserPhotoService {
     @Override
     @Transactional
     public UserPhotoDTO updateUserPhoto(MultipartFile file) {
-        User user = authenticatedUserProvider.getAuthenticatedUser();
+        Long userId = authenticatedUserProvider.getAuthenticatedUserId();
         String newImageId = null;
         String oldImageId = null;
 
         try {
             // Save reference to old photo (if exists)
-            UserPhoto oldPhoto = userPhotoRepository.findByUserId(user.getId()).orElse(null);
+            UserPhoto oldPhoto = userPhotoRepository.findByUserId(userId).orElse(null);
             if (oldPhoto != null) {
                 oldImageId = oldPhoto.getImageId();
             }
@@ -56,7 +55,7 @@ public class UserPhotoServiceImpl implements UserPhotoService {
                 userPhoto = UserPhoto.builder()
                         .imageId(newImageId)
                         .url(imageUrl)
-                        .user(user)
+                        .user(authenticatedUserProvider.getUserReference(userId))
                         .build();
                 userPhoto = userPhotoRepository.save(userPhoto);
             }
@@ -98,13 +97,13 @@ public class UserPhotoServiceImpl implements UserPhotoService {
     @Override
     @Transactional
     public void deleteUserPhoto() {
-        User user = authenticatedUserProvider.getAuthenticatedUser();
+        Long userId = authenticatedUserProvider.getAuthenticatedUserId();
 
-        UserPhoto userPhoto = userPhotoRepository.findByUserId(user.getId())
+        UserPhoto userPhoto = userPhotoRepository.findByUserId(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("No hay foto de perfil para eliminar."));
 
         String imageId = userPhoto.getImageId();
-        userPhotoRepository.deleteByUserId(user.getId());
+        userPhotoRepository.deleteByUserId(userId);
 
         try {
             cloudinaryService.delete(imageId);

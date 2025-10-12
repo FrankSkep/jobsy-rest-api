@@ -6,7 +6,6 @@ import com.fran.jobsy.app.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -22,12 +21,19 @@ public class AuthenticatedUserProvider {
         }
 
         Object principal = authentication.getPrincipal();
-        if (principal instanceof UserDetails) {
-            String username = ((UserDetails) principal).getUsername();
-            return userRepository.findByUsername(username)
-                    .orElseThrow(() -> new ResourceNotFoundException("Usuario autenticado no encontrado en la base de datos."));
+        if (principal instanceof User user) {
+            return user;
         }
 
-        throw new IllegalStateException("El principal no es una instancia de UserDetails.");
+        throw new IllegalStateException("El principal no es una instancia de User.");
+    }
+
+    public Long getAuthenticatedUserId() {
+        User user = getAuthenticatedUser();
+        return user.getId();
+    }
+
+    public User getUserReference(Long userId) {
+        return userRepository.getReferenceById(userId);
     }
 }

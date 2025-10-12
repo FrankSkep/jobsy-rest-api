@@ -3,7 +3,6 @@ package com.fran.jobsy.app.service.impl;
 import com.fran.jobsy.app.dto.CertificationDTO;
 import com.fran.jobsy.app.dto.CertificationRequest;
 import com.fran.jobsy.app.entity.Certification;
-import com.fran.jobsy.app.entity.User;
 import com.fran.jobsy.app.exception.custom.AuthenticationException;
 import com.fran.jobsy.app.exception.custom.ResourceNotFoundException;
 import com.fran.jobsy.app.repository.CertificationRepository;
@@ -26,11 +25,11 @@ public class CertificationServiceImpl implements CertificationService {
     @Override
     @Transactional
     public CertificationDTO addCertification(CertificationRequest request) {
-        User user = authenticatedUserProvider.getAuthenticatedUser();
+        Long userId = authenticatedUserProvider.getAuthenticatedUserId();
 
         boolean exists = certificationRepository
                 .existsByUserIdAndNameIgnoreCaseAndIssuerIgnoreCaseAndYear(
-                        user.getId(),
+                        userId,
                         request.name().trim(),
                         request.issuer().trim(),
                         request.year()
@@ -47,7 +46,7 @@ public class CertificationServiceImpl implements CertificationService {
         }
 
         Certification certification = Certification.builder()
-                .user(user)
+                .user(authenticatedUserProvider.getUserReference(userId))
                 .name(request.name().trim())
                 .issuer(request.issuer().trim())
                 .year(request.year())
@@ -59,9 +58,9 @@ public class CertificationServiceImpl implements CertificationService {
 
     @Override
     public void deleteCertification(Long certId) {
-        User user = authenticatedUserProvider.getAuthenticatedUser();
+        Long userId = authenticatedUserProvider.getAuthenticatedUserId();
 
-        Certification certification = certificationRepository.findByIdAndUserId(certId, user.getId())
+        Certification certification = certificationRepository.findByIdAndUserId(certId, userId)
                 .orElseThrow(() -> new IllegalArgumentException("Certificación no encontrada."));
 
         certificationRepository.delete(certification);
@@ -69,7 +68,7 @@ public class CertificationServiceImpl implements CertificationService {
 
     @Override
     public List<CertificationDTO> getMyCertifications() {
-        return certificationRepository.findAllByUserId(authenticatedUserProvider.getAuthenticatedUser().getId());
+        return certificationRepository.findAllByUserId(authenticatedUserProvider.getAuthenticatedUserId());
     }
 
     @Override
@@ -77,7 +76,7 @@ public class CertificationServiceImpl implements CertificationService {
         Certification cert = certificationRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Certificacion con id " + id + "no encontrada."));
 
-        Long authenticatedUserId = authenticatedUserProvider.getAuthenticatedUser().getId();
+        Long authenticatedUserId = authenticatedUserProvider.getAuthenticatedUserId();
 
         if (authenticatedUserId != cert.getUser().getId()) {
             throw new AuthenticationException("Certificacion con id " + id + "no encontrada.");
