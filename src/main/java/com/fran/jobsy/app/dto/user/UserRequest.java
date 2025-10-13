@@ -15,7 +15,8 @@ public record UserRequest(
         String country,
 
         @NotBlank(message = "Phone is mandatory")
-        @Pattern(regexp = "^\\d{14}$", message = "Phone must contain exactly 14 digits")
+        @Pattern(regexp = "^\\d{10,14}$", message = "Phone must contain between 10 and 14 digits")
         String phone
+
 ) {
 }

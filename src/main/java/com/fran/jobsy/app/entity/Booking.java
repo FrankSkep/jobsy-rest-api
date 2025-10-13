@@ -30,7 +30,7 @@ public class Booking {
     private User provider;
 
     @ManyToOne
-    @JoinColumn(name = "service_id", nullable = false)
+    @JoinColumn(name = "offering_id", nullable = false)
     private Offering offering;
 
     private LocalDateTime startsAt;
