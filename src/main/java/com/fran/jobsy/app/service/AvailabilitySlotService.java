@@ -6,11 +6,11 @@ import com.fran.jobsy.app.dto.availability_slot.AvailabilitySlotRequest;
 import java.util.List;
 
 public interface AvailabilitySlotService {
-    List<AvailabilitySlotDTO> getProviderAvailabilitySlots(Long providerId);
+    List<AvailabilitySlotDTO> getAllByUserId(Long providerId);
 
-    AvailabilitySlotDTO createAvailabilitySlot(AvailabilitySlotRequest availabilitySlotReq);
+    AvailabilitySlotDTO create(AvailabilitySlotRequest availabilitySlotReq);
 
-    AvailabilitySlotDTO updateAvailabilitySlot(Long slotId, AvailabilitySlotRequest availabilitySlotReq);
+    AvailabilitySlotDTO update(Long slotId, AvailabilitySlotRequest availabilitySlotReq);
 
-    void deleteAvailabilitySlot(Long slotId);
+    void delete(Long slotId);
 }
