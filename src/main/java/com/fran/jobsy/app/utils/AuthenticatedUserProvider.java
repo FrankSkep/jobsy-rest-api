@@ -1,7 +1,7 @@
 package com.fran.jobsy.app.utils;
 
 import com.fran.jobsy.app.entity.User;
-import com.fran.jobsy.app.exception.custom.ResourceNotFoundException;
+import com.fran.jobsy.app.exception.custom.AuthenticationException;
 import com.fran.jobsy.app.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
@@ -17,7 +17,7 @@ public class AuthenticatedUserProvider {
     public User getAuthenticatedUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication == null || !authentication.isAuthenticated()) {
-            throw new ResourceNotFoundException("No hay un usuario autenticado en el contexto.");
+            throw new AuthenticationException("No hay un usuario autenticado en el contexto.");
         }
 
         Object principal = authentication.getPrincipal();
