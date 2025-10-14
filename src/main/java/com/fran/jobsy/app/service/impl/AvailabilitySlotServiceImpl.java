@@ -3,7 +3,9 @@ package com.fran.jobsy.app.service.impl;
 import com.fran.jobsy.app.dto.availability_slot.AvailabilitySlotDTO;
 import com.fran.jobsy.app.dto.availability_slot.AvailabilitySlotRequest;
 import com.fran.jobsy.app.entity.AvailabilitySlot;
+import com.fran.jobsy.app.exception.custom.ResourceAlreadyExistsException;
 import com.fran.jobsy.app.exception.custom.ResourceNotFoundException;
+import com.fran.jobsy.app.mapper.AvailabilitySlotMapper;
 import com.fran.jobsy.app.repository.AvailabilitySlotRepository;
 import com.fran.jobsy.app.service.AvailabilitySlotService;
 import com.fran.jobsy.app.util.AuthenticatedUserProvider;
@@ -18,6 +20,7 @@ public class AvailabilitySlotServiceImpl implements AvailabilitySlotService {
 
     private final AvailabilitySlotRepository availabilitySlotRepository;
     private final AuthenticatedUserProvider authenticatedUserProvider;
+    private final AvailabilitySlotMapper availabilitySlotMapper;
 
     @Override
     public List<AvailabilitySlotDTO> getAllByUserId(Long userId) {
@@ -28,6 +31,15 @@ public class AvailabilitySlotServiceImpl implements AvailabilitySlotService {
     public AvailabilitySlotDTO create(AvailabilitySlotRequest availabilitySlotReq) {
         Long userId = authenticatedUserProvider.getAuthenticatedUserId();
 
+        if (availabilitySlotRepository.findOverlappingSlot(
+                userId,
+                availabilitySlotReq.weekday(),
+                availabilitySlotReq.startTime(),
+                availabilitySlotReq.endTime()
+        ).isPresent()) {
+            throw new ResourceAlreadyExistsException("Ya existe una franja horaria que se solapa");
+        }
+
         AvailabilitySlot newSlot = AvailabilitySlot.builder()
                 .user(authenticatedUserProvider.getUserReference(userId))
                 .weekday(availabilitySlotReq.weekday())
@@ -37,7 +49,7 @@ public class AvailabilitySlotServiceImpl implements AvailabilitySlotService {
 
         availabilitySlotRepository.save(newSlot);
 
-        return toDto(newSlot);
+        return availabilitySlotMapper.toDto(newSlot);
     }
 
     @Override
@@ -48,7 +60,7 @@ public class AvailabilitySlotServiceImpl implements AvailabilitySlotService {
         slot.setStartTime(availabilitySlotReq.startTime());
         slot.setEndTime(availabilitySlotReq.endTime());
 
-        return toDto(availabilitySlotRepository.save(slot));
+        return availabilitySlotMapper.toDto(availabilitySlotRepository.save(slot));
     }
 
     @Override
@@ -60,10 +72,5 @@ public class AvailabilitySlotServiceImpl implements AvailabilitySlotService {
     private AvailabilitySlot getAvailabilitySlotIfExists(Long slotId) {
         return availabilitySlotRepository.findById(slotId)
                 .orElseThrow(() -> new ResourceNotFoundException("Availability slot not found with id: " + slotId));
-    }
-
-    private AvailabilitySlotDTO toDto(AvailabilitySlot slot) {
-        return new AvailabilitySlotDTO(slot.getId(), slot.getUser().getId(),
-                slot.getWeekday(), slot.getStartTime(), slot.getEndTime());
     }
 }

@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface AvailabilitySlotRepository extends JpaRepository<AvailabilitySlot, Long> {
@@ -14,4 +15,11 @@ public interface AvailabilitySlotRepository extends JpaRepository<AvailabilitySl
             "a.id, a.user.id, a.weekday, a.startTime, a.endTime) " +
             "FROM AvailabilitySlot a WHERE a.user.id = :userId")
     List<AvailabilitySlotDTO> findAllByUserId(Long userId);
+
+    Optional<AvailabilitySlot> findByUserIdAndWeekdayAndStartTimeAndEndTime(Long userId, Integer weekday, String startTime, String endTime);
+
+    @Query("SELECT a FROM AvailabilitySlot a WHERE a.user.id = :userId AND a.weekday = :weekday " +
+            "AND ((a.startTime < :endTime AND a.endTime > :startTime))")
+    Optional<AvailabilitySlot> findOverlappingSlot(Long userId, Integer weekday, String startTime, String endTime);
+
 }

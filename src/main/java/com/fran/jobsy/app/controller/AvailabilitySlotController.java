@@ -10,7 +10,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.List;
 
 @RestController
@@ -26,7 +25,7 @@ public class AvailabilitySlotController {
     }
 
     @PostMapping("/me/availability")
-    public ResponseEntity<AvailabilitySlotDTO> createAvailabilitySlot(@RequestBody @Valid AvailabilitySlotRequest availabilitySlotReq) throws URISyntaxException {
+    public ResponseEntity<AvailabilitySlotDTO> createAvailabilitySlot(@RequestBody @Valid AvailabilitySlotRequest availabilitySlotReq) {
         AvailabilitySlotDTO slot = availabilitySlotService.create(availabilitySlotReq);
         URI location = RestUtils.buildCreatedLocation(slot.id());
         return ResponseEntity.created(location).body(slot);

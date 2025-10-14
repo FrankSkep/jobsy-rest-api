@@ -3,8 +3,9 @@ package com.fran.jobsy.app.service.impl;
 import com.fran.jobsy.app.dto.category.CategoryDTO;
 import com.fran.jobsy.app.dto.category.CategoryRequest;
 import com.fran.jobsy.app.entity.Category;
-import com.fran.jobsy.app.exception.custom.ResourceAlreadyExists;
+import com.fran.jobsy.app.exception.custom.ResourceAlreadyExistsException;
 import com.fran.jobsy.app.exception.custom.ResourceNotFoundException;
+import com.fran.jobsy.app.mapper.CategoryMapper;
 import com.fran.jobsy.app.repository.CategoryRepository;
 import com.fran.jobsy.app.service.CategoryService;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +18,7 @@ import java.util.List;
 public class CategoryServiceImpl implements CategoryService {
 
     private final CategoryRepository categoryRepository;
+    private final CategoryMapper categoryMapper;
 
     @Override
     public List<CategoryDTO> getAll() {
@@ -28,15 +30,14 @@ public class CategoryServiceImpl implements CategoryService {
         String newCategory = categoryReq.name().toUpperCase();
 
         if (categoryRepository.existsByName(newCategory)) {
-            throw new ResourceAlreadyExists("La categoria " + newCategory + " ya existe.");
+            throw new ResourceAlreadyExistsException("La categoria " + newCategory + " ya existe.");
         }
 
         Category category = Category.builder()
                 .name(newCategory)
                 .build();
 
-        categoryRepository.save(category);
-        return new CategoryDTO(category.getId(), category.getName());
+        return categoryMapper.toDto(categoryRepository.save(category));
     }
 
     @Override
@@ -47,12 +48,11 @@ public class CategoryServiceImpl implements CategoryService {
                 .orElseThrow(() -> new ResourceNotFoundException("La categoria " + id + " no existe."));
 
         if (category.getName().equals(newCategory)) {
-            throw new ResourceAlreadyExists("La categoria " + newCategory + " ya existe.");
+            throw new ResourceAlreadyExistsException("La categoria " + newCategory + " ya existe.");
         }
 
         category.setName(newCategory);
-        categoryRepository.save(category);
-        return new CategoryDTO(category.getId(), category.getName());
+        return categoryMapper.toDto(categoryRepository.save(category));
     }
 
     @Override
