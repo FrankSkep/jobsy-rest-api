@@ -8,5 +8,5 @@ import org.mapstruct.Mapping;
 @Mapper(componentModel = "spring")
 public interface AvailabilitySlotMapper {
     @Mapping(source = "user.id", target = "providerId")
-    AvailabilitySlotDTO toDto(AvailabilitySlot slot);
+    AvailabilitySlotDTO toDTO(AvailabilitySlot slot);
 }

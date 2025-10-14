@@ -58,6 +58,10 @@ class AvailabilitySlotServiceImplTest {
             s.setId(10L);
             return s;
         });
+        when(availabilitySlotMapper.toDTO(any(AvailabilitySlot.class))).thenAnswer(inv -> {
+            AvailabilitySlot s = inv.getArgument(0);
+            return new AvailabilitySlotDTO(s.getId(), s.getUser().getId(), s.getWeekday(), s.getStartTime(), s.getEndTime());
+        });
 
         AvailabilitySlotDTO dto = service.create(req);
         assertEquals(10L, dto.id());
@@ -84,6 +88,10 @@ class AvailabilitySlotServiceImplTest {
 
         when(availabilitySlotRepository.findById(slotId)).thenReturn(Optional.of(slot));
         when(availabilitySlotRepository.save(any(AvailabilitySlot.class))).thenAnswer(inv -> inv.getArgument(0));
+        when(availabilitySlotMapper.toDTO(any(AvailabilitySlot.class))).thenAnswer(inv -> {
+            AvailabilitySlot s = inv.getArgument(0);
+            return new AvailabilitySlotDTO(s.getId(), s.getUser().getId(), s.getWeekday(), s.getStartTime(), s.getEndTime());
+        });
 
         AvailabilitySlotDTO dto = service.update(slotId, req);
         assertEquals(slotId, dto.id());
@@ -132,4 +140,3 @@ class AvailabilitySlotServiceImplTest {
         assertThrows(ResourceNotFoundException.class, () -> service.delete(99L));
     }
 }
-

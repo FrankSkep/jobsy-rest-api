@@ -49,7 +49,7 @@ public class AvailabilitySlotServiceImpl implements AvailabilitySlotService {
 
         availabilitySlotRepository.save(newSlot);
 
-        return availabilitySlotMapper.toDto(newSlot);
+        return availabilitySlotMapper.toDTO(newSlot);
     }
 
     @Override
@@ -60,7 +60,7 @@ public class AvailabilitySlotServiceImpl implements AvailabilitySlotService {
         slot.setStartTime(availabilitySlotReq.startTime());
         slot.setEndTime(availabilitySlotReq.endTime());
 
-        return availabilitySlotMapper.toDto(availabilitySlotRepository.save(slot));
+        return availabilitySlotMapper.toDTO(availabilitySlotRepository.save(slot));
     }
 
     @Override
