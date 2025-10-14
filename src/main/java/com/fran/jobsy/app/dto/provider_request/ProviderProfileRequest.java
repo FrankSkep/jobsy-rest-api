@@ -1,4 +1,4 @@
-package com.fran.jobsy.app.dto.user;
+package com.fran.jobsy.app.dto.provider_request;
 
 import jakarta.validation.constraints.*;
 

@@ -5,6 +5,7 @@ import com.fran.jobsy.app.exception.custom.InvalidFileException;
 import com.fran.jobsy.app.service.UserWorkPhotoService;
 import com.fran.jobsy.app.util.FileValidator;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -19,6 +20,7 @@ public class UserWorkPhotoController {
     private final FileValidator fileValidator;
 
     @PostMapping("/me/portfolio")
+    @PreAuthorize("hasRole('PROVIDER')")
     public void uploadWorkPhotos(@RequestParam("files") List<MultipartFile> files) {
         if (files == null || files.isEmpty()) {
             throw new InvalidFileException("Debe enviar al menos un archivo.");
@@ -34,6 +36,7 @@ public class UserWorkPhotoController {
     }
 
     @DeleteMapping("me/portfolio/{photoId}")
+    @PreAuthorize("hasRole('PROVIDER')")
     public void removeWorkPhoto(@PathVariable Long photoId) {
         userWorkPhotoService.removeWorkPhoto(photoId);
     }

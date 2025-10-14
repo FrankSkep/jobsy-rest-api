@@ -7,6 +7,7 @@ import com.fran.jobsy.app.util.RestUtils;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,6 +28,7 @@ public class CertificationController {
     }
 
     @PostMapping("/users/me/certifications")
+    @PreAuthorize("hasRole('PROVIDER')")
     public ResponseEntity<CertificationDTO> addCertification(@RequestBody @Valid CertificationRequest certificationRequest) {
         CertificationDTO certification = certificationService.addCertification(certificationRequest);
         URI location = RestUtils.buildCreatedLocation(certification.id());
@@ -34,12 +36,14 @@ public class CertificationController {
     }
 
     @DeleteMapping("/users/me/certifications/{certId}")
+    @PreAuthorize("hasRole('PROVIDER')")
     public ResponseEntity<Void> deleteCertification(@PathVariable Long certId) {
         certificationService.deleteCertification(certId);
         return ResponseEntity.noContent().build();
     }
 
     @PutMapping("/users/me/certifications/{certId}")
+    @PreAuthorize("hasRole('PROVIDER')")
     public ResponseEntity<CertificationDTO> updateCertification(@PathVariable Long certId, @RequestBody @Valid CertificationRequest certificationRequest) {
         CertificationDTO updatedCert = certificationService.updateCertification(certId, certificationRequest);
         return ResponseEntity.ok(updatedCert);

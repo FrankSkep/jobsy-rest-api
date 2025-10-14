@@ -7,6 +7,7 @@ import com.fran.jobsy.app.util.RestUtils;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
@@ -25,6 +26,7 @@ public class AvailabilitySlotController {
     }
 
     @PostMapping("/me/availability")
+    @PreAuthorize("hasRole('PROVIDER')")
     public ResponseEntity<AvailabilitySlotDTO> createAvailabilitySlot(@RequestBody @Valid AvailabilitySlotRequest availabilitySlotReq) {
         AvailabilitySlotDTO slot = availabilitySlotService.create(availabilitySlotReq);
         URI location = RestUtils.buildCreatedLocation(slot.id());
@@ -32,12 +34,14 @@ public class AvailabilitySlotController {
     }
 
     @PutMapping("/me/availability/{slotId}")
+    @PreAuthorize("hasRole('PROVIDER')")
     public ResponseEntity<AvailabilitySlotDTO> updateAvailabilitySlot(@PathVariable Long slotId, @RequestBody @Valid AvailabilitySlotRequest availabilitySlotReq) {
         AvailabilitySlotDTO slot = availabilitySlotService.update(slotId, availabilitySlotReq);
         return ResponseEntity.ok(slot);
     }
 
     @DeleteMapping("/me/availability/{slotId}")
+    @PreAuthorize("hasRole('PROVIDER')")
     public ResponseEntity<Void> deleteAvailabilitySlot(@PathVariable Long slotId) {
         availabilitySlotService.delete(slotId);
         return ResponseEntity.noContent().build();

@@ -178,4 +178,15 @@ public class GlobalExceptionHandler {
         error.setPath(request.getRequestURI());
         return new ResponseEntity<>(error, HttpStatus.METHOD_NOT_ALLOWED);
     }
+
+    @ExceptionHandler(ProviderApplicationException.class)
+    public ResponseEntity<ErrorResponse> handleProviderRequestException(
+            ProviderApplicationException ex, HttpServletRequest request) {
+        ErrorResponse error = new ErrorResponse(
+                HttpStatus.BAD_REQUEST.value(),
+                ex.getMessage()
+        );
+        error.setPath(request.getRequestURI());
+        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+    }
 }

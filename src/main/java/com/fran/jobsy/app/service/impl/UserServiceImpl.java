@@ -133,21 +133,6 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void updateProviderInfo(ProviderProfileRequest providerProfileRequest) {
-        User user = getById(authenticatedUserProvider.getAuthenticatedUserId());
-
-        user.setBio(providerProfileRequest.bio());
-        user.setHourlyRate(providerProfileRequest.hourlyRate());
-        user.setYearsExperience(providerProfileRequest.yearsExperience());
-        user.setAddressText(providerProfileRequest.addressText());
-        user.setLat(providerProfileRequest.lat());
-        user.setLng(providerProfileRequest.lng());
-        user.setServiceRadiusKm(providerProfileRequest.serviceRadiusKm());
-        user.setVerifiedCert(providerProfileRequest.verifiedCert());
-        userRepository.save(user);
-    }
-
-    @Override
     public List<OfferingDTO> getUserOfferings(Long userId) {
         getById(userId);
         return offeringService.getServicesByUserId(userId);
