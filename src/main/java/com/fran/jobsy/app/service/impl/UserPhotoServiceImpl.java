@@ -3,7 +3,9 @@ package com.fran.jobsy.app.service.impl;
 import com.fran.jobsy.app.dto.user.UserPhotoDTO;
 import com.fran.jobsy.app.entity.UserPhoto;
 import com.fran.jobsy.app.exception.custom.CloudinaryException;
+import com.fran.jobsy.app.exception.custom.FileOperationException;
 import com.fran.jobsy.app.exception.custom.ResourceNotFoundException;
+import com.fran.jobsy.app.mapper.UserPhotoMapper;
 import com.fran.jobsy.app.repository.UserPhotoRepository;
 import com.fran.jobsy.app.service.CloudinaryService;
 import com.fran.jobsy.app.service.UserPhotoService;
@@ -23,6 +25,7 @@ public class UserPhotoServiceImpl implements UserPhotoService {
     private final AuthenticatedUserProvider authenticatedUserProvider;
     private final CloudinaryService cloudinaryService;
     private final UserPhotoRepository userPhotoRepository;
+    private final UserPhotoMapper userPhotoMapper;
 
     @Override
     @Transactional
@@ -70,7 +73,7 @@ public class UserPhotoServiceImpl implements UserPhotoService {
                 }
             }
 
-            return new UserPhotoDTO(userPhoto.getId(), userPhoto.getImageId(), userPhoto.getUrl());
+            return userPhotoMapper.toDTO(userPhoto);
 
         } catch (
                 Exception e) {
@@ -83,15 +86,15 @@ public class UserPhotoServiceImpl implements UserPhotoService {
                     throw new CloudinaryException("Error al eliminar la nueva foto durante el rollback: " + ex.getMessage());
                 }
             }
-            throw new CloudinaryException("Error al actualizar la foto de perfil: " + e.getMessage());
+            throw new FileOperationException("Error al actualizar la foto de perfil: " + e.getMessage());
         }
     }
 
     @Override
     public UserPhotoDTO getUserPhoto(Long id) {
-        UserPhoto photo = userPhotoRepository.findByUserId(id)
+        UserPhoto userPhoto = userPhotoRepository.findByUserId(id)
                 .orElseThrow(() -> new ResourceNotFoundException("No se encontró la foto de perfil para el usuario con id: " + id));
-        return new UserPhotoDTO(photo.getId(), photo.getImageId(), photo.getUrl());
+        return userPhotoMapper.toDTO(userPhoto);
     }
 
     @Override

@@ -9,7 +9,4 @@ import org.mapstruct.Mapping;
 public interface AvailabilitySlotMapper {
     @Mapping(source = "user.id", target = "providerId")
     AvailabilitySlotDTO toDto(AvailabilitySlot slot);
-
-    @Mapping(source = "providerId", target = "user.id")
-    AvailabilitySlot toEntity(AvailabilitySlotDTO dto);
 }

@@ -3,13 +3,14 @@ package com.fran.jobsy.app.controller;
 import com.fran.jobsy.app.dto.CertificationDTO;
 import com.fran.jobsy.app.dto.CertificationRequest;
 import com.fran.jobsy.app.service.CertificationService;
+import com.fran.jobsy.app.util.RestUtils;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.URI;
 import java.util.List;
 
 @Controller
@@ -28,7 +29,8 @@ public class CertificationController {
     @PostMapping("/users/me/certifications")
     public ResponseEntity<CertificationDTO> addCertification(@RequestBody @Valid CertificationRequest certificationRequest) {
         CertificationDTO certification = certificationService.addCertification(certificationRequest);
-        return ResponseEntity.status(HttpStatus.CREATED).body(certification);
+        URI location = RestUtils.buildCreatedLocation(certification.id());
+        return ResponseEntity.created(location).body(certification);
     }
 
     @DeleteMapping("/users/me/certifications/{certId}")
