@@ -3,7 +3,7 @@ package com.fran.jobsy.app.controller;
 import com.fran.jobsy.app.dto.user.UserWorkPhotoDTO;
 import com.fran.jobsy.app.exception.custom.InvalidFileException;
 import com.fran.jobsy.app.service.UserWorkPhotoService;
-import com.fran.jobsy.app.utils.FileValidator;
+import com.fran.jobsy.app.util.FileValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;

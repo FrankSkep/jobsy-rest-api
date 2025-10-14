@@ -13,7 +13,7 @@ import com.fran.jobsy.app.repository.UserWorkPhotoRepository;
 import com.fran.jobsy.app.service.CloudinaryService;
 import com.fran.jobsy.app.service.OfferingService;
 import com.fran.jobsy.app.service.UserService;
-import com.fran.jobsy.app.utils.AuthenticatedUserProvider;
+import com.fran.jobsy.app.util.AuthenticatedUserProvider;
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;

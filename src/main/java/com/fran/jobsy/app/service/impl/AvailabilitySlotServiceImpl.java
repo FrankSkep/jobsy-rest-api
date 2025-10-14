@@ -6,7 +6,7 @@ import com.fran.jobsy.app.entity.AvailabilitySlot;
 import com.fran.jobsy.app.exception.custom.ResourceNotFoundException;
 import com.fran.jobsy.app.repository.AvailabilitySlotRepository;
 import com.fran.jobsy.app.service.AvailabilitySlotService;
-import com.fran.jobsy.app.utils.AuthenticatedUserProvider;
+import com.fran.jobsy.app.util.AuthenticatedUserProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

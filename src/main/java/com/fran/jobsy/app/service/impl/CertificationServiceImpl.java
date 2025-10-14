@@ -7,7 +7,7 @@ import com.fran.jobsy.app.exception.custom.AuthenticationException;
 import com.fran.jobsy.app.exception.custom.ResourceNotFoundException;
 import com.fran.jobsy.app.repository.CertificationRepository;
 import com.fran.jobsy.app.service.CertificationService;
-import com.fran.jobsy.app.utils.AuthenticatedUserProvider;
+import com.fran.jobsy.app.util.AuthenticatedUserProvider;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

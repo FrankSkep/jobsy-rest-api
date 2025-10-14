@@ -1,4 +1,4 @@
-package com.fran.jobsy.app.utils;
+package com.fran.jobsy.app.util;
 
 import com.fran.jobsy.app.exception.custom.InvalidFileException;
 import org.springframework.stereotype.Component;

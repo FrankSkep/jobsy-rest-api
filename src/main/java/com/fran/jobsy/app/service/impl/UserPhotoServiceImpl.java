@@ -7,7 +7,7 @@ import com.fran.jobsy.app.exception.custom.ResourceNotFoundException;
 import com.fran.jobsy.app.repository.UserPhotoRepository;
 import com.fran.jobsy.app.service.CloudinaryService;
 import com.fran.jobsy.app.service.UserPhotoService;
-import com.fran.jobsy.app.utils.AuthenticatedUserProvider;
+import com.fran.jobsy.app.util.AuthenticatedUserProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

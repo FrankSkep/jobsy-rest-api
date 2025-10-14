@@ -3,6 +3,7 @@ package com.fran.jobsy.app.controller;
 import com.fran.jobsy.app.dto.category.CategoryDTO;
 import com.fran.jobsy.app.dto.category.CategoryRequest;
 import com.fran.jobsy.app.service.CategoryService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -24,13 +25,13 @@ public class CategoryController {
 
     @PostMapping
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<CategoryDTO> createCategory(@RequestBody CategoryRequest categoryReq) {
+    public ResponseEntity<CategoryDTO> createCategory(@RequestBody @Valid CategoryRequest categoryReq) {
         return ResponseEntity.ok(categoryService.create(categoryReq));
     }
 
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<CategoryDTO> updateCategory(@PathVariable Long id, @RequestBody CategoryRequest categoryReq) {
+    public ResponseEntity<CategoryDTO> updateCategory(@PathVariable Long id, @RequestBody @Valid CategoryRequest categoryReq) {
         return ResponseEntity.ok(categoryService.update(id, categoryReq));
     }
 

@@ -2,7 +2,7 @@ package com.fran.jobsy.app.controller;
 
 import com.fran.jobsy.app.dto.user.UserPhotoDTO;
 import com.fran.jobsy.app.service.UserPhotoService;
-import com.fran.jobsy.app.utils.FileValidator;
+import com.fran.jobsy.app.util.FileValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
