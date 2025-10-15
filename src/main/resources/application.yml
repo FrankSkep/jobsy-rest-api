@@ -27,10 +27,10 @@ spring:
       max-request-size: 10MB
 
   mail:
-    host:
-    port:
-    username:
-    password:
+    host: ${MAIL_HOST}
+    port: ${MAIL_PORT}
+    username: ${MAIL_USERNAME}
+    password: ${MAIL_PASSWORD}
     properties:
       mail:
         smtp:
