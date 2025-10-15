@@ -44,6 +44,7 @@ public class ProviderRequestServiceImpl implements ProviderRequestService {
                 .lat(request.lat())
                 .lng(request.lng())
                 .serviceRadiusKm(request.serviceRadiusKm())
+                .rfcHomoclave(request.rfcHomoclave())
                 .verifiedCert(request.verifiedCert())
                 .build();
 

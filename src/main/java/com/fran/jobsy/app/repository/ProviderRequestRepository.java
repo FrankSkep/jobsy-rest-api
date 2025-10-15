@@ -26,6 +26,7 @@ public interface ProviderRequestRepository extends JpaRepository<ProviderRequest
                 pr.lat,
                 pr.lng,
                 pr.serviceRadiusKm,
+                pr.rfcHomoclave,
                 pr.verifiedCert,
                 pr.status,
                 pr.createdAt,

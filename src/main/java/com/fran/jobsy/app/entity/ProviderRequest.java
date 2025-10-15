@@ -45,6 +45,7 @@ public class ProviderRequest {
     private Double lat;
     private Double lng;
     private Double serviceRadiusKm;
+    private String rfcHomoclave;
     private Boolean verifiedCert;
 
     @PrePersist

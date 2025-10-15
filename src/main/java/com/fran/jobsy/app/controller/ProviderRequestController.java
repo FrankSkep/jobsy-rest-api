@@ -31,7 +31,7 @@ public class ProviderRequestController {
         }
 
         if (documents.size() > 5) {
-            throw new InvalidFileException("No puede enviar más de 5 archivos.");
+            throw new InvalidFileException("No puede enviar más de 5 archivos. (3 fotos propias y 2 INE (AMBOS LADOS)");
         }
 
         documents.forEach(fileValidator::validate);
