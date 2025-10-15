@@ -2,6 +2,7 @@ package com.fran.jobsy.app.repository;
 
 import com.fran.jobsy.app.dto.provider_request.ProviderRequestDTO;
 import com.fran.jobsy.app.entity.ProviderRequest;
+import com.fran.jobsy.app.enums.ProviderStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -10,6 +11,9 @@ import java.util.List;
 
 @Repository
 public interface ProviderRequestRepository extends JpaRepository<ProviderRequest, Long> {
+
+    boolean existsByUserIdAndStatus(Long userId, ProviderStatus status);
+
     @Query("""
             select new com.fran.jobsy.app.dto.provider_request.ProviderRequestDTO(
                 pr.id,

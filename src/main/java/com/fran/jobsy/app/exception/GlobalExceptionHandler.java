@@ -189,4 +189,15 @@ public class GlobalExceptionHandler {
         error.setPath(request.getRequestURI());
         return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
     }
+
+    @ExceptionHandler(ConflictException.class)
+    public ResponseEntity<ErrorResponse> handleConflictException(
+            ConflictException ex, HttpServletRequest request) {
+        ErrorResponse error = new ErrorResponse(
+                HttpStatus.CONFLICT.value(),
+                ex.getMessage()
+        );
+        error.setPath(request.getRequestURI());
+        return new ResponseEntity<>(error, HttpStatus.CONFLICT);
+    }
 }

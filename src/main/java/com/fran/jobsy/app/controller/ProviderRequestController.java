@@ -50,7 +50,7 @@ public class ProviderRequestController {
     @PutMapping
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> updateProviderRequestStatus(@RequestParam Long requestId, @RequestParam String status) {
-        // pendiente xd
+        // pendiente de implementar, aqui le asignare rol provider y le asignare los datos de la solicitud, a su perfil (Entidad User)
         return ResponseEntity.noContent().build();
     }
 }

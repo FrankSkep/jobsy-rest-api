@@ -7,6 +7,7 @@ import com.fran.jobsy.app.entity.ProviderRequest;
 import com.fran.jobsy.app.entity.User;
 import com.fran.jobsy.app.enums.ProviderStatus;
 import com.fran.jobsy.app.exception.custom.CloudinaryException;
+import com.fran.jobsy.app.exception.custom.ConflictException;
 import com.fran.jobsy.app.repository.ProviderRequestRepository;
 import com.fran.jobsy.app.service.CloudinaryService;
 import com.fran.jobsy.app.service.ProviderRequestService;
@@ -32,6 +33,11 @@ public class ProviderRequestServiceImpl implements ProviderRequestService {
     @Transactional
     public void applyForProvider(ProviderProfileRequest request, List<MultipartFile> documents) {
         Long userId = authenticatedUserProvider.getAuthenticatedUserId();
+
+        if (existsPendingRequestForUser(userId)) {
+            throw new ConflictException("Ya existe una solicitud pendiente para este usuario.");
+        }
+
         User userRef = authenticatedUserProvider.getUserReference(userId);
 
         ProviderRequest providerRequest = ProviderRequest.builder()
@@ -79,6 +85,10 @@ public class ProviderRequestServiceImpl implements ProviderRequestService {
     @Override
     public List<ProviderRequestDTO> getAllProviderRequests() {
         return providerRequestRepository.findAllProviderRequests();
+    }
+
+    private Boolean existsPendingRequestForUser(Long userId) {
+        return providerRequestRepository.existsByUserIdAndStatus(userId, ProviderStatus.PENDING);
     }
 
     private void rollbackUploads(List<String> uploadedIds) {
