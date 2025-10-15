@@ -1,12 +1,15 @@
 package com.fran.jobsy.app.controller;
 
 import com.fran.jobsy.app.dto.provider_request.ProviderProfileRequest;
+import com.fran.jobsy.app.dto.provider_request.ProviderRejectionRequest;
 import com.fran.jobsy.app.dto.provider_request.ProviderRequestDTO;
 import com.fran.jobsy.app.exception.custom.InvalidFileException;
 import com.fran.jobsy.app.service.ProviderRequestService;
 import com.fran.jobsy.app.util.FileValidator;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -42,15 +45,23 @@ public class ProviderRequestController {
 
     @GetMapping
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<List<ProviderRequestDTO>> getAllProviderRequests() {
-        List<ProviderRequestDTO> requests = providerRequestService.getAllProviderRequests();
+    public ResponseEntity<Page<ProviderRequestDTO>> getAllProviderRequests(Pageable pageable) {
+        Page<ProviderRequestDTO> requests = providerRequestService.getAllProviderRequests(pageable);
         return ResponseEntity.ok(requests);
     }
 
-    @PutMapping
+    @PatchMapping("/{id}/approve")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Void> updateProviderRequestStatus(@RequestParam Long requestId, @RequestParam String status) {
-        // pendiente de implementar, aqui le asignare rol provider y le asignare los datos de la solicitud, a su perfil (Entidad User)
+    public ResponseEntity<Void> approve(@PathVariable Long id) {
+        providerRequestService.approve(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PatchMapping("/{id}/reject")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Void> reject(@PathVariable Long id,
+                                       @Valid @RequestBody ProviderRejectionRequest body) {
+        providerRequestService.reject(id, body.reason());
         return ResponseEntity.noContent().build();
     }
 }

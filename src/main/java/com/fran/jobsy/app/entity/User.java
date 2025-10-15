@@ -70,6 +70,8 @@ public class User implements UserDetails {
 
     private Double serviceRadiusKm;
 
+    private String rfcHomoclave;
+
     private Boolean verifiedCert;
 
     // Relaciones con otras entidades

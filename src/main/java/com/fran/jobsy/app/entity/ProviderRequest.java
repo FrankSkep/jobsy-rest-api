@@ -37,6 +37,14 @@ public class ProviderRequest {
 
     private LocalDateTime updatedAt;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "reviewed_by")
+    private User reviewedBy;
+
+    private LocalDateTime reviewedAt;
+
+    private String rejectionReason;
+
     // Detailed provider information
     private String bio;
     private Double hourlyRate;
