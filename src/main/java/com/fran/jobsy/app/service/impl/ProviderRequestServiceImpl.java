@@ -7,7 +7,7 @@ import com.fran.jobsy.app.dto.user.UserBasicDTO;
 import com.fran.jobsy.app.entity.ProviderDocument;
 import com.fran.jobsy.app.entity.ProviderRequest;
 import com.fran.jobsy.app.entity.User;
-import com.fran.jobsy.app.enums.ProviderStatus;
+import com.fran.jobsy.app.enums.ProviderRequestStatus;
 import com.fran.jobsy.app.enums.Role;
 import com.fran.jobsy.app.exception.custom.CloudinaryException;
 import com.fran.jobsy.app.exception.custom.ConflictException;
@@ -52,7 +52,7 @@ public class ProviderRequestServiceImpl implements ProviderRequestService {
 
         ProviderRequest providerRequest = ProviderRequest.builder()
                 .user(userRef)
-                .status(ProviderStatus.PENDING)
+                .status(ProviderRequestStatus.PENDING)
                 .bio(request.bio())
                 .hourlyRate(request.hourlyRate())
                 .yearsExperience(request.yearsExperience())
@@ -137,7 +137,7 @@ public class ProviderRequestServiceImpl implements ProviderRequestService {
         ProviderRequest request = providerRequestRepository.findById(requestId)
                 .orElseThrow(() -> new ResourceNotFoundException("Solicitud no encontrada"));
 
-        if (request.getStatus() != ProviderStatus.PENDING) {
+        if (request.getStatus() != ProviderRequestStatus.PENDING) {
             throw new ProviderApplicationException("Solo pueden aprobarse solicitudes pendientes");
         }
 
@@ -157,7 +157,7 @@ public class ProviderRequestServiceImpl implements ProviderRequestService {
         user.setVerifiedCert(request.getVerifiedCert());
 
         // update request data
-        request.setStatus(ProviderStatus.APPROVED);
+        request.setStatus(ProviderRequestStatus.APPROVED);
         request.setReviewedBy(admin);
         request.setReviewedAt(LocalDateTime.now());
         request.setRejectionReason(null);
@@ -178,13 +178,13 @@ public class ProviderRequestServiceImpl implements ProviderRequestService {
         ProviderRequest request = providerRequestRepository.findById(requestId)
                 .orElseThrow(() -> new ResourceNotFoundException("Solicitud no encontrada"));
 
-        if (request.getStatus() != ProviderStatus.PENDING) {
+        if (request.getStatus() != ProviderRequestStatus.PENDING) {
             throw new ProviderApplicationException("Solo pueden rechazarse solicitudes pendientes");
         }
 
         User admin = authenticatedUserProvider.getAuthenticatedUser();
 
-        request.setStatus(ProviderStatus.REJECTED);
+        request.setStatus(ProviderRequestStatus.REJECTED);
         request.setReviewedBy(admin);
         request.setReviewedAt(LocalDateTime.now());
         request.setRejectionReason(reason);
@@ -200,7 +200,7 @@ public class ProviderRequestServiceImpl implements ProviderRequestService {
 
 
     private Boolean existsPendingRequestForUser(Long userId) {
-        return providerRequestRepository.existsByUserIdAndStatus(userId, ProviderStatus.PENDING);
+        return providerRequestRepository.existsByUserIdAndStatus(userId, ProviderRequestStatus.PENDING);
     }
 
     private void rollbackUploads(List<String> uploadedIds) {

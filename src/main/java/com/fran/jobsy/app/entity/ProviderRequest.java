@@ -1,6 +1,6 @@
 package com.fran.jobsy.app.entity;
 
-import com.fran.jobsy.app.enums.ProviderStatus;
+import com.fran.jobsy.app.enums.ProviderRequestStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -30,7 +30,7 @@ public class ProviderRequest {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private ProviderStatus status; // PENDING, APPROVED, REJECTED
+    private ProviderRequestStatus status; // PENDING, APPROVED, REJECTED
 
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;

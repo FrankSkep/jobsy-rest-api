@@ -1,6 +1,6 @@
 package com.fran.jobsy.app.enums;
 
-public enum ProviderStatus {
+public enum ProviderRequestStatus {
     PENDING,
     APPROVED,
     REJECTED

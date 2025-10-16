@@ -97,6 +97,7 @@ public class UserController {
     }
 
     @PutMapping("/me/full")
+    @PreAuthorize("hasRole('PROVIDER')")
     @Operation(summary = "Actualizar mi información completa", description = "Permite al usuario autenticado actualizar su información completa. Requiere autenticación y rol PROVIDER.")
     @ApiResponse(responseCode = "204", description = "Información actualizada correctamente")
     public ResponseEntity<Void> updateMyFullInfo(
