@@ -4,6 +4,10 @@ import com.fran.jobsy.app.dto.CertificationDTO;
 import com.fran.jobsy.app.dto.CertificationRequest;
 import com.fran.jobsy.app.service.CertificationService;
 import com.fran.jobsy.app.util.RestUtils;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -17,11 +21,14 @@ import java.util.List;
 @Controller
 @RequestMapping("/api/v1")
 @RequiredArgsConstructor
+@Tag(name = "Certifications", description = "Operaciones sobre certificaciones de proveedores")
 public class CertificationController {
 
     private final CertificationService certificationService;
 
     @GetMapping("users/{id}/certifications")
+    @Operation(summary = "Obtener certificaciones de usuario", description = "Devuelve la lista de certificaciones públicas de un usuario.")
+    @ApiResponse(responseCode = "200", description = "Lista de certificaciones obtenida correctamente")
     public ResponseEntity<List<CertificationDTO>> getMyCertifications(@PathVariable Long id) {
         List<CertificationDTO> certifications = certificationService.getUserCertifications(id);
         return ResponseEntity.ok(certifications);
@@ -29,6 +36,11 @@ public class CertificationController {
 
     @PostMapping("/users/me/certifications")
     @PreAuthorize("hasRole('PROVIDER')")
+    @Operation(summary = "Agregar certificación", description = "Permite a un usuario con rol PROVIDER agregar una certificación. Requiere autenticación y rol PROVIDER.")
+    @ApiResponses({
+        @ApiResponse(responseCode = "201", description = "Certificación agregada correctamente"),
+        @ApiResponse(responseCode = "403", description = "Acceso denegado. Solo PROVIDER")
+    })
     public ResponseEntity<CertificationDTO> addCertification(@RequestBody @Valid CertificationRequest certificationRequest) {
         CertificationDTO certification = certificationService.addCertification(certificationRequest);
         URI location = RestUtils.buildCreatedLocation(certification.id());
@@ -37,6 +49,11 @@ public class CertificationController {
 
     @DeleteMapping("/users/me/certifications/{certId}")
     @PreAuthorize("hasRole('PROVIDER')")
+    @Operation(summary = "Eliminar certificación", description = "Permite a un usuario con rol PROVIDER eliminar una certificación. Requiere autenticación y rol PROVIDER.")
+    @ApiResponses({
+        @ApiResponse(responseCode = "204", description = "Certificación eliminada correctamente"),
+        @ApiResponse(responseCode = "403", description = "Acceso denegado. Solo PROVIDER")
+    })
     public ResponseEntity<Void> deleteCertification(@PathVariable Long certId) {
         certificationService.deleteCertification(certId);
         return ResponseEntity.noContent().build();
@@ -44,6 +61,11 @@ public class CertificationController {
 
     @PutMapping("/users/me/certifications/{certId}")
     @PreAuthorize("hasRole('PROVIDER')")
+    @Operation(summary = "Actualizar certificación", description = "Permite a un usuario con rol PROVIDER actualizar una certificación. Requiere autenticación y rol PROVIDER.")
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", description = "Certificación actualizada correctamente"),
+        @ApiResponse(responseCode = "403", description = "Acceso denegado. Solo PROVIDER")
+    })
     public ResponseEntity<CertificationDTO> updateCertification(@PathVariable Long certId, @RequestBody @Valid CertificationRequest certificationRequest) {
         CertificationDTO updatedCert = certificationService.updateCertification(certId, certificationRequest);
         return ResponseEntity.ok(updatedCert);

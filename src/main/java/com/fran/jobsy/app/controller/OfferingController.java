@@ -3,6 +3,9 @@ package com.fran.jobsy.app.controller;
 import com.fran.jobsy.app.dto.offering.OfferingDTO;
 import com.fran.jobsy.app.dto.offering.OfferingFilterDTO;
 import com.fran.jobsy.app.service.OfferingService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -17,11 +20,14 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/v1/services")
 @RequiredArgsConstructor
+@Tag(name = "Offerings", description = "Operaciones sobre los servicios ofrecidos por los proveedores")
 public class OfferingController {
 
     private final OfferingService offeringService;
 
     @GetMapping
+    @Operation(summary = "Listar servicios", description = "Devuelve una lista paginada de servicios, con posibilidad de filtrar por categoría, precio, calificación y ubicación.")
+    @ApiResponse(responseCode = "200", description = "Lista de servicios obtenida correctamente")
     public ResponseEntity<Page<OfferingDTO>> getOfferings(
             @RequestParam(required = false) Long categoryId,
             @RequestParam(required = false) Double minPrice,
