@@ -3,7 +3,7 @@ package com.fran.jobsy.app.dto.user;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 
-public record UserRequest(
+public record UserUpdateRequest(
         @NotBlank(message = "First name is mandatory")
         String firstname,
 

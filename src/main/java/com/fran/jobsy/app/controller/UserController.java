@@ -1,15 +1,11 @@
 package com.fran.jobsy.app.controller;
 
 import com.fran.jobsy.app.dto.offering.OfferingDTO;
-import com.fran.jobsy.app.dto.user.UserDTO;
-import com.fran.jobsy.app.dto.user.UserFullDTO;
-import com.fran.jobsy.app.dto.user.UserPublicDTO;
-import com.fran.jobsy.app.dto.user.UserRequest;
+import com.fran.jobsy.app.dto.user.*;
 import com.fran.jobsy.app.enums.Role;
 import com.fran.jobsy.app.service.OfferingService;
 import com.fran.jobsy.app.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -49,16 +45,6 @@ public class UserController {
         return ResponseEntity.ok(userService.getUser(id));
     }
 
-    @PutMapping("/me/basic")
-    @Operation(summary = "Actualizar mi información básica", description = "Permite al usuario autenticado actualizar su información básica.")
-    @ApiResponse(responseCode = "204", description = "Información actualizada correctamente")
-    public ResponseEntity<Void> updateMyBasicInfo(
-            @Parameter(description = "Nombre de usuario")
-            @Valid @RequestBody UserRequest userRequest) {
-        userService.updateUser(userRequest);
-        return ResponseEntity.noContent().build();
-    }
-
     @PatchMapping("/{id}/role")
     @PreAuthorize("hasRole('ADMIN')")
     @Operation(summary = "Actualizar rol de usuario", description = "Solo accesible para ADMIN. Permite cambiar el rol de un usuario.")
@@ -67,7 +53,7 @@ public class UserController {
             @ApiResponse(responseCode = "403", description = "Acceso denegado. Solo ADMIN")
     })
     public ResponseEntity<Void> updateRole(
-            @Parameter(description = "ID del usuario") @PathVariable Long id,
+            @PathVariable Long id,
             @RequestBody Role role) {
         userService.updateRole(id, role);
         return ResponseEntity.noContent().build();
@@ -98,6 +84,24 @@ public class UserController {
     @ApiResponse(responseCode = "204", description = "Cuenta eliminada correctamente")
     public ResponseEntity<Void> deleteMyAccount() {
         userService.deleteMyAccount();
+        return ResponseEntity.noContent().build();
+    }
+
+    @PutMapping("/me/basic")
+    @Operation(summary = "Actualizar mi información básica", description = "Permite al usuario autenticado actualizar su información básica.")
+    @ApiResponse(responseCode = "204", description = "Información actualizada correctamente")
+    public ResponseEntity<Void> updateMyBasicInfo(
+            @Valid @RequestBody UserUpdateRequest userUpdateRequest) {
+        userService.updateUser(userUpdateRequest);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PutMapping("/me/full")
+    @Operation(summary = "Actualizar mi información completa", description = "Permite al usuario autenticado actualizar su información completa. Requiere autenticación y rol PROVIDER.")
+    @ApiResponse(responseCode = "204", description = "Información actualizada correctamente")
+    public ResponseEntity<Void> updateMyFullInfo(
+            @Valid @RequestBody UserFullUpdateRequest userFullDTO) {
+        userService.updateUser(userFullDTO);
         return ResponseEntity.noContent().build();
     }
 

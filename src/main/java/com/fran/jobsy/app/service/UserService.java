@@ -2,10 +2,7 @@ package com.fran.jobsy.app.service;
 
 import com.fran.jobsy.app.dto.auth.PasswordRequest;
 import com.fran.jobsy.app.dto.offering.OfferingDTO;
-import com.fran.jobsy.app.dto.user.UserDTO;
-import com.fran.jobsy.app.dto.user.UserFullDTO;
-import com.fran.jobsy.app.dto.user.UserPublicDTO;
-import com.fran.jobsy.app.dto.user.UserRequest;
+import com.fran.jobsy.app.dto.user.*;
 import com.fran.jobsy.app.enums.Role;
 
 import java.util.List;
@@ -14,7 +11,9 @@ public interface UserService {
 
     List<UserDTO> getAllUsers();
 
-    void updateUser(UserRequest user);
+    void updateUser(UserUpdateRequest user);
+
+    void updateUser(UserFullUpdateRequest user);
 
     void updateRole(Long userId, Role role);
 

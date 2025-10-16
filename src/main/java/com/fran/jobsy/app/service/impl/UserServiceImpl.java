@@ -50,7 +50,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void updateUser(UserRequest userReq) {
+    public void updateUser(UserUpdateRequest userReq) {
         User user = getById(authenticatedUserProvider.getAuthenticatedUserId());
         user.setFirstname(userReq.firstname());
         user.setLastname(userReq.lastname());
@@ -58,6 +58,20 @@ public class UserServiceImpl implements UserService {
         userRepository.save(user);
     }
 
+    @Override
+    public void updateUser(UserFullUpdateRequest userReq) {
+        User user = getById(authenticatedUserProvider.getAuthenticatedUserId());
+
+        user.setBio(userReq.bio());
+        user.setHourlyRate(userReq.hourlyRate());
+        user.setYearsExperience(userReq.yearsExperience());
+        user.setAddressText(userReq.addressText());
+        user.setLat(userReq.lat());
+        user.setLng(userReq.lng());
+        user.setServiceRadiusKm(userReq.serviceRadiusKm());
+
+        userRepository.save(user);
+    }
 
     @Override
     public void updateRole(Long userId, Role role) {
