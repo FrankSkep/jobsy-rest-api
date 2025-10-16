@@ -35,8 +35,8 @@ public class UserController {
     @PreAuthorize("hasRole('ADMIN')")
     @Operation(summary = "Obtener todos los usuarios", description = "Solo accesible para ADMIN. Devuelve la lista de todos los usuarios registrados.")
     @ApiResponses({
-        @ApiResponse(responseCode = "200", description = "Lista de usuarios obtenida correctamente"),
-        @ApiResponse(responseCode = "403", description = "Acceso denegado. Solo ADMIN")
+            @ApiResponse(responseCode = "200", description = "Lista de usuarios obtenida correctamente"),
+            @ApiResponse(responseCode = "403", description = "Acceso denegado. Solo ADMIN")
     })
     public ResponseEntity<List<UserDTO>> getAllUsers() {
         return ResponseEntity.ok(userService.getAllUsers());
@@ -63,8 +63,8 @@ public class UserController {
     @PreAuthorize("hasRole('ADMIN')")
     @Operation(summary = "Actualizar rol de usuario", description = "Solo accesible para ADMIN. Permite cambiar el rol de un usuario.")
     @ApiResponses({
-        @ApiResponse(responseCode = "204", description = "Rol actualizado correctamente"),
-        @ApiResponse(responseCode = "403", description = "Acceso denegado. Solo ADMIN")
+            @ApiResponse(responseCode = "204", description = "Rol actualizado correctamente"),
+            @ApiResponse(responseCode = "403", description = "Acceso denegado. Solo ADMIN")
     })
     public ResponseEntity<Void> updateRole(
             @Parameter(description = "ID del usuario") @PathVariable Long id,
@@ -77,8 +77,8 @@ public class UserController {
     @PreAuthorize("hasRole('ADMIN')")
     @Operation(summary = "Eliminar usuario", description = "Solo accesible para ADMIN. Elimina un usuario por su ID.")
     @ApiResponses({
-        @ApiResponse(responseCode = "204", description = "Usuario eliminado correctamente"),
-        @ApiResponse(responseCode = "403", description = "Acceso denegado. Solo ADMIN")
+            @ApiResponse(responseCode = "204", description = "Usuario eliminado correctamente"),
+            @ApiResponse(responseCode = "403", description = "Acceso denegado. Solo ADMIN")
     })
     public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
         userService.deleteUser(id);

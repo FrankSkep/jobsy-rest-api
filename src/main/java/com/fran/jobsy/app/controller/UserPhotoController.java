@@ -24,8 +24,8 @@ public class UserPhotoController {
     @PostMapping("/me/photo")
     @Operation(summary = "Actualizar foto de perfil", description = "Permite al usuario autenticado actualizar su foto de perfil.")
     @ApiResponses({
-        @ApiResponse(responseCode = "200", description = "Foto de perfil actualizada correctamente"),
-        @ApiResponse(responseCode = "400", description = "Archivo no válido")
+            @ApiResponse(responseCode = "200", description = "Foto de perfil actualizada correctamente"),
+            @ApiResponse(responseCode = "400", description = "Archivo no válido")
     })
     public ResponseEntity<UserPhotoDTO> updateProfileImage(@RequestParam("file") MultipartFile photo) {
         fileValidator.validate(photo);

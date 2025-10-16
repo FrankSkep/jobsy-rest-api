@@ -36,8 +36,8 @@ public class AvailabilitySlotController {
     @PreAuthorize("hasRole('PROVIDER')")
     @Operation(summary = "Crear horario de disponibilidad", description = "Permite a un usuario con rol PROVIDER crear un horario de disponibilidad. Requiere autenticación y rol PROVIDER.")
     @ApiResponses({
-        @ApiResponse(responseCode = "201", description = "Horario creado correctamente"),
-        @ApiResponse(responseCode = "403", description = "Acceso denegado. Solo PROVIDER")
+            @ApiResponse(responseCode = "201", description = "Horario creado correctamente"),
+            @ApiResponse(responseCode = "403", description = "Acceso denegado. Solo PROVIDER")
     })
     public ResponseEntity<AvailabilitySlotDTO> createAvailabilitySlot(@RequestBody @Valid AvailabilitySlotRequest availabilitySlotReq) {
         AvailabilitySlotDTO slot = availabilitySlotService.create(availabilitySlotReq);
@@ -49,8 +49,8 @@ public class AvailabilitySlotController {
     @PreAuthorize("hasRole('PROVIDER')")
     @Operation(summary = "Actualizar horario de disponibilidad", description = "Permite a un usuario con rol PROVIDER actualizar un horario de disponibilidad. Requiere autenticación y rol PROVIDER.")
     @ApiResponses({
-        @ApiResponse(responseCode = "200", description = "Horario actualizado correctamente"),
-        @ApiResponse(responseCode = "403", description = "Acceso denegado. Solo PROVIDER")
+            @ApiResponse(responseCode = "200", description = "Horario actualizado correctamente"),
+            @ApiResponse(responseCode = "403", description = "Acceso denegado. Solo PROVIDER")
     })
     public ResponseEntity<AvailabilitySlotDTO> updateAvailabilitySlot(@PathVariable Long slotId, @RequestBody @Valid AvailabilitySlotRequest availabilitySlotReq) {
         AvailabilitySlotDTO slot = availabilitySlotService.update(slotId, availabilitySlotReq);
@@ -61,8 +61,8 @@ public class AvailabilitySlotController {
     @PreAuthorize("hasRole('PROVIDER')")
     @Operation(summary = "Eliminar horario de disponibilidad", description = "Permite a un usuario con rol PROVIDER eliminar un horario de disponibilidad. Requiere autenticación y rol PROVIDER.")
     @ApiResponses({
-        @ApiResponse(responseCode = "204", description = "Horario eliminado correctamente"),
-        @ApiResponse(responseCode = "403", description = "Acceso denegado. Solo PROVIDER")
+            @ApiResponse(responseCode = "204", description = "Horario eliminado correctamente"),
+            @ApiResponse(responseCode = "403", description = "Acceso denegado. Solo PROVIDER")
     })
     public ResponseEntity<Void> deleteAvailabilitySlot(@PathVariable Long slotId) {
         availabilitySlotService.delete(slotId);

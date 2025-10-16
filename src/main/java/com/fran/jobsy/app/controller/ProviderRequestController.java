@@ -33,8 +33,8 @@ public class ProviderRequestController {
     @PostMapping
     @Operation(summary = "Solicitar ser proveedor", description = "Permite a un usuario postularse como proveedor adjuntando documentos requeridos. Recibe en formData un objeto JSON con los datos del perfil y hasta 5 archivos (3 fotos propias y 2 INE (AMBOS LADOS)).")
     @ApiResponses({
-        @ApiResponse(responseCode = "204", description = "Solicitud enviada correctamente"),
-        @ApiResponse(responseCode = "400", description = "Archivos inválidos o solicitud incorrecta")
+            @ApiResponse(responseCode = "204", description = "Solicitud enviada correctamente"),
+            @ApiResponse(responseCode = "400", description = "Archivos inválidos o solicitud incorrecta")
     })
     public ResponseEntity<Void> applyForProvider(@RequestPart("providerProfile") @Valid ProviderProfileRequest providerProfileRequest,
                                                  @RequestPart("documents") List<MultipartFile> documents) {
@@ -57,8 +57,8 @@ public class ProviderRequestController {
     @PreAuthorize("hasRole('ADMIN')")
     @Operation(summary = "Obtener todas las solicitudes de proveedor", description = "Solo accesible para ADMIN. Devuelve todas las solicitudes de proveedor.")
     @ApiResponses({
-        @ApiResponse(responseCode = "200", description = "Solicitudes obtenidas correctamente"),
-        @ApiResponse(responseCode = "403", description = "Acceso denegado. Solo ADMIN")
+            @ApiResponse(responseCode = "200", description = "Solicitudes obtenidas correctamente"),
+            @ApiResponse(responseCode = "403", description = "Acceso denegado. Solo ADMIN")
     })
     public ResponseEntity<Page<ProviderRequestDTO>> getAllProviderRequests(Pageable pageable) {
         Page<ProviderRequestDTO> requests = providerRequestService.getAllProviderRequests(pageable);
@@ -69,8 +69,8 @@ public class ProviderRequestController {
     @PreAuthorize("hasRole('ADMIN')")
     @Operation(summary = "Aprobar solicitud de proveedor", description = "Solo accesible para ADMIN. Aprueba la solicitud de proveedor indicada.")
     @ApiResponses({
-        @ApiResponse(responseCode = "204", description = "Solicitud aprobada correctamente"),
-        @ApiResponse(responseCode = "403", description = "Acceso denegado. Solo ADMIN")
+            @ApiResponse(responseCode = "204", description = "Solicitud aprobada correctamente"),
+            @ApiResponse(responseCode = "403", description = "Acceso denegado. Solo ADMIN")
     })
     public ResponseEntity<Void> approve(@PathVariable Long id) {
         providerRequestService.approve(id);
@@ -81,8 +81,8 @@ public class ProviderRequestController {
     @PreAuthorize("hasRole('ADMIN')")
     @Operation(summary = "Rechazar solicitud de proveedor", description = "Solo accesible para ADMIN. Rechaza la solicitud de proveedor indicada.")
     @ApiResponses({
-        @ApiResponse(responseCode = "204", description = "Solicitud rechazada correctamente"),
-        @ApiResponse(responseCode = "403", description = "Acceso denegado. Solo ADMIN")
+            @ApiResponse(responseCode = "204", description = "Solicitud rechazada correctamente"),
+            @ApiResponse(responseCode = "403", description = "Acceso denegado. Solo ADMIN")
     })
     public ResponseEntity<Void> reject(@PathVariable Long id,
                                        @Valid @RequestBody ProviderRejectionRequest body) {

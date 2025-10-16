@@ -38,8 +38,8 @@ public class CertificationController {
     @PreAuthorize("hasRole('PROVIDER')")
     @Operation(summary = "Agregar certificación", description = "Permite a un usuario con rol PROVIDER agregar una certificación. Requiere autenticación y rol PROVIDER.")
     @ApiResponses({
-        @ApiResponse(responseCode = "201", description = "Certificación agregada correctamente"),
-        @ApiResponse(responseCode = "403", description = "Acceso denegado. Solo PROVIDER")
+            @ApiResponse(responseCode = "201", description = "Certificación agregada correctamente"),
+            @ApiResponse(responseCode = "403", description = "Acceso denegado. Solo PROVIDER")
     })
     public ResponseEntity<CertificationDTO> addCertification(@RequestBody @Valid CertificationRequest certificationRequest) {
         CertificationDTO certification = certificationService.addCertification(certificationRequest);
@@ -51,8 +51,8 @@ public class CertificationController {
     @PreAuthorize("hasRole('PROVIDER')")
     @Operation(summary = "Eliminar certificación", description = "Permite a un usuario con rol PROVIDER eliminar una certificación. Requiere autenticación y rol PROVIDER.")
     @ApiResponses({
-        @ApiResponse(responseCode = "204", description = "Certificación eliminada correctamente"),
-        @ApiResponse(responseCode = "403", description = "Acceso denegado. Solo PROVIDER")
+            @ApiResponse(responseCode = "204", description = "Certificación eliminada correctamente"),
+            @ApiResponse(responseCode = "403", description = "Acceso denegado. Solo PROVIDER")
     })
     public ResponseEntity<Void> deleteCertification(@PathVariable Long certId) {
         certificationService.deleteCertification(certId);
@@ -63,8 +63,8 @@ public class CertificationController {
     @PreAuthorize("hasRole('PROVIDER')")
     @Operation(summary = "Actualizar certificación", description = "Permite a un usuario con rol PROVIDER actualizar una certificación. Requiere autenticación y rol PROVIDER.")
     @ApiResponses({
-        @ApiResponse(responseCode = "200", description = "Certificación actualizada correctamente"),
-        @ApiResponse(responseCode = "403", description = "Acceso denegado. Solo PROVIDER")
+            @ApiResponse(responseCode = "200", description = "Certificación actualizada correctamente"),
+            @ApiResponse(responseCode = "403", description = "Acceso denegado. Solo PROVIDER")
     })
     public ResponseEntity<CertificationDTO> updateCertification(@PathVariable Long certId, @RequestBody @Valid CertificationRequest certificationRequest) {
         CertificationDTO updatedCert = certificationService.updateCertification(certId, certificationRequest);

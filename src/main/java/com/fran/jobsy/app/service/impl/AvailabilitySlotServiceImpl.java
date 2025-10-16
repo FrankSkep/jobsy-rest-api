@@ -3,10 +3,14 @@ package com.fran.jobsy.app.service.impl;
 import com.fran.jobsy.app.dto.availability_slot.AvailabilitySlotDTO;
 import com.fran.jobsy.app.dto.availability_slot.AvailabilitySlotRequest;
 import com.fran.jobsy.app.entity.AvailabilitySlot;
+import com.fran.jobsy.app.entity.User;
+import com.fran.jobsy.app.enums.Role;
+import com.fran.jobsy.app.exception.custom.ConflictException;
 import com.fran.jobsy.app.exception.custom.ResourceAlreadyExistsException;
 import com.fran.jobsy.app.exception.custom.ResourceNotFoundException;
 import com.fran.jobsy.app.mapper.AvailabilitySlotMapper;
 import com.fran.jobsy.app.repository.AvailabilitySlotRepository;
+import com.fran.jobsy.app.repository.UserRepository;
 import com.fran.jobsy.app.service.AvailabilitySlotService;
 import com.fran.jobsy.app.util.AuthenticatedUserProvider;
 import lombok.RequiredArgsConstructor;
@@ -21,9 +25,16 @@ public class AvailabilitySlotServiceImpl implements AvailabilitySlotService {
     private final AvailabilitySlotRepository availabilitySlotRepository;
     private final AuthenticatedUserProvider authenticatedUserProvider;
     private final AvailabilitySlotMapper availabilitySlotMapper;
+    private final UserRepository userRepository;
 
     @Override
     public List<AvailabilitySlotDTO> getAllByUserId(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado con ID: " + userId));
+
+        if (user.getRole() != Role.PROVIDER) {
+            throw new ConflictException("El usuario con ID: " + userId + " no es un proveedor");
+        }
         return availabilitySlotRepository.findAllByUserId(userId);
     }
 
