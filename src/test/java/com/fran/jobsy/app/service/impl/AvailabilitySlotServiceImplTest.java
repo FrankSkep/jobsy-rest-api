@@ -7,6 +7,7 @@ import com.fran.jobsy.app.entity.User;
 import com.fran.jobsy.app.exception.custom.ResourceNotFoundException;
 import com.fran.jobsy.app.mapper.AvailabilitySlotMapper;
 import com.fran.jobsy.app.repository.AvailabilitySlotRepository;
+import com.fran.jobsy.app.repository.UserRepository;
 import com.fran.jobsy.app.util.AuthenticatedUserProvider;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -28,13 +29,18 @@ class AvailabilitySlotServiceImplTest {
     private AuthenticatedUserProvider authenticatedUserProvider;
     @Mock
     private AvailabilitySlotMapper availabilitySlotMapper;
+    @Mock
+    private UserRepository userRepository;
     @InjectMocks
     private AvailabilitySlotServiceImpl service;
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        service = new AvailabilitySlotServiceImpl(availabilitySlotRepository, authenticatedUserProvider, availabilitySlotMapper);
+        service = new AvailabilitySlotServiceImpl(availabilitySlotRepository,
+                authenticatedUserProvider,
+                availabilitySlotMapper,
+                userRepository);
     }
 
     @Test

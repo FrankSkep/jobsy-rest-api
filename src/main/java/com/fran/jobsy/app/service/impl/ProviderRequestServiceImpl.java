@@ -7,6 +7,7 @@ import com.fran.jobsy.app.dto.user.UserBasicDTO;
 import com.fran.jobsy.app.entity.ProviderDocument;
 import com.fran.jobsy.app.entity.ProviderRequest;
 import com.fran.jobsy.app.entity.User;
+import com.fran.jobsy.app.enums.NotificationType;
 import com.fran.jobsy.app.enums.ProviderRequestStatus;
 import com.fran.jobsy.app.enums.Role;
 import com.fran.jobsy.app.exception.custom.CloudinaryException;
@@ -15,7 +16,6 @@ import com.fran.jobsy.app.exception.custom.ProviderApplicationException;
 import com.fran.jobsy.app.exception.custom.ResourceNotFoundException;
 import com.fran.jobsy.app.repository.ProviderRequestRepository;
 import com.fran.jobsy.app.service.CloudinaryService;
-import com.fran.jobsy.app.service.MailService;
 import com.fran.jobsy.app.service.ProviderRequestService;
 import com.fran.jobsy.app.util.AuthenticatedUserProvider;
 import lombok.RequiredArgsConstructor;
@@ -37,7 +37,7 @@ public class ProviderRequestServiceImpl implements ProviderRequestService {
     private final ProviderRequestRepository providerRequestRepository;
     private final CloudinaryService cloudinaryService;
     private final AuthenticatedUserProvider authenticatedUserProvider;
-    private final MailService mailService;
+    private final NotificationServiceImpl notificationService;
 
     @Override
     @Transactional
@@ -86,11 +86,9 @@ public class ProviderRequestServiceImpl implements ProviderRequestService {
             providerRequest.setDocuments(uploadedDocs);
             providerRequestRepository.save(providerRequest);
 
-            mailService.sendEmail(
-                    userRef.getUsername(),
-                    "Solicitud de proveedor recibida",
-                    "Tu solicitud para ser proveedor ha sido recibida y está pendiente de revisión."
-            );
+            notificationService.notifyUser(userRef, "Jobsy | Solicitud de proveedor recibida",
+                    "Tu solicitud para ser proveedor ha sido recibida y está pendiente de revisión.",
+                    NotificationType.SYSTEM, true);
 
         } catch (
                 Exception e) {
@@ -164,11 +162,9 @@ public class ProviderRequestServiceImpl implements ProviderRequestService {
 
         providerRequestRepository.save(request);
 
-        mailService.sendEmail(
-                user.getUsername(),
-                "Jobsy - Solicitud de proveedor aprobada",
-                "¡Felicidades! Tu solicitud para ser proveedor ha sido aprobada. Ya puedes ofrecer tus servicios en la plataforma."
-        );
+        notificationService.notifyUser(user, "Jobsy - Solicitud de proveedor aprobada",
+                "¡Felicidades! Tu solicitud para ser proveedor ha sido aprobada. Ya puedes ofrecer tus servicios en la plataforma.",
+                NotificationType.SYSTEM, true);
     }
 
 
@@ -191,11 +187,9 @@ public class ProviderRequestServiceImpl implements ProviderRequestService {
 
         providerRequestRepository.save(request);
 
-        mailService.sendEmail(
-                request.getUser().getUsername(),
-                "Jobsy - Solicitud de proveedor rechazada",
-                "Lamentamos informarte que tu solicitud para ser proveedor fue rechazada. Motivo: " + reason
-        );
+        notificationService.notifyUser(request.getUser(), "Jobsy - Solicitud de proveedor rechazada",
+                "Lamentamos informarte que tu solicitud para ser proveedor fue rechazada. Motivo: " + reason,
+                NotificationType.SYSTEM, true);
     }
 
 

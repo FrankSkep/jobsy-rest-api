@@ -20,13 +20,12 @@ import java.util.List;
 public class NotificationServiceImpl implements NotificationService {
 
     private final NotificationRepository notificationRepository;
-    private final NotificationService notificationService;
     private final SimpMessagingTemplate messagingTemplate;
     private final MailService emailService;
 
     @Override
     public List<NotificationDTO> getMyNotifications() {
-        return notificationService.getMyNotifications();
+        return notificationRepository.findAllAsDTO();
     }
 
     @Override
