@@ -6,14 +6,10 @@ import com.fran.jobsy.app.entity.User;
 import com.fran.jobsy.app.enums.Role;
 import com.fran.jobsy.app.exception.custom.AuthenticationException;
 import com.fran.jobsy.app.exception.custom.ResourceNotFoundException;
-import com.fran.jobsy.app.repository.UserPhotoRepository;
 import com.fran.jobsy.app.repository.UserRepository;
 import com.fran.jobsy.app.repository.UserWorkPhotoRepository;
-import com.fran.jobsy.app.service.CloudinaryService;
-import com.fran.jobsy.app.service.OfferingService;
 import com.fran.jobsy.app.service.UserService;
 import com.fran.jobsy.app.util.AuthenticatedUserProvider;
-import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -122,12 +118,21 @@ public class UserServiceImpl implements UserService {
     public UserFullDTO getUserInfo() {
         User user = getById(authenticatedUserProvider.getAuthenticatedUserId());
 
+        UserPhotoDTO photoDto = null;
+        if (user.getPhoto() != null) {
+            photoDto = new UserPhotoDTO(
+                    user.getPhoto().getId(),
+                    user.getPhoto().getImageId(),
+                    user.getPhoto().getUrl()
+            );
+        }
+
         return new UserFullDTO(
                 user.getId(),
                 user.getUsername(),
                 user.getLastname(),
                 user.getFirstname(),
-                new UserPhotoDTO(user.getPhoto().getId(), user.getPhoto().getImageId(), user.getPhoto().getUrl()),
+                photoDto,
                 user.getCountry(),
                 user.getRole(),
                 user.getBio(),
