@@ -17,11 +17,6 @@ public interface OfferingRepository extends JpaRepository<Offering, Long> {
     @Query("SELECT new com.fran.jobsy.app.dto.offering.OfferingDTO(s.id, " +
             "new com.fran.jobsy.app.dto.user.UserServiceDTO(s.owner.id, s.owner.lastname, s.owner.firstname), " +
             "s.category.name, s.title, s.description, s.basePrice) FROM Offering s")
-    List<OfferingDTO> findAllServices();
-
-    @Query("SELECT new com.fran.jobsy.app.dto.offering.OfferingDTO(s.id, " +
-            "new com.fran.jobsy.app.dto.user.UserServiceDTO(s.owner.id, s.owner.lastname, s.owner.firstname), " +
-            "s.category.name, s.title, s.description, s.basePrice) FROM Offering s")
     Page<OfferingDTO> findAllServicesPaged(Pageable pageable);
 
     @Query("SELECT new com.fran.jobsy.app.dto.offering.OfferingDTO(s.id, " +
@@ -39,22 +34,6 @@ public interface OfferingRepository extends JpaRepository<Offering, Long> {
             @Param("minRating") Double minRating,
             @Param("location") String location,
             Pageable pageable
-    );
-
-    @Query("SELECT new com.fran.jobsy.app.dto.offering.OfferingDTO(s.id, " +
-            "new com.fran.jobsy.app.dto.user.UserServiceDTO(s.owner.id, s.owner.lastname, s.owner.firstname), " +
-            "s.category.name, s.title, s.description, s.basePrice) FROM Offering s " +
-            "WHERE (:categoryId IS NULL OR s.category.id = :categoryId) " +
-            "AND (:minPrice IS NULL OR s.basePrice >= :minPrice) " +
-            "AND (:maxPrice IS NULL OR s.basePrice <= :maxPrice) " +
-            "AND (:minRating IS NULL OR s.owner.avgRatingCache >= :minRating) " +
-            "AND (:location IS NULL OR LOWER(s.owner.addressText) LIKE LOWER(CONCAT('%', :location, '%')))")
-    List<OfferingDTO> findServicesWithFilters(
-            @Param("categoryId") Long categoryId,
-            @Param("minPrice") Double minPrice,
-            @Param("maxPrice") Double maxPrice,
-            @Param("minRating") Double minRating,
-            @Param("location") String location
     );
 
     @Query("SELECT new com.fran.jobsy.app.dto.offering.OfferingDTO(s.id, " +

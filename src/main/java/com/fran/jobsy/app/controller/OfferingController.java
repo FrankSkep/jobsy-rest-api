@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.*;
 import java.net.URI;
 
 @RestController
-@RequestMapping("/api/v1/services")
+@RequestMapping("/api/v1/offerings")
 @RequiredArgsConstructor
 @Tag(name = "Offerings", description = "Operaciones sobre los servicios ofrecidos por los proveedores")
 public class OfferingController {
@@ -75,6 +75,16 @@ public class OfferingController {
     public ResponseEntity<OfferingDTO> getOfferingById(@PathVariable Long id) {
         OfferingDTO offering = offeringService.getOffering(id);
         return ResponseEntity.ok(offering);
+    }
+
+    @PutMapping("/{id}")
+    @PreAuthorize("hasRole('PROVIDER')")
+    @Operation(summary = "Actualizar servicio", description = "Actualiza los detalles de un servicio ofrecido por un proveedor.")
+    public ResponseEntity<OfferingDTO> updateOffering(
+            @PathVariable Long id,
+            @RequestBody @Valid OfferingRequest offeringRequest) {
+        OfferingDTO updatedOffering = offeringService.updateOffering(id, offeringRequest);
+        return ResponseEntity.ok(updatedOffering);
     }
 
 //    @GetMapping("/api/v1/users/{id}/services")

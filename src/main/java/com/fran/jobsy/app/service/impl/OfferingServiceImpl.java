@@ -10,6 +10,7 @@ import com.fran.jobsy.app.entity.User;
 import com.fran.jobsy.app.enums.Role;
 import com.fran.jobsy.app.exception.custom.ConflictException;
 import com.fran.jobsy.app.exception.custom.ResourceNotFoundException;
+import com.fran.jobsy.app.mapper.OfferingMapper;
 import com.fran.jobsy.app.repository.CategoryRepository;
 import com.fran.jobsy.app.repository.OfferingRepository;
 import com.fran.jobsy.app.repository.UserRepository;
@@ -29,27 +30,7 @@ public class OfferingServiceImpl implements OfferingService {
     private final UserRepository userRepository;
     private final CategoryRepository categoryRepository;
     private final AuthenticatedUserProvider authenticatedUserProvider;
-
-    @Override
-    public List<OfferingDTO> getServices() {
-        return offeringRepository.findAllServices();
-    }
-
-    @Override
-    public Page<OfferingDTO> getOfferingsPage(Pageable pageable) {
-        return offeringRepository.findAllServicesPaged(pageable);
-    }
-
-    @Override
-    public List<OfferingDTO> getOfferingsWithFilters(OfferingFilterDTO filters) {
-        return offeringRepository.findServicesWithFilters(
-                filters.categoryId(),
-                filters.minPrice(),
-                filters.maxPrice(),
-                filters.minRating(),
-                filters.location()
-        );
-    }
+    private final OfferingMapper offeringMapper;
 
     @Override
     public Page<OfferingDTO> getOfferingsWithFiltersPaged(OfferingFilterDTO filters, Pageable pageable) {
@@ -64,7 +45,12 @@ public class OfferingServiceImpl implements OfferingService {
     }
 
     @Override
-    public List<OfferingDTO> getServicesByUserId(Long userId) {
+    public Page<OfferingDTO> getOfferingsPage(Pageable pageable) {
+        return offeringRepository.findAllServicesPaged(pageable);
+    }
+
+    @Override
+    public List<OfferingDTO> getOfferingsByUserId(Long userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado con ID: " + userId));
 
@@ -93,20 +79,29 @@ public class OfferingServiceImpl implements OfferingService {
                 .basePrice(offeringRequest.basePrice())
                 .build();
 
-        offeringRepository.save(offering);
+        return offeringMapper.toDTO(offeringRepository.save(offering));
+    }
 
-        return new OfferingDTO(
-                offering.getId(),
-                new UserServiceDTO(
-                        owner.getId(),
-                        owner.getLastname(),
-                        owner.getFirstname()
-                ),
-                category.getName(),
-                offering.getTitle(),
-                offering.getDescription(),
-                offering.getBasePrice()
-        );
+    @Override
+    public OfferingDTO updateOffering(Long offeringId, OfferingRequest offeringRequest) {
+        Offering offering = offeringRepository.findById(offeringId)
+                .orElseThrow(() -> new ResourceNotFoundException("Servicio no encontrado con ID: " + offeringId));
+
+        User owner = authenticatedUserProvider.getAuthenticatedUser();
+
+        if (!offering.getOwner().getId().equals(owner.getId())) {
+            throw new ConflictException("El usuario autenticado no es el propietario del servicio");
+        }
+
+        Category category = categoryRepository.findById(offeringRequest.category().id())
+                .orElseThrow(() -> new ResourceNotFoundException("Categoría no existente: " + offeringRequest.category().name()));
+
+        offering.setCategory(category);
+        offering.setTitle(offeringRequest.title());
+        offering.setDescription(offeringRequest.description());
+        offering.setBasePrice(offeringRequest.basePrice());
+
+        return offeringMapper.toDTO(offeringRepository.save(offering));
     }
 
     @Override

@@ -3,7 +3,7 @@ package com.fran.jobsy.app.service.impl;
 import com.fran.jobsy.app.dto.CertificationDTO;
 import com.fran.jobsy.app.dto.CertificationRequest;
 import com.fran.jobsy.app.entity.Certification;
-import com.fran.jobsy.app.exception.custom.AuthenticationException;
+import com.fran.jobsy.app.exception.custom.ConflictException;
 import com.fran.jobsy.app.exception.custom.ResourceNotFoundException;
 import com.fran.jobsy.app.repository.CertificationRepository;
 import com.fran.jobsy.app.service.CertificationService;
@@ -79,7 +79,7 @@ public class CertificationServiceImpl implements CertificationService {
         Long authenticatedUserId = authenticatedUserProvider.getAuthenticatedUserId();
 
         if (authenticatedUserId != cert.getUser().getId()) {
-            throw new AuthenticationException("Certificacion con id " + id + "no encontrada.");
+            throw new ConflictException("El usuario autenticado no es el propietario de la certificación.");
         }
 
         cert.setName(request.name());

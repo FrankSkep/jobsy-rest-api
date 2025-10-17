@@ -9,19 +9,15 @@ import org.springframework.data.domain.Pageable;
 import java.util.List;
 
 public interface OfferingService {
-
-    List<OfferingDTO> getServices();
-
-    Page<OfferingDTO> getOfferingsPage(Pageable pageable);
-
-    List<OfferingDTO> getOfferingsWithFilters(OfferingFilterDTO filters);
-
     Page<OfferingDTO> getOfferingsWithFiltersPaged(OfferingFilterDTO filters, Pageable pageable);
 
-    List<OfferingDTO> getServicesByUserId(Long userId);
+    Page<OfferingDTO> getOfferingsPage(Pageable pageable);
 
     OfferingDTO createOffering(OfferingRequest offeringRequest);
 
     OfferingDTO getOffering(Long offeringId);
 
+    List<OfferingDTO> getOfferingsByUserId(Long userId);
+
+    OfferingDTO updateOffering(Long offeringId, OfferingRequest offeringRequest);
 }
