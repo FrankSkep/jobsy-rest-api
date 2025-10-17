@@ -2,6 +2,7 @@ package com.fran.jobsy.app.service;
 
 import com.fran.jobsy.app.dto.offering.OfferingDTO;
 import com.fran.jobsy.app.dto.offering.OfferingFilterDTO;
+import com.fran.jobsy.app.dto.offering.OfferingRequest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -18,5 +19,7 @@ public interface OfferingService {
     Page<OfferingDTO> getServicesWithFiltersPaged(OfferingFilterDTO filters, Pageable pageable);
 
     List<OfferingDTO> getServicesByUserId(Long userId);
+
+    OfferingDTO createOffering(OfferingRequest offeringRequest);
 
 }

@@ -27,11 +27,6 @@ public class UserWorkPhotoController {
     @PostMapping("/me/portfolio")
     @PreAuthorize("hasRole('PROVIDER')")
     @Operation(summary = "Subir fotos de trabajos", description = "Permite a un usuario con rol PROVIDER subir fotos a su portafolio. Requiere autenticación y rol PROVIDER.")
-    @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "Fotos subidas correctamente"),
-            @ApiResponse(responseCode = "400", description = "Solicitud inválida o archivos no válidos"),
-            @ApiResponse(responseCode = "403", description = "Acceso denegado. Solo PROVIDER")
-    })
     public void uploadWorkPhotos(@RequestParam("files") List<MultipartFile> files) {
         if (files == null || files.isEmpty()) {
             throw new InvalidFileException("Debe enviar al menos un archivo.");
@@ -42,7 +37,6 @@ public class UserWorkPhotoController {
 
     @GetMapping("/{id}/portfolio")
     @Operation(summary = "Obtener portafolio de usuario", description = "Devuelve la lista de fotos de trabajos de un usuario público.")
-    @ApiResponse(responseCode = "200", description = "Lista de fotos obtenida correctamente")
     public List<UserWorkPhotoDTO> getWorkPhotos(@PathVariable Long id) {
         return userWorkPhotoService.getUserWorkPhotos(id);
     }
@@ -50,10 +44,6 @@ public class UserWorkPhotoController {
     @DeleteMapping("me/portfolio/{photoId}")
     @PreAuthorize("hasRole('PROVIDER')")
     @Operation(summary = "Eliminar foto de portafolio", description = "Permite a un usuario con rol PROVIDER eliminar una foto de su portafolio. Requiere autenticación y rol PROVIDER.")
-    @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "Foto eliminada correctamente"),
-            @ApiResponse(responseCode = "403", description = "Acceso denegado. Solo PROVIDER")
-    })
     public void removeWorkPhoto(@PathVariable Long photoId) {
         userWorkPhotoService.removeWorkPhoto(photoId);
     }

@@ -2,32 +2,42 @@ package com.fran.jobsy.app.controller;
 
 import com.fran.jobsy.app.dto.offering.OfferingDTO;
 import com.fran.jobsy.app.dto.offering.OfferingFilterDTO;
+import com.fran.jobsy.app.dto.offering.OfferingRequest;
 import com.fran.jobsy.app.service.OfferingService;
+import com.fran.jobsy.app.util.RestUtils;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
+
+import java.net.URI;
+import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/services")
 @RequiredArgsConstructor
 @Tag(name = "Offerings", description = "Operaciones sobre los servicios ofrecidos por los proveedores")
 public class OfferingController {
 
     private final OfferingService offeringService;
 
-    @GetMapping
+    @PostMapping("/api/v1/services")
+    @PreAuthorize("hasRole('PROVIDER')")
+    @Operation(summary = "Crear servicio", description = "Crea un nuevo servicio ofrecido por un proveedor.")
+    public ResponseEntity<OfferingDTO> createOffering(@RequestBody @Valid OfferingRequest offeringRequest) {
+        OfferingDTO offering = offeringService.createOffering(offeringRequest);
+        URI location = RestUtils.buildCreatedLocation(offering.id());
+        return ResponseEntity.created(location).body(offering);
+    }
+
+    @GetMapping("/api/v1/services")
     @Operation(summary = "Listar servicios", description = "Devuelve una lista paginada de servicios, con posibilidad de filtrar por categoría, precio, calificación y ubicación.")
-    @ApiResponse(responseCode = "200", description = "Lista de servicios obtenida correctamente")
     public ResponseEntity<Page<OfferingDTO>> getOfferings(
             @RequestParam(required = false) Long categoryId,
             @RequestParam(required = false) Double minPrice,
@@ -58,5 +68,11 @@ public class OfferingController {
 
         Page<OfferingDTO> result = offeringService.getServicesPaged(pageable);
         return ResponseEntity.ok(result);
+    }
+
+    @GetMapping("/api/v1/users/{id}/services")
+    @Operation(summary = "Obtener servicios de usuario", description = "Devuelve la lista de servicios ofrecidos por un usuario público.")
+    public ResponseEntity<List<OfferingDTO>> getUserServices(@PathVariable Long id) {
+        return ResponseEntity.ok(offeringService.getServicesByUserId(id));
     }
 }

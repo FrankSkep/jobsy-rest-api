@@ -27,7 +27,6 @@ public class CategoryController {
 
     @GetMapping
     @Operation(summary = "Listar categorías", description = "Devuelve la lista de todas las categorías disponibles.")
-    @ApiResponse(responseCode = "200", description = "Lista de categorías obtenida correctamente")
     public ResponseEntity<List<CategoryDTO>> getCategories() {
         return ResponseEntity.ok(categoryService.getAll());
     }
@@ -35,10 +34,6 @@ public class CategoryController {
     @PostMapping
     @PreAuthorize("hasRole('ADMIN')")
     @Operation(summary = "Crear categoría", description = "Solo accesible para ADMIN. Permite crear una nueva categoría de servicios.")
-    @ApiResponses({
-            @ApiResponse(responseCode = "201", description = "Categoría creada correctamente"),
-            @ApiResponse(responseCode = "403", description = "Acceso denegado. Solo ADMIN")
-    })
     public ResponseEntity<CategoryDTO> createCategory(@RequestBody @Valid CategoryRequest categoryReq) {
         CategoryDTO category = categoryService.create(categoryReq);
         URI location = RestUtils.buildCreatedLocation(category.id());
@@ -48,10 +43,6 @@ public class CategoryController {
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     @Operation(summary = "Actualizar categoría", description = "Solo accesible para ADMIN. Permite actualizar una categoría existente.")
-    @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "Categoría actualizada correctamente"),
-            @ApiResponse(responseCode = "403", description = "Acceso denegado. Solo ADMIN")
-    })
     public ResponseEntity<CategoryDTO> updateCategory(@PathVariable Long id, @RequestBody @Valid CategoryRequest categoryReq) {
         return ResponseEntity.ok(categoryService.update(id, categoryReq));
     }
@@ -59,10 +50,6 @@ public class CategoryController {
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     @Operation(summary = "Eliminar categoría", description = "Solo accesible para ADMIN. Permite eliminar una categoría existente.")
-    @ApiResponses({
-            @ApiResponse(responseCode = "204", description = "Categoría eliminada correctamente"),
-            @ApiResponse(responseCode = "403", description = "Acceso denegado. Solo ADMIN")
-    })
     public ResponseEntity<Void> deleteCategory(@PathVariable Long id) {
         categoryService.delete(id);
         return ResponseEntity.noContent().build();

@@ -26,14 +26,12 @@ public class AuthController {
 
     @PostMapping("/signin")
     @Operation(summary = "Iniciar sesión", description = "Permite a un usuario autenticarse en el sistema.")
-    @ApiResponse(responseCode = "200", description = "Inicio de sesión exitoso")
     public ResponseEntity<AuthResponse> login(@RequestBody @Valid LoginRequest request) {
         return ResponseEntity.ok(authService.login(request));
     }
 
     @PostMapping("/signup")
     @Operation(summary = "Registrar usuario", description = "Permite a un nuevo usuario registrarse en el sistema.")
-    @ApiResponse(responseCode = "201", description = "Usuario registrado exitosamente")
     public ResponseEntity<AuthResponse> register(@RequestBody @Valid RegisterRequest request) {
         return ResponseEntity.status(HttpStatus.CREATED).body(authService.register(request));
     }
