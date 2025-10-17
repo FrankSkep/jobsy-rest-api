@@ -12,14 +12,16 @@ public interface OfferingService {
 
     List<OfferingDTO> getServices();
 
-    Page<OfferingDTO> getServicesPaged(Pageable pageable);
+    Page<OfferingDTO> getOfferingsPage(Pageable pageable);
 
-    List<OfferingDTO> getServicesWithFilters(OfferingFilterDTO filters);
+    List<OfferingDTO> getOfferingsWithFilters(OfferingFilterDTO filters);
 
-    Page<OfferingDTO> getServicesWithFiltersPaged(OfferingFilterDTO filters, Pageable pageable);
+    Page<OfferingDTO> getOfferingsWithFiltersPaged(OfferingFilterDTO filters, Pageable pageable);
 
     List<OfferingDTO> getServicesByUserId(Long userId);
 
     OfferingDTO createOffering(OfferingRequest offeringRequest);
+
+    OfferingDTO getOffering(Long offeringId);
 
 }

@@ -1,7 +1,6 @@
 package com.fran.jobsy.app.service;
 
 import com.fran.jobsy.app.dto.auth.PasswordRequest;
-import com.fran.jobsy.app.dto.offering.OfferingDTO;
 import com.fran.jobsy.app.dto.user.*;
 import com.fran.jobsy.app.enums.Role;
 
@@ -26,8 +25,6 @@ public interface UserService {
     UserPublicDTO getUser(Long id);
 
     UserFullDTO getUserInfo();
-
-    List<OfferingDTO> getUserOfferings(Long userId);
 
     void deleteMyAccount();
 }

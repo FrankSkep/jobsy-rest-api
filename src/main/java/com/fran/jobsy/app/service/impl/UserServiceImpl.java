@@ -1,7 +1,6 @@
 package com.fran.jobsy.app.service.impl;
 
 import com.fran.jobsy.app.dto.auth.PasswordRequest;
-import com.fran.jobsy.app.dto.offering.OfferingDTO;
 import com.fran.jobsy.app.dto.user.*;
 import com.fran.jobsy.app.entity.User;
 import com.fran.jobsy.app.enums.Role;
@@ -26,13 +25,9 @@ import java.util.List;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
-    private final UserPhotoRepository UserPhotoRepository;
     private final UserWorkPhotoRepository userWorkPhotoRepository;
-    private final CloudinaryService cloudinaryService;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticatedUserProvider authenticatedUserProvider;
-    private final OfferingService offeringService;
-    private final EntityManager entityManager;
 
     private User getById(Long id) {
         return userRepository.findById(id)
@@ -144,12 +139,6 @@ public class UserServiceImpl implements UserService {
                 user.getServiceRadiusKm(),
                 user.getVerifiedCert()
         );
-    }
-
-    @Override
-    public List<OfferingDTO> getUserOfferings(Long userId) {
-        getById(userId);
-        return offeringService.getServicesByUserId(userId);
     }
 
     public void deleteMyAccount() {

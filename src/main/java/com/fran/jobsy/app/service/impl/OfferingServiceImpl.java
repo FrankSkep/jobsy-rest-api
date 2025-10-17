@@ -36,12 +36,12 @@ public class OfferingServiceImpl implements OfferingService {
     }
 
     @Override
-    public Page<OfferingDTO> getServicesPaged(Pageable pageable) {
+    public Page<OfferingDTO> getOfferingsPage(Pageable pageable) {
         return offeringRepository.findAllServicesPaged(pageable);
     }
 
     @Override
-    public List<OfferingDTO> getServicesWithFilters(OfferingFilterDTO filters) {
+    public List<OfferingDTO> getOfferingsWithFilters(OfferingFilterDTO filters) {
         return offeringRepository.findServicesWithFilters(
                 filters.categoryId(),
                 filters.minPrice(),
@@ -52,7 +52,7 @@ public class OfferingServiceImpl implements OfferingService {
     }
 
     @Override
-    public Page<OfferingDTO> getServicesWithFiltersPaged(OfferingFilterDTO filters, Pageable pageable) {
+    public Page<OfferingDTO> getOfferingsWithFiltersPaged(OfferingFilterDTO filters, Pageable pageable) {
         return offeringRepository.findServicesWithFiltersPaged(
                 filters.categoryId(),
                 filters.minPrice(),
@@ -94,6 +94,28 @@ public class OfferingServiceImpl implements OfferingService {
                 .build();
 
         offeringRepository.save(offering);
+
+        return new OfferingDTO(
+                offering.getId(),
+                new UserServiceDTO(
+                        owner.getId(),
+                        owner.getLastname(),
+                        owner.getFirstname()
+                ),
+                category.getName(),
+                offering.getTitle(),
+                offering.getDescription(),
+                offering.getBasePrice()
+        );
+    }
+
+    @Override
+    public OfferingDTO getOffering(Long offeringId) {
+        Offering offering = offeringRepository.findById(offeringId)
+                .orElseThrow(() -> new ResourceNotFoundException("Servicio no encontrado con ID: " + offeringId));
+
+        User owner = offering.getOwner();
+        Category category = offering.getCategory();
 
         return new OfferingDTO(
                 offering.getId(),

@@ -18,16 +18,16 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
-import java.util.List;
 
 @RestController
+@RequestMapping("/api/v1/services")
 @RequiredArgsConstructor
 @Tag(name = "Offerings", description = "Operaciones sobre los servicios ofrecidos por los proveedores")
 public class OfferingController {
 
     private final OfferingService offeringService;
 
-    @PostMapping("/api/v1/services")
+    @PostMapping
     @PreAuthorize("hasRole('PROVIDER')")
     @Operation(summary = "Crear servicio", description = "Crea un nuevo servicio ofrecido por un proveedor.")
     public ResponseEntity<OfferingDTO> createOffering(@RequestBody @Valid OfferingRequest offeringRequest) {
@@ -36,7 +36,7 @@ public class OfferingController {
         return ResponseEntity.created(location).body(offering);
     }
 
-    @GetMapping("/api/v1/services")
+    @GetMapping
     @Operation(summary = "Listar servicios", description = "Devuelve una lista paginada de servicios, con posibilidad de filtrar por categoría, precio, calificación y ubicación.")
     public ResponseEntity<Page<OfferingDTO>> getOfferings(
             @RequestParam(required = false) Long categoryId,
@@ -62,17 +62,24 @@ public class OfferingController {
                     categoryId, minPrice, maxPrice, minRating, null, null, null, location
             );
 
-            Page<OfferingDTO> result = offeringService.getServicesWithFiltersPaged(filters, pageable);
+            Page<OfferingDTO> result = offeringService.getOfferingsWithFiltersPaged(filters, pageable);
             return ResponseEntity.ok(result);
         }
 
-        Page<OfferingDTO> result = offeringService.getServicesPaged(pageable);
+        Page<OfferingDTO> result = offeringService.getOfferingsPage(pageable);
         return ResponseEntity.ok(result);
     }
 
-    @GetMapping("/api/v1/users/{id}/services")
-    @Operation(summary = "Obtener servicios de usuario", description = "Devuelve la lista de servicios ofrecidos por un usuario público.")
-    public ResponseEntity<List<OfferingDTO>> getUserServices(@PathVariable Long id) {
-        return ResponseEntity.ok(offeringService.getServicesByUserId(id));
+    @GetMapping("/{id}")
+    @Operation(summary = "Obtener servicio por ID", description = "Devuelve los detalles de un servicio específico por su ID.")
+    public ResponseEntity<OfferingDTO> getOfferingById(@PathVariable Long id) {
+        OfferingDTO offering = offeringService.getOffering(id);
+        return ResponseEntity.ok(offering);
     }
+
+//    @GetMapping("/api/v1/users/{id}/services")
+//    @Operation(summary = "Obtener servicios de usuario", description = "Devuelve la lista de servicios ofrecidos por un usuario público.")
+//    public ResponseEntity<List<OfferingDTO>> getUserServices(@PathVariable Long id) {
+//        return ResponseEntity.ok(offeringService.getServicesByUserId(id));
+//    }
 }

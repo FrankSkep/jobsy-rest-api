@@ -62,5 +62,4 @@ public interface OfferingRepository extends JpaRepository<Offering, Long> {
             "s.category.name, s.title, s.description, s.basePrice) FROM Offering s " +
             "WHERE s.owner.id = :ownerId")
     List<OfferingDTO> findByOwnerId(@Param("ownerId") Long ownerId);
-
 }
