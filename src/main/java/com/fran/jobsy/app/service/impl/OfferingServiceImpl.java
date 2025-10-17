@@ -3,7 +3,6 @@ package com.fran.jobsy.app.service.impl;
 import com.fran.jobsy.app.dto.offering.OfferingDTO;
 import com.fran.jobsy.app.dto.offering.OfferingFilterDTO;
 import com.fran.jobsy.app.dto.offering.OfferingRequest;
-import com.fran.jobsy.app.dto.user.UserServiceDTO;
 import com.fran.jobsy.app.entity.Category;
 import com.fran.jobsy.app.entity.Offering;
 import com.fran.jobsy.app.entity.User;
@@ -109,20 +108,6 @@ public class OfferingServiceImpl implements OfferingService {
         Offering offering = offeringRepository.findById(offeringId)
                 .orElseThrow(() -> new ResourceNotFoundException("Servicio no encontrado con ID: " + offeringId));
 
-        User owner = offering.getOwner();
-        Category category = offering.getCategory();
-
-        return new OfferingDTO(
-                offering.getId(),
-                new UserServiceDTO(
-                        owner.getId(),
-                        owner.getLastname(),
-                        owner.getFirstname()
-                ),
-                category.getName(),
-                offering.getTitle(),
-                offering.getDescription(),
-                offering.getBasePrice()
-        );
+        return offeringMapper.toDTO(offering);
     }
 }

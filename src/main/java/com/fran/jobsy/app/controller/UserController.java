@@ -1,13 +1,9 @@
 package com.fran.jobsy.app.controller;
 
-import com.fran.jobsy.app.dto.offering.OfferingDTO;
 import com.fran.jobsy.app.dto.user.*;
 import com.fran.jobsy.app.enums.Role;
-import com.fran.jobsy.app.service.OfferingService;
 import com.fran.jobsy.app.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

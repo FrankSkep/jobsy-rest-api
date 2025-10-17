@@ -5,8 +5,6 @@ import com.fran.jobsy.app.dto.category.CategoryRequest;
 import com.fran.jobsy.app.service.CategoryService;
 import com.fran.jobsy.app.util.RestUtils;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

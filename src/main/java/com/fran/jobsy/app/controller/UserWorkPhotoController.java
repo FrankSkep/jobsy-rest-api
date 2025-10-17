@@ -5,8 +5,6 @@ import com.fran.jobsy.app.exception.custom.InvalidFileException;
 import com.fran.jobsy.app.service.UserWorkPhotoService;
 import com.fran.jobsy.app.util.FileValidator;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
