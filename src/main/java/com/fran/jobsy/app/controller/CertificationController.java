@@ -17,21 +17,21 @@ import java.net.URI;
 import java.util.List;
 
 @Controller
-@RequestMapping("/api/v1")
+@RequestMapping("/api/v1/users")
 @RequiredArgsConstructor
 @Tag(name = "Certifications", description = "Operaciones sobre certificaciones de proveedores")
 public class CertificationController {
 
     private final CertificationService certificationService;
 
-    @GetMapping("users/{id}/certifications")
+    @GetMapping("/{id}/certifications")
     @Operation(summary = "Obtener certificaciones de usuario", description = "Devuelve la lista de certificaciones públicas de un usuario.")
     public ResponseEntity<List<CertificationDTO>> getMyCertifications(@PathVariable Long id) {
         List<CertificationDTO> certifications = certificationService.getUserCertifications(id);
         return ResponseEntity.ok(certifications);
     }
 
-    @PostMapping("/users/me/certifications")
+    @PostMapping("/me/certifications")
     @PreAuthorize("hasRole('PROVIDER')")
     @Operation(summary = "Agregar certificación", description = "Permite a un usuario con rol PROVIDER agregar una certificación. Requiere autenticación y rol PROVIDER.")
     public ResponseEntity<CertificationDTO> addCertification(@RequestBody @Valid CertificationRequest certificationRequest) {
@@ -40,7 +40,7 @@ public class CertificationController {
         return ResponseEntity.created(location).body(certification);
     }
 
-    @DeleteMapping("/users/me/certifications/{certId}")
+    @DeleteMapping("/me/certifications/{certId}")
     @PreAuthorize("hasRole('PROVIDER')")
     @Operation(summary = "Eliminar certificación", description = "Permite a un usuario con rol PROVIDER eliminar una certificación. Requiere autenticación y rol PROVIDER.")
     public ResponseEntity<Void> deleteCertification(@PathVariable Long certId) {
@@ -48,7 +48,7 @@ public class CertificationController {
         return ResponseEntity.noContent().build();
     }
 
-    @PutMapping("/users/me/certifications/{certId}")
+    @PutMapping("/me/certifications/{certId}")
     @PreAuthorize("hasRole('PROVIDER')")
     @Operation(summary = "Actualizar certificación", description = "Permite a un usuario con rol PROVIDER actualizar una certificación. Requiere autenticación y rol PROVIDER.")
     public ResponseEntity<CertificationDTO> updateCertification(@PathVariable Long certId, @RequestBody @Valid CertificationRequest certificationRequest) {
