@@ -2,20 +2,18 @@ package com.fran.jobsy.app.entity;
 
 import com.fran.jobsy.app.enums.ProviderRequestStatus;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
 @Table(name = "provider_applies")
-@Data
+@Builder
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 public class ProviderRequest {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

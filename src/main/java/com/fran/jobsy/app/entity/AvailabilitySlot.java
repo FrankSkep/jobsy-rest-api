@@ -1,17 +1,15 @@
 package com.fran.jobsy.app.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Entity
 @Table(name = "availability_slots")
-@Data
+@Builder
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 public class AvailabilitySlot {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
