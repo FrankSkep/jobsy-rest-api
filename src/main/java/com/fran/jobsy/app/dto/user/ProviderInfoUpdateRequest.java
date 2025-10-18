@@ -2,7 +2,7 @@ package com.fran.jobsy.app.dto.user;
 
 import jakarta.validation.constraints.*;
 
-public record UserFullUpdateRequest(
+public record ProviderInfoUpdateRequest(
         @NotBlank(message = "Bio is mandatory")
         @Size(max = 500, message = "Bio must not exceed 500 characters")
         String bio,

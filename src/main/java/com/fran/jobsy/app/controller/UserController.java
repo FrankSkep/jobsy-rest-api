@@ -70,8 +70,8 @@ public class UserController {
     @PutMapping("/me/basic")
     @Operation(summary = "Actualizar mi información básica", description = "Permite al usuario autenticado actualizar su información básica.")
     public ResponseEntity<Void> updateMyBasicInfo(
-            @Valid @RequestBody UserUpdateRequest userUpdateRequest) {
-        userService.updateUser(userUpdateRequest);
+            @Valid @RequestBody UserInfoUpdateRequest userInfoUpdateRequest) {
+        userService.updateUser(userInfoUpdateRequest);
         return ResponseEntity.noContent().build();
     }
 
@@ -79,7 +79,7 @@ public class UserController {
     @PreAuthorize("hasRole('PROVIDER')")
     @Operation(summary = "Actualizar mi información completa", description = "Permite al usuario autenticado actualizar su información completa. Requiere autenticación y rol PROVIDER.")
     public ResponseEntity<Void> updateMyFullInfo(
-            @Valid @RequestBody UserFullUpdateRequest userFullDTO) {
+            @Valid @RequestBody ProviderInfoUpdateRequest userFullDTO) {
         userService.updateUser(userFullDTO);
         return ResponseEntity.noContent().build();
     }

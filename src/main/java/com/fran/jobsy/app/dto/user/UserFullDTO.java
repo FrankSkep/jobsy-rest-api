@@ -4,7 +4,7 @@ import com.fran.jobsy.app.enums.Role;
 
 public record UserFullDTO(
         Long id,
-        String username,
+        String email,
         String lastname,
         String firstname,
         UserPhotoDTO userPhoto,

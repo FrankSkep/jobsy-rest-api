@@ -41,7 +41,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void updateUser(UserUpdateRequest userReq) {
+    public void updateUser(UserInfoUpdateRequest userReq) {
         User user = getById(authenticatedUserProvider.getAuthenticatedUserId());
         user.setFirstname(userReq.firstname());
         user.setLastname(userReq.lastname());
@@ -50,7 +50,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void updateUser(UserFullUpdateRequest userReq) {
+    public void updateUser(ProviderInfoUpdateRequest userReq) {
         User user = getById(authenticatedUserProvider.getAuthenticatedUserId());
 
         user.setBio(userReq.bio());

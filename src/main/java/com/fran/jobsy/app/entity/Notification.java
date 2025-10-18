@@ -34,8 +34,11 @@ public class Notification {
     @Enumerated(EnumType.STRING)
     private NotificationType type;
 
+    @Builder.Default
+    @Column(nullable = false)
     private Boolean read = false;
 
+    @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
     @PrePersist

@@ -10,9 +10,9 @@ public interface UserService {
 
     List<UserDTO> getAllUsers();
 
-    void updateUser(UserUpdateRequest user);
+    void updateUser(UserInfoUpdateRequest user);
 
-    void updateUser(UserFullUpdateRequest user);
+    void updateUser(ProviderInfoUpdateRequest user);
 
     void updateRole(Long userId, Role role);
 

@@ -34,7 +34,7 @@ public class JwtService {
                 .findFirst()
                 .orElseThrow(() -> new RuntimeException("No role found"))
                 .getAuthority());
-        extraClaims.put("username", user.getUsername());
+        extraClaims.put("email", user.getUsername());
         if (user instanceof User customUser) {
             extraClaims.put("name", customUser.getFirstname() + customUser.getLastname());
         }
