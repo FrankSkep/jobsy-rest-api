@@ -33,6 +33,10 @@ public class ProviderAvailabilityServiceImpl implements ProviderAvailabilityServ
         User provider = userRepository.findById(providerId)
                 .orElseThrow(() -> new ResourceNotFoundException("Proveedor no encontrado"));
 
+        // Check for past dates
+        checkPastDate(startsAt);
+        checkPastDate(endsAt);
+
         // 1️. Verify working hours
         List<AvailabilitySlot> slots = slotRepository.findAllByUser(provider);
 
@@ -89,6 +93,8 @@ public class ProviderAvailabilityServiceImpl implements ProviderAvailabilityServ
 
 
     public AvailabilityCheckResponse checkDayAvailability(Long providerId, LocalDate date) {
+
+        checkPastDate(date);
         User provider = userRepository.findById(providerId)
                 .orElseThrow(() -> new ResourceNotFoundException("Proveedor no encontrado."));
 
@@ -150,6 +156,8 @@ public class ProviderAvailabilityServiceImpl implements ProviderAvailabilityServ
         User provider = userRepository.findById(providerId)
                 .orElseThrow(() -> new ResourceNotFoundException("Proveedor no encontrado."));
 
+        checkPastDate(date);
+
         int weekday = date.getDayOfWeek().getValue();
         List<AvailabilitySlot> slots = slotRepository.findAllByUser(provider).stream()
                 .filter(s -> s.getWeekday() == weekday)
@@ -192,5 +200,17 @@ public class ProviderAvailabilityServiceImpl implements ProviderAvailabilityServ
             }
         }
         return new DailyAvailabilityResponse(date, availableSlots);
+    }
+
+    private void checkPastDate(LocalDateTime dateTime) {
+        if (dateTime.isBefore(LocalDateTime.now())) {
+            throw new IllegalArgumentException("No puedes elegir una fecha pasada.");
+        }
+    }
+
+    private void checkPastDate(LocalDate date) {
+        if (date.isBefore(LocalDate.now())) {
+            throw new IllegalArgumentException("No puedes elegir una fecha pasada.");
+        }
     }
 }
