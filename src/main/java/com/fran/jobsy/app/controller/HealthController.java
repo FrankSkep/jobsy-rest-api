@@ -11,6 +11,4 @@ public class HealthController {
     public String checkHealth() {
         return "OK";
     }
-
-
 }

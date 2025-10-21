@@ -73,7 +73,13 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void deleteUser(Long id) {
+        Long authenticatedUserId = authenticatedUserProvider.getAuthenticatedUserId();
         User user = getById(id);
+
+        if (user.getId().equals(authenticatedUserId)) {
+            throw new AuthenticationException("No puedes eliminar tu propia cuenta.");
+        }
+
         userRepository.delete(user);
     }
 

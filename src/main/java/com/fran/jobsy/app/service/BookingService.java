@@ -7,7 +7,7 @@ import com.fran.jobsy.app.dto.booking.BookingResponseDTO;
 import java.util.List;
 
 public interface BookingService {
-    BookingListDTO createBooking(BookingRequest bookingReq);
+    BookingResponseDTO createBooking(BookingRequest bookingReq);
 
     List<BookingListDTO> getBookings();
 

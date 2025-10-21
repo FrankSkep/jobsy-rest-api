@@ -8,9 +8,9 @@ import java.time.LocalDateTime;
 
 public record BookingResponseDTO(
         Long id,
-        UserSummaryDTO clientId,
-        UserSummaryDTO providerId,
-        OfferingSummaryDTO offeringId,
+        UserSummaryDTO client,
+        UserSummaryDTO provider,
+        OfferingSummaryDTO offering,
         LocalDateTime startsAt,
         LocalDateTime endsAt,
         BookingStatus bookingStatus,

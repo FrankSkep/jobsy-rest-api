@@ -4,6 +4,8 @@ import com.fran.jobsy.app.dto.booking.AvailabilityCheckResponse;
 import com.fran.jobsy.app.dto.booking.BookingListDTO;
 import com.fran.jobsy.app.dto.booking.BookingRequest;
 import com.fran.jobsy.app.dto.booking.BookingResponseDTO;
+import com.fran.jobsy.app.dto.offering.OfferingSummaryDTO;
+import com.fran.jobsy.app.dto.user.UserSummaryDTO;
 import com.fran.jobsy.app.entity.Booking;
 import com.fran.jobsy.app.entity.Offering;
 import com.fran.jobsy.app.entity.User;
@@ -36,7 +38,7 @@ public class BookingServiceImpl implements BookingService {
     private final ProviderAvailabilityService providerAvailabilityService;
 
     @Override
-    public BookingListDTO createBooking(BookingRequest bookingReq) {
+    public BookingResponseDTO createBooking(BookingRequest bookingReq) {
 
         User provider = userRepository.findById(bookingReq.providerId())
                 .orElseThrow(() -> new ResourceNotFoundException("Proveedor no encontrado."));
@@ -52,7 +54,7 @@ public class BookingServiceImpl implements BookingService {
         }
 
         AvailabilityCheckResponse check = providerAvailabilityService.checkAvailability(provider.getId(),
-                LocalDateTime.parse(bookingReq.startsAt()), LocalDateTime.parse(bookingReq.endsAt()));
+                bookingReq.startsAt().toLocalDateTime(), bookingReq.endsAt().toLocalDateTime());
 
         if (!check.available()) {
             throw new ConflictException(check.message());
@@ -62,8 +64,8 @@ public class BookingServiceImpl implements BookingService {
                 .client(client)
                 .provider(provider)
                 .offering(offering)
-                .startsAt(LocalDateTime.parse(bookingReq.startsAt()))
-                .endsAt(LocalDateTime.parse(bookingReq.endsAt()))
+                .startsAt(bookingReq.startsAt().toLocalDateTime())
+                .endsAt(bookingReq.endsAt().toLocalDateTime())
                 .status(BookingStatus.PENDING)
                 .priceAtBooking(bookingReq.priceAtBooking())
                 .addressText(bookingReq.addressText())
@@ -75,15 +77,30 @@ public class BookingServiceImpl implements BookingService {
 
         notificationService.notifyUser(client, "Reserva solicitada con éxito.", "Su reserva ha sido creada y está pendiente de confirmación.", NotificationType.BOOKING, true);
 
-        return new BookingListDTO(
+        return new BookingResponseDTO(
                 booking.getId(),
-                provider.getFirstname() + " " + provider.getLastname(),
-                client.getFirstname() + " " + client.getLastname(),
-                offering.getTitle(),
+                new UserSummaryDTO(
+                        client.getId(),
+                        client.getFirstname() + " " + client.getLastname(),
+                        client.getPhoto().getUrl() != null ? client.getPhoto().getUrl() : "",
+                        client.getCountry()),
+                new UserSummaryDTO(
+                        provider.getId(),
+                        provider.getFirstname() + " " + provider.getLastname(),
+                        provider.getPhoto().getUrl() != null ? provider.getPhoto().getUrl() : "",
+                        provider.getCountry()),
+                new OfferingSummaryDTO(
+                        offering.getId(),
+                        offering.getCategory().getName(),
+                        offering.getTitle(),
+                        offering.getBasePrice()),
                 booking.getStartsAt(),
                 booking.getEndsAt(),
                 booking.getStatus(),
-                booking.getPriceAtBooking()
+                booking.getPriceAtBooking(),
+                booking.getAddressText(),
+                booking.getLat(),
+                booking.getLng()
         );
     }
 

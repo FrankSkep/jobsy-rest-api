@@ -65,15 +65,56 @@ public class ProviderAvailabilityServiceImpl implements ProviderAvailabilityServ
                 .orElseThrow(() -> new ResourceNotFoundException("Proveedor no encontrado."));
 
         int weekday = date.getDayOfWeek().getValue();
+        List<AvailabilitySlot> slots = slotRepository.findAllByUser(provider).stream()
+                .filter(s -> s.getWeekday() == weekday)
+                .toList();
 
-        boolean worksThatDay = slotRepository.findAllByUser(provider).stream()
-                .anyMatch(slot -> slot.getWeekday() == weekday);
-
-        if (!worksThatDay) {
+        // 1️. No trabaja ese día
+        if (slots.isEmpty()) {
             return new AvailabilityCheckResponse(false, "El proveedor no trabaja ese día.");
         }
 
-        return new AvailabilityCheckResponse(true, "El proveedor tiene disponibilidad base ese día.");
+        // 2️. Traer todas las reservas activas (PENDING o CONFIRMED) para ese día
+        LocalDateTime startOfDay = date.atStartOfDay();
+        LocalDateTime endOfDay = date.plusDays(1).atStartOfDay();
+
+        List<Booking> bookings = bookingRepository.findByProviderAndStatusInAndStartsAtBetween(
+                provider,
+                List.of(BookingStatus.CONFIRMED),
+                startOfDay,
+                endOfDay
+        );
+
+        // 3️. Evaluar si al menos hay un hueco libre
+        boolean hasFreeSlot = false;
+
+        for (AvailabilitySlot slot : slots) {
+            LocalTime current = LocalTime.parse(slot.getStartTime());
+            LocalTime end = LocalTime.parse(slot.getEndTime());
+
+            while (current.isBefore(end)) {
+                LocalDateTime startTime = date.atTime(current);
+                LocalDateTime endTime = date.atTime(current.plusHours(1));
+
+                boolean overlaps = bookings.stream().anyMatch(b ->
+                        b.getStartsAt().isBefore(endTime) && b.getEndsAt().isAfter(startTime)
+                );
+
+                if (!overlaps) {
+                    hasFreeSlot = true;
+                    break;
+                }
+                current = current.plusHours(1);
+            }
+
+            if (hasFreeSlot) break;
+        }
+
+        if (hasFreeSlot) {
+            return new AvailabilityCheckResponse(true, "El proveedor tiene disponibilidad ese día.");
+        } else {
+            return new AvailabilityCheckResponse(false, "El proveedor no tiene espacios libres ese día.");
+        }
     }
 
     public DailyAvailabilityResponse getAvailabilityForDay(Long providerId, LocalDate date) {
