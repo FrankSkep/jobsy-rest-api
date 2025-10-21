@@ -35,14 +35,42 @@ public class ProviderAvailabilityServiceImpl implements ProviderAvailabilityServ
 
         // 1️. Verify working hours
         List<AvailabilitySlot> slots = slotRepository.findAllByUser(provider);
-        boolean withinSchedule = slots.stream()
-                .anyMatch(slot -> slot.getWeekday() == startsAt.getDayOfWeek().getValue()
-                        && !startsAt.toLocalTime().isBefore(LocalTime.parse(slot.getStartTime()))
-                        && !endsAt.toLocalTime().isAfter(LocalTime.parse(slot.getEndTime())));
+
+        int requestedDay = startsAt.getDayOfWeek().getValue(); // 1..7
+
+        List<AvailabilitySlot> daySlots = slots.stream()
+                .filter(slot -> {
+                    Integer s = slot.getWeekday();
+                    if (s == null)
+                        return false;
+                    return s.intValue() == requestedDay;
+                })
+                .toList();
+
+        if (daySlots.isEmpty()) {
+            return new AvailabilityCheckResponse(false, "El proveedor no trabaja ese día.");
+        }
+
+
+        // Get the full range of working hours for the day
+        LocalTime earliestStart = daySlots.stream()
+                .map(slot -> LocalTime.parse(slot.getStartTime()))
+                .min(LocalTime::compareTo)
+                .orElseThrow();
+
+        LocalTime latestEnd = daySlots.stream()
+                .map(slot -> LocalTime.parse(slot.getEndTime()))
+                .max(LocalTime::compareTo)
+                .orElseThrow();
+
+        // Validate that the booking is within working hours
+        boolean withinSchedule = !startsAt.toLocalTime().isBefore(earliestStart)
+                && !endsAt.toLocalTime().isAfter(latestEnd);
 
         if (!withinSchedule) {
             return new AvailabilityCheckResponse(false, "El proveedor no trabaja en ese horario.");
         }
+
 
         // 2️. Check for overlapping bookings
         boolean overlaps = bookingRepository.existsByProviderAndStatusInAndStartsAtLessThanAndEndsAtGreaterThan(
@@ -69,12 +97,12 @@ public class ProviderAvailabilityServiceImpl implements ProviderAvailabilityServ
                 .filter(s -> s.getWeekday() == weekday)
                 .toList();
 
-        // 1️. No trabaja ese día
+        // 1️. Not working that day
         if (slots.isEmpty()) {
             return new AvailabilityCheckResponse(false, "El proveedor no trabaja ese día.");
         }
 
-        // 2️. Traer todas las reservas activas (PENDING o CONFIRMED) para ese día
+        // 2️. Get all active bookings (PENDING or CONFIRMED) for that day
         LocalDateTime startOfDay = date.atStartOfDay();
         LocalDateTime endOfDay = date.plusDays(1).atStartOfDay();
 
@@ -85,7 +113,7 @@ public class ProviderAvailabilityServiceImpl implements ProviderAvailabilityServ
                 endOfDay
         );
 
-        // 3️. Evaluar si al menos hay un hueco libre
+        // 3️. Check if there is at least one free slot
         boolean hasFreeSlot = false;
 
         for (AvailabilitySlot slot : slots) {
@@ -107,7 +135,8 @@ public class ProviderAvailabilityServiceImpl implements ProviderAvailabilityServ
                 current = current.plusHours(1);
             }
 
-            if (hasFreeSlot) break;
+            if (hasFreeSlot)
+                break;
         }
 
         if (hasFreeSlot) {

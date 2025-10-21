@@ -1,5 +1,6 @@
 package com.fran.jobsy.app.repository;
 
+import com.fran.jobsy.app.dto.booking.BookingListDTO;
 import com.fran.jobsy.app.entity.Booking;
 import com.fran.jobsy.app.entity.User;
 import com.fran.jobsy.app.enums.BookingStatus;
@@ -21,4 +22,8 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
     );
 
     List<Booking> findByProviderAndStatusInAndStartsAtBetween(User provider, Collection<BookingStatus> statuses, LocalDateTime startsAtAfter, LocalDateTime startsAtBefore);
+
+    List<Booking> findAllByClientId(Long clientId);
+
+    List<Booking> findByProvider_IdAndStatusIn(Long providerId, Collection<BookingStatus> statuses);
 }

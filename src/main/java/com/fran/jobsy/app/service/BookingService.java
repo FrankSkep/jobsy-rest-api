@@ -9,7 +9,7 @@ import java.util.List;
 public interface BookingService {
     BookingResponseDTO createBooking(BookingRequest bookingReq);
 
-    List<BookingListDTO> getBookings();
+    List<BookingListDTO> getClientBookings();
 
     BookingResponseDTO getBooking(Long id);
 

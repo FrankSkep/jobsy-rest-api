@@ -13,6 +13,7 @@ import com.fran.jobsy.app.enums.BookingStatus;
 import com.fran.jobsy.app.enums.NotificationType;
 import com.fran.jobsy.app.exception.custom.ConflictException;
 import com.fran.jobsy.app.exception.custom.ResourceNotFoundException;
+import com.fran.jobsy.app.mapper.BookingMapper;
 import com.fran.jobsy.app.repository.BookingRepository;
 import com.fran.jobsy.app.repository.OfferingRepository;
 import com.fran.jobsy.app.repository.UserRepository;
@@ -23,7 +24,6 @@ import com.fran.jobsy.app.util.AuthenticatedUserProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -36,6 +36,7 @@ public class BookingServiceImpl implements BookingService {
     private final NotificationService notificationService;
     private final UserRepository userRepository;
     private final ProviderAvailabilityService providerAvailabilityService;
+    private final BookingMapper bookingMapper;
 
     @Override
     public BookingResponseDTO createBooking(BookingRequest bookingReq) {
@@ -54,7 +55,7 @@ public class BookingServiceImpl implements BookingService {
         }
 
         AvailabilityCheckResponse check = providerAvailabilityService.checkAvailability(provider.getId(),
-                bookingReq.startsAt().toLocalDateTime(), bookingReq.endsAt().toLocalDateTime());
+                bookingReq.startsAt(), bookingReq.endsAt());
 
         if (!check.available()) {
             throw new ConflictException(check.message());
@@ -64,8 +65,8 @@ public class BookingServiceImpl implements BookingService {
                 .client(client)
                 .provider(provider)
                 .offering(offering)
-                .startsAt(bookingReq.startsAt().toLocalDateTime())
-                .endsAt(bookingReq.endsAt().toLocalDateTime())
+                .startsAt(bookingReq.startsAt())
+                .endsAt(bookingReq.endsAt())
                 .status(BookingStatus.PENDING)
                 .priceAtBooking(bookingReq.priceAtBooking())
                 .addressText(bookingReq.addressText())
@@ -105,8 +106,14 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public List<BookingListDTO> getBookings() {
-        return List.of();
+    public List<BookingListDTO> getClientBookings() {
+        Long clientId = authenticatedUserProvider.getAuthenticatedUserId();
+        List<Booking> bookings = bookingRepository.findAllByClientId(clientId);
+
+
+        return bookings.stream()
+                .map(bookingMapper::toBookingListDTO)
+                .toList();
     }
 
     @Override

@@ -3,7 +3,7 @@ package com.fran.jobsy.app.dto.booking;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.constraints.*;
 
-import java.time.OffsetDateTime;
+import java.time.LocalDateTime;
 
 public record BookingRequest(
         @NotNull
@@ -14,11 +14,11 @@ public record BookingRequest(
 
         @NotNull
         @JsonFormat(shape = JsonFormat.Shape.STRING)
-        OffsetDateTime startsAt,
+        LocalDateTime startsAt,
 
         @NotNull
         @JsonFormat(shape = JsonFormat.Shape.STRING)
-        OffsetDateTime endsAt,
+        LocalDateTime endsAt,
 
         @NotNull
         @PositiveOrZero
