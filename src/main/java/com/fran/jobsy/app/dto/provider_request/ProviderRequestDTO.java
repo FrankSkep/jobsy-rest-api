@@ -1,13 +1,13 @@
 package com.fran.jobsy.app.dto.provider_request;
 
-import com.fran.jobsy.app.dto.user.UserBasicDTO;
+import com.fran.jobsy.app.dto.user.UserSummaryDTO;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
 public record ProviderRequestDTO(
         Long id,
-        UserBasicDTO user,
+        UserSummaryDTO user,
         String bio,
         Double hourlyRate,
         Integer yearsExperience,

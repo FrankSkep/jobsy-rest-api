@@ -36,6 +36,7 @@ public class NotificationServiceImpl implements NotificationService {
         notificationRepository.save(n);
     }
 
+    @Override
     @Transactional
     public void notifyUser(User recipient, String title, String message, NotificationType type, boolean sendEmail) {
         Notification notification = new Notification();

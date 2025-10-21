@@ -12,19 +12,18 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
     @Override
     public void configureMessageBroker(MessageBrokerRegistry config) {
-        // Broker interno para las rutas de destino
+        // Internal broker for destination routes
         config.enableSimpleBroker("/topic", "/queue");
 
-        // Prefijo para los destinos a los que el cliente puede enviar mensajes
+        // Prefix for destinations to which the client can send messages
         config.setApplicationDestinationPrefixes("/app");
     }
 
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
-        // Endpoint público al que el frontend se conectará
+        // Public endpoint to which the frontend will connect
         registry.addEndpoint("/ws")
                 .setAllowedOriginPatterns("*")
                 .withSockJS();
     }
 }
-

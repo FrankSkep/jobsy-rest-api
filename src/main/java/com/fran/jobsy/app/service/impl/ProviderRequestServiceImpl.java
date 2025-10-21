@@ -3,7 +3,7 @@ package com.fran.jobsy.app.service.impl;
 import com.fran.jobsy.app.dto.provider_request.ProviderDocumentDTO;
 import com.fran.jobsy.app.dto.provider_request.ProviderProfileRequest;
 import com.fran.jobsy.app.dto.provider_request.ProviderRequestDTO;
-import com.fran.jobsy.app.dto.user.UserBasicDTO;
+import com.fran.jobsy.app.dto.user.UserSummaryDTO;
 import com.fran.jobsy.app.entity.ProviderDocument;
 import com.fran.jobsy.app.entity.ProviderRequest;
 import com.fran.jobsy.app.entity.User;
@@ -106,7 +106,7 @@ public class ProviderRequestServiceImpl implements ProviderRequestService {
     private ProviderRequestDTO toDTO(ProviderRequest pr) {
         return new ProviderRequestDTO(
                 pr.getId(),
-                new UserBasicDTO(
+                new UserSummaryDTO(
                         pr.getUser().getId(),
                         pr.getUser().getFirstname(),
                         pr.getUser().getLastname(),

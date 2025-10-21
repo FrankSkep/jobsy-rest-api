@@ -72,7 +72,7 @@ public class User implements UserDetails {
 
     private Boolean verifiedCert;
 
-    // Relaciones con otras entidades
+    // --- Relationships ---
     @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Offering> offerings;
 
@@ -85,15 +85,15 @@ public class User implements UserDetails {
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private UserPhoto photo;
 
-    // Portfolio (múltiples fotos de trabajos)
+    // Portfolio (multiple work photos)
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<UserWorkPhoto> workPhotos;
 
-    // Como cliente → sus reservas
+    // As client → their bookings
     @OneToMany(mappedBy = "client")
     private List<Booking> bookingsAsClient;
 
-    // Como proveedor → sus reservas
+    // As provider → their bookings
     @OneToMany(mappedBy = "provider")
     private List<Booking> bookingsAsProvider;
 

@@ -1,9 +1,9 @@
 package com.fran.jobsy.app.dto.user;
 
-public record UserBasicDTO(
+public record UserSummaryDTO(
         Long id,
-        String firstname,
-        String lastname,
+        String fullName,
+        String photoUrl,
         String country
 ) {
 }

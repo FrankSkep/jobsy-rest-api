@@ -7,7 +7,7 @@ import org.mapstruct.*;
 @Mapper(componentModel = "spring", uses = {UserPhotoMapper.class, UserWorkPhotoMapper.class})
 public interface UserMapper {
 
-    UserBasicDTO toBasic(User user);
+    UserSummaryDTO toBasic(User user);
 
     @Mapping(source = "username", target = "email")
     UserDTO toDTO(User user);
@@ -21,7 +21,6 @@ public interface UserMapper {
 
     UserServiceDTO toService(User user);
 
-    // Mapeo inverso: DTO -> Entity
     @Mapping(source = "email", target = "username")
     @Mapping(target = "password", ignore = true)
     @Mapping(target = "createdAt", ignore = true)

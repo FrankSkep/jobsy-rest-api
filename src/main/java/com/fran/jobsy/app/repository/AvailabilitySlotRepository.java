@@ -2,6 +2,7 @@ package com.fran.jobsy.app.repository;
 
 import com.fran.jobsy.app.dto.availability_slot.AvailabilitySlotDTO;
 import com.fran.jobsy.app.entity.AvailabilitySlot;
+import com.fran.jobsy.app.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -22,4 +23,5 @@ public interface AvailabilitySlotRepository extends JpaRepository<AvailabilitySl
             "AND ((a.startTime < :endTime AND a.endTime > :startTime))")
     Optional<AvailabilitySlot> findOverlappingSlot(Long userId, Integer weekday, String startTime, String endTime);
 
+    List<AvailabilitySlot> findAllByUser(User user);
 }

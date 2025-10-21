@@ -123,8 +123,8 @@ class FileValidatorTest {
         byte[] pdfHeader = {0x25, 0x50, 0x44, 0x46}; // PDF header
         MultipartFile file = new MockMultipartFile(
                 "file",
-                "test.jpg",  // Extensión permitida
-                "application/pdf",  // Pero tipo MIME no permitido
+                "test.jpg",  // Allowed extension
+                "application/pdf",  // But MIME type not allowed
                 pdfHeader
         );
 
@@ -148,4 +148,3 @@ class FileValidatorTest {
         assertDoesNotThrow(() -> fileValidator.validate(file));
     }
 }
-
