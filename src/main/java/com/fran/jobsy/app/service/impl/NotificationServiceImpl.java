@@ -8,11 +8,13 @@ import com.fran.jobsy.app.exception.custom.ResourceNotFoundException;
 import com.fran.jobsy.app.repository.NotificationRepository;
 import com.fran.jobsy.app.service.MailService;
 import com.fran.jobsy.app.service.NotificationService;
+import com.fran.jobsy.app.util.AuthenticatedUserProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Instant;
 import java.util.List;
 
 @Service
@@ -22,6 +24,7 @@ public class NotificationServiceImpl implements NotificationService {
     private final NotificationRepository notificationRepository;
     private final SimpMessagingTemplate messagingTemplate;
     private final MailService emailService;
+    private final AuthenticatedUserProvider authenticatedUserProvider;
 
     @Override
     public List<NotificationDTO> getMyNotifications() {
@@ -50,11 +53,33 @@ public class NotificationServiceImpl implements NotificationService {
             emailService.sendEmail(recipient.getUsername(), title, message);
         }
 
+        NotificationDTO dto = new NotificationDTO(notification.getId(),
+                notification.getTitle(),
+                notification.getMessage(),
+                notification.getType().toString(),
+                notification.getRead(),
+                notification.getCreatedAt().toString());
+
         // Send real-time notification via WebSocket
         messagingTemplate.convertAndSendToUser(
                 recipient.getId().toString(),
                 "/queue/notifications",
-                notification
+                dto
         );
+    }
+
+    public void sendTestNotificationToAuthUser() {
+        User user = authenticatedUserProvider.getAuthenticatedUser();
+
+        NotificationDTO dto = new NotificationDTO(
+                null,
+                "Notificación de prueba",
+                "Este es un mensaje de prueba para verificar notificaciones en tiempo real.",
+                NotificationType.SYSTEM.toString(),
+                false,
+                Instant.now().toString()
+        );
+
+        messagingTemplate.convertAndSendToUser(user.getId().toString(), "/queue/notifications", dto);
     }
 }

@@ -13,4 +13,6 @@ public interface NotificationService {
     void markAsRead(@PathVariable Long id);
 
     void notifyUser(User recipient, String title, String message, NotificationType type, boolean sendEmail);
+
+    void sendTestNotificationToAuthUser();
 }

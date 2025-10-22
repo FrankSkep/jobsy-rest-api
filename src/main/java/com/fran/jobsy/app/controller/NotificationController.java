@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.List;
 
 @RestController
@@ -30,5 +31,11 @@ public class NotificationController {
     public void markAsRead(@Parameter(description = "ID de la notificación a marcar como leída", required = true)
                            @PathVariable Long id) {
         notificationService.markAsRead(id);
+    }
+
+    @Operation(summary = "Enviar notificación de prueba", description = "Envía una notificación en tiempo real de prueba al usuario autenticado.")
+    @PostMapping("/test")
+    public void sendTestNotification() {
+        notificationService.sendTestNotificationToAuthUser();
     }
 }

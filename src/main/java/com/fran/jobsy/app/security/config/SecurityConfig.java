@@ -40,7 +40,7 @@ public class SecurityConfig {
                             "https://jobsy-two.vercel.app"));
                     config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
                     config.setAllowedHeaders(List.of("Authorization", "Content-Type"));
-                    config.setAllowCredentials(false);
+                    config.setAllowCredentials(true);
                     return config;
                 }))
                 .authorizeHttpRequests(authRequest ->
@@ -50,7 +50,8 @@ public class SecurityConfig {
                                         "/health",
                                         "/v3/api-docs/**",
                                         "/swagger-ui/**",
-                                        "/swagger-ui/index.html"
+                                        "/swagger-ui/index.html",
+                                        "/ws/**"
                                 ).permitAll()
                                 .anyRequest().authenticated()
                 )

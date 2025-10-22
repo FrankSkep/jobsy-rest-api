@@ -1,4 +1,4 @@
-package com.fran.jobsy.app.config;
+package com.fran.jobsy.app.config.websockets;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
@@ -10,20 +10,27 @@ import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerCo
 @EnableWebSocketMessageBroker
 public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
+    private final JwtHandshakeInterceptor jwtHandshakeInterceptor;
+    private final UserHandshakeHandler userHandshakeHandler;
+
+    public WebSocketConfig(JwtHandshakeInterceptor interceptor, UserHandshakeHandler handler) {
+        this.jwtHandshakeInterceptor = interceptor;
+        this.userHandshakeHandler = handler;
+    }
+
     @Override
     public void configureMessageBroker(MessageBrokerRegistry config) {
-        // Internal broker for destination routes
-        config.enableSimpleBroker("/topic", "/queue");
-
-        // Prefix for destinations to which the client can send messages
+        config.enableSimpleBroker("/queue", "/topic");
         config.setApplicationDestinationPrefixes("/app");
+        config.setUserDestinationPrefix("/user");
     }
 
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
-        // Public endpoint to which the frontend will connect
         registry.addEndpoint("/ws")
-                .setAllowedOriginPatterns("*")
+                .addInterceptors(jwtHandshakeInterceptor)
+                .setHandshakeHandler(userHandshakeHandler)
+                .setAllowedOrigins("http://localhost:5173")
                 .withSockJS();
     }
 }
