@@ -4,11 +4,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/v1/health")
+@RequestMapping("/health")
 public class HealthController {
 
-    @RequestMapping("/check")
-    public String checkHealth() {
-        return "OK";
+    @GetMapping
+    public Map<String, String> checkHealth() {
+        return Map.of("status", "OK");
     }
 }
