@@ -1,6 +1,5 @@
 package com.fran.jobsy.app.repository;
 
-import com.fran.jobsy.app.dto.booking.BookingListDTO;
 import com.fran.jobsy.app.entity.Booking;
 import com.fran.jobsy.app.entity.User;
 import com.fran.jobsy.app.enums.BookingStatus;

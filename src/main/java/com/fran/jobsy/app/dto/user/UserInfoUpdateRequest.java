@@ -16,4 +16,5 @@ public record UserInfoUpdateRequest(
         @Pattern(regexp = "(^$)|(^\\d{10,14}$)", message = "Phone must contain between 10 and 14 digits")
         String phone
 
-) {}
+) {
+}
