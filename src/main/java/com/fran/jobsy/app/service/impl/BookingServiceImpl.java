@@ -49,61 +49,59 @@ public class BookingServiceImpl implements BookingService {
 
         User client = authenticatedUserProvider.getAuthenticatedUser();
 
+        if (provider.getId().equals(client.getId())) {
+            throw new ConflictException("No puedes reservar tus propios servicios");
+        }
+
+        AvailabilityCheckResponse check = providerAvailabilityService.checkAvailability(provider.getId(),
+                bookingReq.startsAt(), bookingReq.endsAt());
+
+        if (!check.available()) {
+            throw new ConflictException(check.message());
+        }
+
+        Booking booking = Booking.builder()
+                .client(client)
+                .provider(provider)
+                .offering(offering)
+                .startsAt(bookingReq.startsAt())
+                .endsAt(bookingReq.endsAt())
+                .status(BookingStatus.PENDING)
+                .priceAtBooking(bookingReq.priceAtBooking())
+                .addressText(bookingReq.addressText())
+                .lat(bookingReq.lat())
+                .lng(bookingReq.lng())
+                .build();
+
+        bookingRepository.save(booking);
+
         notificationService.notifyUser(client, "Reserva solicitada con éxito.", "Su reserva ha sido creada y está pendiente de confirmación.", NotificationType.BOOKING, true);
-        return null;
-//        if (provider.getId().equals(client.getId())) {
-//            throw new ConflictException("No puedes reservar tus propios servicios");
-//        }
-//
-//        AvailabilityCheckResponse check = providerAvailabilityService.checkAvailability(provider.getId(),
-//                bookingReq.startsAt(), bookingReq.endsAt());
-//
-//        if (!check.available()) {
-//            throw new ConflictException(check.message());
-//        }
-//
-//        Booking booking = Booking.builder()
-//                .client(client)
-//                .provider(provider)
-//                .offering(offering)
-//                .startsAt(bookingReq.startsAt())
-//                .endsAt(bookingReq.endsAt())
-//                .status(BookingStatus.PENDING)
-//                .priceAtBooking(bookingReq.priceAtBooking())
-//                .addressText(bookingReq.addressText())
-//                .lat(bookingReq.lat())
-//                .lng(bookingReq.lng())
-//                .build();
-//
-//        bookingRepository.save(booking);
-//
-//        notificationService.notifyUser(client, "Reserva solicitada con éxito.", "Su reserva ha sido creada y está pendiente de confirmación.", NotificationType.BOOKING, true);
-//
-//        return new BookingResponseDTO(
-//                booking.getId(),
-//                new UserSummaryDTO(
-//                        client.getId(),
-//                        client.getFirstname() + " " + client.getLastname(),
-//                        client.getPhoto().getUrl() != null ? client.getPhoto().getUrl() : "",
-//                        client.getCountry()),
-//                new UserSummaryDTO(
-//                        provider.getId(),
-//                        provider.getFirstname() + " " + provider.getLastname(),
-//                        provider.getPhoto().getUrl() != null ? provider.getPhoto().getUrl() : "",
-//                        provider.getCountry()),
-//                new OfferingSummaryDTO(
-//                        offering.getId(),
-//                        offering.getCategory().getName(),
-//                        offering.getTitle(),
-//                        offering.getBasePrice()),
-//                booking.getStartsAt(),
-//                booking.getEndsAt(),
-//                booking.getStatus(),
-//                booking.getPriceAtBooking(),
-//                booking.getAddressText(),
-//                booking.getLat(),
-//                booking.getLng()
-//        );
+
+        return new BookingResponseDTO(
+                booking.getId(),
+                new UserSummaryDTO(
+                        client.getId(),
+                        client.getFirstname() + " " + client.getLastname(),
+                        client.getPhoto().getUrl() != null ? client.getPhoto().getUrl() : "",
+                        client.getCountry()),
+                new UserSummaryDTO(
+                        provider.getId(),
+                        provider.getFirstname() + " " + provider.getLastname(),
+                        provider.getPhoto().getUrl() != null ? provider.getPhoto().getUrl() : "",
+                        provider.getCountry()),
+                new OfferingSummaryDTO(
+                        offering.getId(),
+                        offering.getCategory().getName(),
+                        offering.getTitle(),
+                        offering.getBasePrice()),
+                booking.getStartsAt(),
+                booking.getEndsAt(),
+                booking.getStatus(),
+                booking.getPriceAtBooking(),
+                booking.getAddressText(),
+                booking.getLat(),
+                booking.getLng()
+        );
     }
 
     @Override
