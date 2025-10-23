@@ -69,7 +69,7 @@ public class NotificationServiceImpl implements NotificationService {
     }
 
     public void sendTestNotificationToAuthUser() {
-        User user = authenticatedUserProvider.getAuthenticatedUser();
+        Long userId = authenticatedUserProvider.getAuthenticatedUserId();
 
         NotificationDTO dto = new NotificationDTO(
                 null,
@@ -80,6 +80,6 @@ public class NotificationServiceImpl implements NotificationService {
                 Instant.now().toString()
         );
 
-        messagingTemplate.convertAndSendToUser(user.getId().toString(), "/queue/notifications", dto);
+        messagingTemplate.convertAndSendToUser(userId.toString(), "/queue/notifications", dto);
     }
 }

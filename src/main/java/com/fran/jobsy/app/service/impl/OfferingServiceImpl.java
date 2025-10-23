@@ -86,9 +86,9 @@ public class OfferingServiceImpl implements OfferingService {
         Offering offering = offeringRepository.findById(offeringId)
                 .orElseThrow(() -> new ResourceNotFoundException("Servicio no encontrado con ID: " + offeringId));
 
-        User owner = authenticatedUserProvider.getAuthenticatedUser();
+        Long ownerId = authenticatedUserProvider.getAuthenticatedUserId();
 
-        if (!offering.getOwner().getId().equals(owner.getId())) {
+        if (!offering.getOwner().getId().equals(ownerId)) {
             throw new ConflictException("El usuario autenticado no es el propietario del servicio");
         }
 

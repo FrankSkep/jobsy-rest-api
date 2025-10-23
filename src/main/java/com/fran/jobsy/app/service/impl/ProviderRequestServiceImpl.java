@@ -139,7 +139,7 @@ public class ProviderRequestServiceImpl implements ProviderRequestService {
             throw new ProviderApplicationException("Solo pueden aprobarse solicitudes pendientes");
         }
 
-        User admin = authenticatedUserProvider.getAuthenticatedUser();
+        User admin = authenticatedUserProvider.getAuthenticatedUserReference();
 
         // Update user data
         User user = request.getUser();
@@ -178,7 +178,7 @@ public class ProviderRequestServiceImpl implements ProviderRequestService {
             throw new ProviderApplicationException("Solo pueden rechazarse solicitudes pendientes");
         }
 
-        User admin = authenticatedUserProvider.getAuthenticatedUser();
+        User admin = authenticatedUserProvider.getAuthenticatedUserReference();
 
         request.setStatus(ProviderRequestStatus.REJECTED);
         request.setReviewedBy(admin);

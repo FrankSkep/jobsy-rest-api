@@ -14,44 +14,29 @@ public class AuthenticatedUserProvider {
 
     private final UserRepository userRepository;
 
-    /**
-     * Obtiene el ID del usuario directamente del JWT (sin consulta a BD)
-     */
     public Long getAuthenticatedUserId() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication == null || !authentication.isAuthenticated()) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth == null || !auth.isAuthenticated()) {
             throw new AuthenticationException("No hay un usuario autenticado en el contexto.");
         }
 
-        Object principal = authentication.getPrincipal();
+        Object principal = auth.getPrincipal();
         if (principal instanceof User user) {
             return user.getId();
         }
 
-        throw new IllegalStateException("El principal no es una instancia de CustomUserDetails.");
+        throw new AuthenticationException("El principal no es un User válido.");
     }
 
-    /**
-     * Obtiene el User completo solo cuando sea necesario (hace consulta a BD)
-     * Úsalo solo cuando realmente necesites los datos completos del usuario
-     */
     public User getAuthenticatedUser() {
-        Long userId = getAuthenticatedUserId();
-        return userRepository.findById(userId)
+        return userRepository.findById(getAuthenticatedUserId())
                 .orElseThrow(() -> new AuthenticationException("Usuario no encontrado"));
     }
 
-    /**
-     * Para relaciones entre entidades - uso más eficiente con reference
-     */
     public User getAuthenticatedUserReference() {
-        Long userId = getAuthenticatedUserId();
-        return userRepository.getReferenceById(userId);
+        return userRepository.getReferenceById(getAuthenticatedUserId());
     }
 
-    /**
-     * Obtiene una referencia de cualquier usuario (útil para relaciones)
-     */
     public User getUserReference(Long userId) {
         return userRepository.getReferenceById(userId);
     }
