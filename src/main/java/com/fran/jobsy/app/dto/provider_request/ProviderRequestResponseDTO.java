@@ -5,7 +5,7 @@ import com.fran.jobsy.app.dto.user.UserSummaryDTO;
 import java.time.LocalDateTime;
 import java.util.List;
 
-public record ProviderRequestDTO(
+public record ProviderRequestResponseDTO(
         Long id,
         UserSummaryDTO user,
         String bio,

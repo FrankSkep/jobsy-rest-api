@@ -17,6 +17,7 @@ public record BookingResponseDTO(
         Double priceAtBooking,
         String addressText,
         Double lat,
-        Double lng
+        Double lng,
+        String statusComment
 ) {
 }

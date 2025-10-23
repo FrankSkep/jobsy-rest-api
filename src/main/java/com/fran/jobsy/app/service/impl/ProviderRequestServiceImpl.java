@@ -1,8 +1,8 @@
 package com.fran.jobsy.app.service.impl;
 
+import com.fran.jobsy.app.dto.provider_request.ProviderApplyRequest;
 import com.fran.jobsy.app.dto.provider_request.ProviderDocumentDTO;
-import com.fran.jobsy.app.dto.provider_request.ProviderProfileRequest;
-import com.fran.jobsy.app.dto.provider_request.ProviderRequestDTO;
+import com.fran.jobsy.app.dto.provider_request.ProviderRequestResponseDTO;
 import com.fran.jobsy.app.dto.user.UserSummaryDTO;
 import com.fran.jobsy.app.entity.ProviderDocument;
 import com.fran.jobsy.app.entity.ProviderRequest;
@@ -41,7 +41,7 @@ public class ProviderRequestServiceImpl implements ProviderRequestService {
 
     @Override
     @Transactional
-    public void applyForProvider(ProviderProfileRequest request, List<MultipartFile> documents) {
+    public void applyForProvider(ProviderApplyRequest request, List<MultipartFile> documents) {
         Long userId = authenticatedUserProvider.getAuthenticatedUserId();
 
         if (existsPendingRequestForUser(userId)) {
@@ -98,13 +98,13 @@ public class ProviderRequestServiceImpl implements ProviderRequestService {
 
     @Override
     @Transactional(readOnly = true)
-    public Page<ProviderRequestDTO> getAllProviderRequests(Pageable pageable) {
+    public Page<ProviderRequestResponseDTO> getAllProviderRequests(Pageable pageable) {
         return providerRequestRepository.findAll(pageable)
                 .map(this::toDTO);
     }
 
-    private ProviderRequestDTO toDTO(ProviderRequest pr) {
-        return new ProviderRequestDTO(
+    private ProviderRequestResponseDTO toDTO(ProviderRequest pr) {
+        return new ProviderRequestResponseDTO(
                 pr.getId(),
                 new UserSummaryDTO(
                         pr.getUser().getId(),

@@ -1,6 +1,11 @@
 package com.fran.jobsy.app.dto.availability_slot;
 
-import jakarta.validation.constraints.*;
+import jakarta.validation.constraints.AssertTrue;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
+
+import java.time.LocalTime;
 
 public record AvailabilitySlotRequest(
         @NotNull(message = "El día de la semana es obligatorio")
@@ -9,24 +14,15 @@ public record AvailabilitySlotRequest(
         Integer weekday,
 
         @NotNull(message = "La hora de inicio es obligatoria")
-        @Pattern(regexp = "^([01]\\d|2[0-3]):[0-5]\\d$", message = "La hora de inicio debe tener el formato HH:mm")
-        String startTime,
+        LocalTime startTime,
 
         @NotNull(message = "La hora de fin es obligatoria")
-        @Pattern(regexp = "^([01]\\d|2[0-3]):[0-5]\\d$", message = "La hora de fin debe tener el formato HH:mm")
-        String endTime
+        LocalTime endTime
 ) {
     @AssertTrue(message = "La hora de inicio debe ser anterior a la hora de fin")
     public boolean isStartTimeBeforeEndTime() {
         if (startTime == null || endTime == null)
-            return true; // handled by @NotNull
-        try {
-            java.time.LocalTime start = java.time.LocalTime.parse(startTime);
-            java.time.LocalTime end = java.time.LocalTime.parse(endTime);
-            return start.isBefore(end);
-        } catch (
-                Exception e) {
-            return true; // handled by @Pattern
-        }
+            return true;
+        return startTime.isBefore(endTime);
     }
 }

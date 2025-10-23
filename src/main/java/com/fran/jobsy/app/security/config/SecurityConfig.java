@@ -18,6 +18,7 @@ import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 
+import java.time.Instant;
 import java.util.List;
 
 @Configuration
@@ -69,28 +70,46 @@ public class SecurityConfig {
     @Bean
     public AuthenticationEntryPoint authenticationEntryPoint() {
         return (request, response, authException) -> {
+            String detail = (String) request.getAttribute("auth.error");
+            String message = detail != null ? detail : "You need to authenticate to access this resource.";
+
             response.setStatus(HttpStatus.UNAUTHORIZED.value());
             response.setContentType(MediaType.APPLICATION_JSON_VALUE);
             response.getWriter().write("""
                     {
-                        "error": "Unauthorized",
-                        "message": "You need to authenticate to access this resource."
+                      "timestamp": "%s",
+                      "status": %d,
+                      "error": "Unauthorized",
+                      "message": "%s",
+                      "path": "%s"
                     }
-                    """);
+                    """.formatted(Instant.now().toString(),
+                    HttpStatus.UNAUTHORIZED.value(),
+                    message.replace("\"", "\\\""),
+                    request.getRequestURI()));
         };
     }
 
     @Bean
     public AccessDeniedHandler accessDeniedHandler() {
         return (request, response, accessDeniedException) -> {
+            String detail = (String) request.getAttribute("auth.error");
+            String message = detail != null ? detail : "You do not have permissions to access this resource.";
+
             response.setStatus(HttpStatus.FORBIDDEN.value());
             response.setContentType(MediaType.APPLICATION_JSON_VALUE);
             response.getWriter().write("""
                     {
-                        "error": "Forbidden",
-                        "message": "You do not have permissions to access this resource."
+                      "timestamp": "%s",
+                      "status": %d,
+                      "error": "Forbidden",
+                      "message": "%s",
+                      "path": "%s"
                     }
-                    """);
+                    """.formatted(Instant.now().toString(),
+                    HttpStatus.FORBIDDEN.value(),
+                    message.replace("\"", "\\\""),
+                    request.getRequestURI()));
         };
     }
 }

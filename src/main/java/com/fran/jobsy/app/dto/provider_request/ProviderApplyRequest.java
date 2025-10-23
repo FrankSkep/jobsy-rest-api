@@ -2,7 +2,7 @@ package com.fran.jobsy.app.dto.provider_request;
 
 import jakarta.validation.constraints.*;
 
-public record ProviderProfileRequest(
+public record ProviderApplyRequest(
         @NotBlank(message = "Bio is mandatory")
         @Size(max = 500, message = "Bio must not exceed 500 characters")
         String bio,
@@ -42,7 +42,7 @@ public record ProviderProfileRequest(
 
         Boolean verifiedCert
 ) {
-    public ProviderProfileRequest {
+    public ProviderApplyRequest {
         if (verifiedCert == null)
             verifiedCert = false;
     }

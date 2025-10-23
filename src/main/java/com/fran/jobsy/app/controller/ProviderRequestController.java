@@ -1,8 +1,8 @@
 package com.fran.jobsy.app.controller;
 
-import com.fran.jobsy.app.dto.provider_request.ProviderProfileRequest;
+import com.fran.jobsy.app.dto.provider_request.ProviderApplyRequest;
 import com.fran.jobsy.app.dto.provider_request.ProviderRejectionRequest;
-import com.fran.jobsy.app.dto.provider_request.ProviderRequestDTO;
+import com.fran.jobsy.app.dto.provider_request.ProviderRequestResponseDTO;
 import com.fran.jobsy.app.exception.custom.InvalidFileException;
 import com.fran.jobsy.app.service.ProviderRequestService;
 import com.fran.jobsy.app.util.FileValidator;
@@ -30,7 +30,7 @@ public class ProviderRequestController {
 
     @PostMapping
     @Operation(summary = "Solicitar ser proveedor", description = "Permite a un usuario postularse como proveedor adjuntando documentos requeridos. Recibe en formData un objeto JSON con los datos del perfil y hasta 5 archivos (3 fotos propias y 2 INE (AMBOS LADOS)).")
-    public ResponseEntity<Void> applyForProvider(@RequestPart("providerProfile") @Valid ProviderProfileRequest providerProfileRequest,
+    public ResponseEntity<Void> applyForProvider(@RequestPart("providerProfile") @Valid ProviderApplyRequest providerApplyRequest,
                                                  @RequestPart("documents") List<MultipartFile> documents) {
 
         if (documents == null || documents.isEmpty()) {
@@ -43,15 +43,15 @@ public class ProviderRequestController {
 
         documents.forEach(fileValidator::validate);
 
-        providerRequestService.applyForProvider(providerProfileRequest, documents);
+        providerRequestService.applyForProvider(providerApplyRequest, documents);
         return ResponseEntity.noContent().build();
     }
 
     @GetMapping
     @PreAuthorize("hasRole('ADMIN')")
     @Operation(summary = "Obtener todas las solicitudes de proveedor", description = "Solo accesible para ADMIN. Devuelve todas las solicitudes de proveedor.")
-    public ResponseEntity<Page<ProviderRequestDTO>> getAllProviderRequests(Pageable pageable) {
-        Page<ProviderRequestDTO> requests = providerRequestService.getAllProviderRequests(pageable);
+    public ResponseEntity<Page<ProviderRequestResponseDTO>> getAllProviderRequests(Pageable pageable) {
+        Page<ProviderRequestResponseDTO> requests = providerRequestService.getAllProviderRequests(pageable);
         return ResponseEntity.ok(requests);
     }
 

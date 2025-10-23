@@ -15,6 +15,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import java.time.LocalTime;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -48,12 +49,12 @@ class AvailabilitySlotServiceImplTest {
         Long userId = 1L;
         User user = new User();
         user.setId(userId);
-        AvailabilitySlotRequest req = new AvailabilitySlotRequest(1, "09:00", "17:00");
+        AvailabilitySlotRequest req = new AvailabilitySlotRequest(1, LocalTime.parse("09:00"), LocalTime.parse("17:00"));
         AvailabilitySlot slot = AvailabilitySlot.builder()
                 .user(user)
                 .weekday(1)
-                .startTime("09:00")
-                .endTime("17:00")
+                .startTime(LocalTime.parse("09:00"))
+                .endTime(LocalTime.parse("17:00"))
                 .build();
         slot.setId(10L);
 
@@ -86,11 +87,11 @@ class AvailabilitySlotServiceImplTest {
         AvailabilitySlot slot = AvailabilitySlot.builder()
                 .user(user)
                 .weekday(2)
-                .startTime("10:00")
-                .endTime("18:00")
+                .startTime(LocalTime.parse("10:00"))
+                .endTime(LocalTime.parse("18:00"))
                 .build();
         slot.setId(slotId);
-        AvailabilitySlotRequest req = new AvailabilitySlotRequest(3, "11:00", "19:00");
+        AvailabilitySlotRequest req = new AvailabilitySlotRequest(3, LocalTime.parse("11:00"), LocalTime.parse("19:00"));
 
         when(availabilitySlotRepository.findById(slotId)).thenReturn(Optional.of(slot));
         when(availabilitySlotRepository.save(any(AvailabilitySlot.class))).thenAnswer(inv -> inv.getArgument(0));
@@ -123,8 +124,8 @@ class AvailabilitySlotServiceImplTest {
     void testGetAllByUserId() {
         Long userId = 1L;
         List<AvailabilitySlotDTO> dtos = Arrays.asList(
-                new AvailabilitySlotDTO(1L, userId, 1, "09:00", "12:00"),
-                new AvailabilitySlotDTO(2L, userId, 2, "13:00", "15:00")
+                new AvailabilitySlotDTO(1L, userId, 1, LocalTime.parse("09:00"), LocalTime.parse("12:00")),
+                new AvailabilitySlotDTO(2L, userId, 2, LocalTime.parse("13:00"), LocalTime.parse("15:00"))
         );
         when(availabilitySlotRepository.findAllByUserId(userId)).thenReturn(dtos);
         List<AvailabilitySlotDTO> result = service.getAllByUserId(userId);
@@ -136,7 +137,7 @@ class AvailabilitySlotServiceImplTest {
     @Test
     void testUpdateNotFound() {
         when(availabilitySlotRepository.findById(99L)).thenReturn(Optional.empty());
-        AvailabilitySlotRequest req = new AvailabilitySlotRequest(1, "09:00", "17:00");
+        AvailabilitySlotRequest req = new AvailabilitySlotRequest(1, LocalTime.parse("09:00"), LocalTime.parse("17:00"));
         assertThrows(ResourceNotFoundException.class, () -> service.update(99L, req));
     }
 

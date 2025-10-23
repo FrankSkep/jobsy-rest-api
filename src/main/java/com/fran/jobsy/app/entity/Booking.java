@@ -43,6 +43,8 @@ public class Booking {
     private Double lat;
     private Double lng;
 
+    private String statusComment;
+
     @OneToMany(mappedBy = "booking", cascade = CascadeType.ALL)
     private List<Payment> payments;
 

@@ -1,9 +1,6 @@
 package com.fran.jobsy.app.service.impl;
 
-import com.fran.jobsy.app.dto.booking.AvailabilityCheckResponse;
-import com.fran.jobsy.app.dto.booking.BookingListDTO;
-import com.fran.jobsy.app.dto.booking.BookingRequest;
-import com.fran.jobsy.app.dto.booking.BookingResponseDTO;
+import com.fran.jobsy.app.dto.booking.*;
 import com.fran.jobsy.app.dto.offering.OfferingSummaryDTO;
 import com.fran.jobsy.app.dto.user.UserSummaryDTO;
 import com.fran.jobsy.app.entity.Booking;
@@ -22,6 +19,7 @@ import com.fran.jobsy.app.service.NotificationService;
 import com.fran.jobsy.app.service.ProviderAvailabilityService;
 import com.fran.jobsy.app.util.AuthenticatedUserProvider;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -100,7 +98,8 @@ public class BookingServiceImpl implements BookingService {
                 booking.getPriceAtBooking(),
                 booking.getAddressText(),
                 booking.getLat(),
-                booking.getLng()
+                booking.getLng(),
+                null
         );
     }
 
@@ -117,21 +116,113 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     public BookingResponseDTO getBooking(Long id) {
-        return null;
+        Booking booking = bookingRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Reserva no encontrada con ID: " + id));
+
+        User client = booking.getClient();
+        User provider = booking.getProvider();
+        Offering offering = booking.getOffering();
+
+        return new BookingResponseDTO(
+                booking.getId(),
+                new UserSummaryDTO(
+                        client.getId(),
+                        client.getFirstname() + " " + client.getLastname(),
+                        client.getPhoto() != null && client.getPhoto().getUrl() != null ? client.getPhoto().getUrl() : "",
+                        client.getCountry()),
+                new UserSummaryDTO(
+                        provider.getId(),
+                        provider.getFirstname() + " " + provider.getLastname(),
+                        provider.getPhoto() != null && provider.getPhoto().getUrl() != null ? provider.getPhoto().getUrl() : "",
+                        provider.getCountry()),
+                new OfferingSummaryDTO(
+                        offering.getId(),
+                        offering.getCategory().getName(),
+                        offering.getTitle(),
+                        offering.getBasePrice()),
+                booking.getStartsAt(),
+                booking.getEndsAt(),
+                booking.getStatus(),
+                booking.getPriceAtBooking(),
+                booking.getAddressText(),
+                booking.getLat(),
+                booking.getLng(),
+                booking.getStatusComment()
+        );
     }
 
     @Override
-    public void confirmBooking(Long id) {
+    public BookingResponseDTO updateBookingStatus(Long id, BookingStatusUpdateReqDTO statusUpdateReqDTO) {
+        Booking booking = bookingRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Reserva no encontrada con ID: " + id));
 
+        Long authId = authenticatedUserProvider.getAuthenticatedUserId();
+        BookingStatus newStatus = statusUpdateReqDTO.status();
+        String comment = statusUpdateReqDTO.comment();
+
+        switch (newStatus) {
+            case CONFIRMED ->
+                    handleConfirmed(booking, authId, comment);
+            case CANCELED ->
+                    handleCanceled(booking, authId, comment);
+            case COMPLETED ->
+                    handleCompleted(booking, authId, comment);
+            default ->
+                    throw new ConflictException("Estado de reserva no válido: " + newStatus);
+        }
+
+        return getBooking(id);
     }
 
-    @Override
-    public void cancelBooking(Long id) {
+    // --- Private Update booking status helpers ---
+    private void handleConfirmed(Booking booking, Long authId, String comment) {
+        if (!booking.getProvider().getId().equals(authId)) {
+            throw new AccessDeniedException("Solo el proveedor puede confirmar la reserva.");
+        }
+        if (booking.getStatus() != BookingStatus.PENDING) {
+            throw new ConflictException("No se puede confirmar una reserva en estado: " + booking.getStatus());
+        }
 
+        updateBookingStatusAndNotify(booking, BookingStatus.CONFIRMED, comment, booking.getClient(),
+                "Reserva confirmada", "La reserva fue confirmada");
     }
 
-    @Override
-    public void completeBooking(Long id) {
+    private void handleCanceled(Booking booking, Long authId, String comment) {
+        boolean isProvider = booking.getProvider().getId().equals(authId);
+        boolean isClient = booking.getClient().getId().equals(authId);
 
+        if (!isProvider && !isClient) {
+            throw new AccessDeniedException("No autorizado para cancelar la reserva.");
+        }
+        if (booking.getStatus() == BookingStatus.CANCELED || booking.getStatus() == BookingStatus.COMPLETED) {
+            throw new ConflictException("No se puede cancelar una reserva en estado: " + booking.getStatus());
+        }
+
+        User recipient = isProvider ? booking.getClient() : booking.getProvider();
+        updateBookingStatusAndNotify(booking, BookingStatus.CANCELED, comment, recipient,
+                "Reserva cancelada", "La reserva fue cancelada");
+    }
+
+    private void handleCompleted(Booking booking, Long authId, String comment) {
+        if (!booking.getProvider().getId().equals(authId)) {
+            throw new AccessDeniedException("Solo el proveedor puede marcar la reserva como completada.");
+        }
+        if (booking.getStatus() != BookingStatus.CONFIRMED) {
+            throw new ConflictException("Solo una reserva confirmada puede marcarse como completada.");
+        }
+
+        updateBookingStatusAndNotify(booking, BookingStatus.COMPLETED, comment, booking.getClient(),
+                "Reserva completada", "La reserva fue completada");
+    }
+
+    private void updateBookingStatusAndNotify(Booking booking, BookingStatus status, String comment,
+                                              User recipient, String title, String defaultMessage) {
+        booking.setStatus(status);
+        booking.setStatusComment(comment);
+        bookingRepository.save(booking);
+
+        notificationService.notifyUser(recipient, title,
+                comment != null ? defaultMessage + ": " + comment : defaultMessage,
+                NotificationType.BOOKING, true);
     }
 }

@@ -3,6 +3,8 @@ package com.fran.jobsy.app.controller;
 import com.fran.jobsy.app.dto.booking.BookingListDTO;
 import com.fran.jobsy.app.dto.booking.BookingRequest;
 import com.fran.jobsy.app.dto.booking.BookingResponseDTO;
+import com.fran.jobsy.app.dto.booking.BookingStatusUpdateReqDTO;
+import com.fran.jobsy.app.enums.BookingStatus;
 import com.fran.jobsy.app.service.BookingService;
 import com.fran.jobsy.app.util.RestUtils;
 import jakarta.validation.Valid;
@@ -32,5 +34,14 @@ public class BookingController {
     @GetMapping("/client")
     public ResponseEntity<List<BookingListDTO>> getClientBookings() {
         return ResponseEntity.ok(bookingService.getClientBookings());
+    }
+
+    @PatchMapping("/{id}/status")
+    @PreAuthorize("hasAnyRole('USER', 'PROVIDER')")
+    public ResponseEntity<BookingResponseDTO> updateBookingStatus(
+            @PathVariable Long id,
+            @RequestBody @Valid BookingStatusUpdateReqDTO updateStatusReq) {
+        BookingResponseDTO updatedBooking = bookingService.updateBookingStatus(id, updateStatusReq);
+        return ResponseEntity.ok(updatedBooking);
     }
 }

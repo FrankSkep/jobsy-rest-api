@@ -3,6 +3,8 @@ package com.fran.jobsy.app.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalTime;
+
 @Entity
 @Table(name = "availability_slots")
 @Builder
@@ -23,8 +25,8 @@ public class AvailabilitySlot {
     private Integer weekday; // 1=Monday, 7=Sunday
 
     @Column(nullable = false)
-    private String startTime; // HH:mm
+    private LocalTime startTime; // HH:mm
 
     @Column(nullable = false)
-    private String endTime;
+    private LocalTime endTime;
 }

@@ -14,10 +14,12 @@ public record BookingRequest(
 
         @NotNull
         @JsonFormat(shape = JsonFormat.Shape.STRING)
+        @Future
         LocalDateTime startsAt,
 
         @NotNull
         @JsonFormat(shape = JsonFormat.Shape.STRING)
+        @Future
         LocalDateTime endsAt,
 
         @NotNull

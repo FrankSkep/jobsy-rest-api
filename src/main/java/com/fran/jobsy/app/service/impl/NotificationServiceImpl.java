@@ -28,7 +28,8 @@ public class NotificationServiceImpl implements NotificationService {
 
     @Override
     public List<NotificationDTO> getMyNotifications() {
-        return notificationRepository.findAllAsDTO();
+        Long userId = authenticatedUserProvider.getAuthenticatedUserId();
+        return notificationRepository.findAllByRecipientId(userId);
     }
 
     @Override
