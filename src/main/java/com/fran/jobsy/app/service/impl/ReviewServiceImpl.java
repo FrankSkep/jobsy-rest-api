@@ -5,7 +5,6 @@ import com.fran.jobsy.app.dto.review.ReviewDTO;
 import com.fran.jobsy.app.dto.review.ReviewRequest;
 import com.fran.jobsy.app.entity.Booking;
 import com.fran.jobsy.app.entity.Review;
-import com.fran.jobsy.app.entity.User;
 import com.fran.jobsy.app.enums.BookingStatus;
 import com.fran.jobsy.app.exception.custom.ConflictException;
 import com.fran.jobsy.app.exception.custom.ResourceNotFoundException;
@@ -33,7 +32,6 @@ public class ReviewServiceImpl implements ReviewService {
         validateBookingStatus(booking);
         validateNoExistingReview(booking);
         validateReviewAuthorization(booking);
-        validateRequestConsistency(booking, reviewRequest);
 
         Review savedReview = saveReview(booking, reviewRequest);
 
@@ -50,8 +48,7 @@ public class ReviewServiceImpl implements ReviewService {
         return reviewRepository.findByProviderId(providerId);
     }
 
-    // ---------- Private Methods ---------- //
-
+    // ----- Private Methods -----
     private Booking findBookingOrThrow(Long bookingId) {
         return bookingRepository.findById(bookingId)
                 .orElseThrow(() -> new ResourceNotFoundException("Reserva no encontrada. ID: " + bookingId));
@@ -75,19 +72,6 @@ public class ReviewServiceImpl implements ReviewService {
 
         if (!authenticatedUserId.equals(clientId)) {
             throw new ConflictException("No autorizado para crear una reseña en nombre de otro usuario.");
-        }
-    }
-
-    private void validateRequestConsistency(Booking booking, ReviewRequest reviewRequest) {
-        User provider = booking.getProvider();
-        User client = booking.getClient();
-
-        if (!provider.getId().equals(reviewRequest.providerId())) {
-            throw new ConflictException("Datos del proveedor no coinciden con la reserva.");
-        }
-
-        if (!client.getId().equals(reviewRequest.clientId())) {
-            throw new ConflictException("Datos del cliente no coinciden con la reserva.");
         }
     }
 
