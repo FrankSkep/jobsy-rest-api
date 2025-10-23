@@ -32,5 +32,10 @@ public class Review {
     private Integer rating; // 1-5
     private String comment;
     private LocalDateTime createdAt;
+
+    @PrePersist
+    protected void onCreate() {
+        this.createdAt = LocalDateTime.now();
+    }
 }
 
