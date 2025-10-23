@@ -20,7 +20,9 @@ public interface UserService {
 
     void deleteUser(String username);
 
-    void updatePassword(String username, PasswordRequest password);
+    void updatePassword(PasswordRequest password);
+
+    void setPasswordByAdmin(Long userId, String newPassword);
 
     UserPublicDTO getUser(Long id);
 

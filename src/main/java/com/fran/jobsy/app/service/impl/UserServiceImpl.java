@@ -90,14 +90,23 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void updatePassword(String username, PasswordRequest password) {
-        User user = getByUsername(username);
+    public void updatePassword(PasswordRequest password) {
+        Long authenticatedUserId = authenticatedUserProvider.getAuthenticatedUserId();
+
+        User user = getById(authenticatedUserId);
 
         if (passwordEncoder.matches(password.getOldPassword(), user.getPassword())) {
             user.setPassword(passwordEncoder.encode(password.getNewPassword()));
         } else {
-            throw new AuthenticationException("Old password does not match.");
+            throw new AuthenticationException("Contraseña antigua incorrecta.");
         }
+        userRepository.save(user);
+    }
+
+    @Override
+    public void setPasswordByAdmin(Long userId, String newPassword) {
+        User user = getById(userId);
+        user.setPassword(passwordEncoder.encode(newPassword));
         userRepository.save(user);
     }
 
