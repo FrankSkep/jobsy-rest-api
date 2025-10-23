@@ -20,7 +20,12 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
             LocalDateTime startsAt
     );
 
-    List<Booking> findByProviderAndStatusInAndStartsAtBetween(User provider, Collection<BookingStatus> statuses, LocalDateTime startsAtAfter, LocalDateTime startsAtBefore);
+    List<Booking> findByProviderAndStatusInAndStartsAtLessThanAndEndsAtGreaterThan(
+            User provider,
+            List<BookingStatus> statuses,
+            LocalDateTime startsAtLessThan,
+            LocalDateTime endsAtGreaterThan
+    );
 
     List<Booking> findAllByClientId(Long clientId);
 

@@ -14,12 +14,12 @@ public record BookingRequest(
 
         @NotNull
         @JsonFormat(shape = JsonFormat.Shape.STRING)
-        @Future
+        @Future(message = "La fecha de inicio no puede ser en el pasado")
         LocalDateTime startsAt,
 
         @NotNull
         @JsonFormat(shape = JsonFormat.Shape.STRING)
-        @Future
+        @Future(message = "La fecha de fin no puede ser en el pasado")
         LocalDateTime endsAt,
 
         @NotNull

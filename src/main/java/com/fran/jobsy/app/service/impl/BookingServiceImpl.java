@@ -3,6 +3,7 @@ package com.fran.jobsy.app.service.impl;
 import com.fran.jobsy.app.dto.booking.*;
 import com.fran.jobsy.app.dto.offering.OfferingSummaryDTO;
 import com.fran.jobsy.app.dto.user.UserSummaryDTO;
+import com.fran.jobsy.app.entity.AvailabilitySlot;
 import com.fran.jobsy.app.entity.Booking;
 import com.fran.jobsy.app.entity.Offering;
 import com.fran.jobsy.app.entity.User;

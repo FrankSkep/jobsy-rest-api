@@ -4,7 +4,6 @@ import com.fran.jobsy.app.dto.booking.BookingListDTO;
 import com.fran.jobsy.app.dto.booking.BookingRequest;
 import com.fran.jobsy.app.dto.booking.BookingResponseDTO;
 import com.fran.jobsy.app.dto.booking.BookingStatusUpdateReqDTO;
-import com.fran.jobsy.app.enums.BookingStatus;
 import com.fran.jobsy.app.service.BookingService;
 import com.fran.jobsy.app.util.RestUtils;
 import jakarta.validation.Valid;
