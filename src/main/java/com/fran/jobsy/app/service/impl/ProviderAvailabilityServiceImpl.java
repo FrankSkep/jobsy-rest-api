@@ -1,6 +1,5 @@
 package com.fran.jobsy.app.service.impl;
 
-import com.fran.jobsy.app.dto.availability_slot.AvailabilitySlotDTO;
 import com.fran.jobsy.app.dto.booking.AvailabilityCheckResponse;
 import com.fran.jobsy.app.dto.booking.DailyAvailabilityResponse;
 import com.fran.jobsy.app.dto.booking.SlotDTO;
@@ -169,7 +168,8 @@ public class ProviderAvailabilityServiceImpl implements ProviderAvailabilityServ
                     b.getStartsAt().isBefore(endTime) && b.getEndsAt().isAfter(startTime)
             );
 
-            if (!overlaps) return true;
+            if (!overlaps)
+                return true;
             current = current.plusHours(1);
         }
         return false;
