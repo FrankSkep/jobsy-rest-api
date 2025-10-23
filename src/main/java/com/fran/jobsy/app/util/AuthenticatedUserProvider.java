@@ -14,7 +14,10 @@ public class AuthenticatedUserProvider {
 
     private final UserRepository userRepository;
 
-    public User getAuthenticatedUser() {
+    /**
+     * Obtiene el ID del usuario directamente del JWT (sin consulta a BD)
+     */
+    public Long getAuthenticatedUserId() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication == null || !authentication.isAuthenticated()) {
             throw new AuthenticationException("No hay un usuario autenticado en el contexto.");
@@ -22,17 +25,33 @@ public class AuthenticatedUserProvider {
 
         Object principal = authentication.getPrincipal();
         if (principal instanceof User user) {
-            return user;
+            return user.getId();
         }
 
-        throw new IllegalStateException("El principal no es una instancia de User.");
+        throw new IllegalStateException("El principal no es una instancia de CustomUserDetails.");
     }
 
-    public Long getAuthenticatedUserId() {
-        User user = getAuthenticatedUser();
-        return user.getId();
+    /**
+     * Obtiene el User completo solo cuando sea necesario (hace consulta a BD)
+     * Úsalo solo cuando realmente necesites los datos completos del usuario
+     */
+    public User getAuthenticatedUser() {
+        Long userId = getAuthenticatedUserId();
+        return userRepository.findById(userId)
+                .orElseThrow(() -> new AuthenticationException("Usuario no encontrado"));
     }
 
+    /**
+     * Para relaciones entre entidades - uso más eficiente con reference
+     */
+    public User getAuthenticatedUserReference() {
+        Long userId = getAuthenticatedUserId();
+        return userRepository.getReferenceById(userId);
+    }
+
+    /**
+     * Obtiene una referencia de cualquier usuario (útil para relaciones)
+     */
     public User getUserReference(Long userId) {
         return userRepository.getReferenceById(userId);
     }

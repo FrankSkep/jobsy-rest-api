@@ -122,7 +122,7 @@ public class UserServiceImpl implements UserService {
     // === Authenticated User Methods ===
     @Override
     public UserFullDTO getUserInfo() {
-        User user = getById(authenticatedUserProvider.getAuthenticatedUserId());
+        User user = authenticatedUserProvider.getAuthenticatedUser();
 
         UserPhotoDTO photoDto = null;
         if (user.getPhoto() != null) {
