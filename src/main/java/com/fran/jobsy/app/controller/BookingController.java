@@ -30,13 +30,23 @@ public class BookingController {
         return ResponseEntity.created(location).body(bookingResponseDTO);
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<BookingResponseDTO> getBooking(@PathVariable Long id) {
+        return ResponseEntity.ok(bookingService.getBooking(id));
+    }
+
     @GetMapping("/client")
     public ResponseEntity<List<BookingListDTO>> getClientBookings() {
         return ResponseEntity.ok(bookingService.getClientBookings());
     }
 
+    @GetMapping("/provider")
+    @PreAuthorize("hasRole('PROVIDER')")
+    public ResponseEntity<List<BookingListDTO>> getProviderBookings() {
+        return ResponseEntity.ok(bookingService.getProviderBookings());
+    }
+
     @PatchMapping("/{id}/status")
-    @PreAuthorize("hasAnyRole('USER', 'PROVIDER')")
     public ResponseEntity<BookingResponseDTO> updateBookingStatus(
             @PathVariable Long id,
             @RequestBody @Valid BookingStatusUpdateReqDTO updateStatusReq) {

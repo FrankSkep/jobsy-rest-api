@@ -106,8 +106,19 @@ public class BookingServiceImpl implements BookingService {
     @Override
     public List<BookingListDTO> getClientBookings() {
         Long clientId = authenticatedUserProvider.getAuthenticatedUserId();
+
         List<Booking> bookings = bookingRepository.findAllByClientId(clientId);
 
+        return bookings.stream()
+                .map(bookingMapper::toBookingListDTO)
+                .toList();
+    }
+
+    @Override
+    public List<BookingListDTO> getProviderBookings() {
+        Long providerId = authenticatedUserProvider.getAuthenticatedUserId();
+
+        List<Booking> bookings = bookingRepository.findAllByProviderId(providerId);
 
         return bookings.stream()
                 .map(bookingMapper::toBookingListDTO)

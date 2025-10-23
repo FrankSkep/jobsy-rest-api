@@ -12,6 +12,8 @@ public interface BookingService {
 
     List<BookingListDTO> getClientBookings();
 
+    List<BookingListDTO> getProviderBookings();
+
     BookingResponseDTO getBooking(Long id);
 
     BookingResponseDTO updateBookingStatus(Long id, BookingStatusUpdateReqDTO statusUpdateReqDTO);
