@@ -4,6 +4,7 @@ import com.fran.jobsy.app.dto.CertificationDTO;
 import com.fran.jobsy.app.entity.Certification;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -17,5 +18,5 @@ public interface CertificationRepository extends JpaRepository<Certification, Lo
 
     @Query("SELECT NEW com.fran.jobsy.app.dto.CertificationDTO(" +
             "c.id, c.name, c.issuer, c.year ) FROM Certification c WHERE c.user.id = :userId")
-    List<CertificationDTO> findAllByUserId(Long userId);
+    List<CertificationDTO> findAllByUserId(@Param("userId") Long userId);
 }

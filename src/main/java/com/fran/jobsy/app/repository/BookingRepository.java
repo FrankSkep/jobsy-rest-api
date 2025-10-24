@@ -7,7 +7,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
-import java.util.Collection;
 import java.util.List;
 
 @Repository
@@ -30,6 +29,4 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
     List<Booking> findAllByClientId(Long clientId);
 
     List<Booking> findAllByProviderId(Long providerId);
-
-    List<Booking> findByProvider_IdAndStatusIn(Long providerId, Collection<BookingStatus> statuses);
 }

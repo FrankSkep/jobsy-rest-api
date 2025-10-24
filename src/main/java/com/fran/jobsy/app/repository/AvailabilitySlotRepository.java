@@ -5,6 +5,7 @@ import com.fran.jobsy.app.entity.AvailabilitySlot;
 import com.fran.jobsy.app.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalTime;
@@ -16,13 +17,13 @@ public interface AvailabilitySlotRepository extends JpaRepository<AvailabilitySl
     @Query("SELECT new com.fran.jobsy.app.dto.availability_slot.AvailabilitySlotDTO(" +
             "a.id, a.user.id, a.weekday, a.startTime, a.endTime) " +
             "FROM AvailabilitySlot a WHERE a.user.id = :userId")
-    List<AvailabilitySlotDTO> findAllByUserId(Long userId);
+    List<AvailabilitySlotDTO> findAllByUserId(@Param("userId") Long userId);
 
     Optional<AvailabilitySlot> findByUserIdAndWeekdayAndStartTimeAndEndTime(Long userId, Integer weekday, LocalTime startTime, LocalTime endTime);
 
     @Query("SELECT a FROM AvailabilitySlot a WHERE a.user.id = :userId AND a.weekday = :weekday " +
-            "AND ((a.startTime < :endTime AND a.endTime > :startTime))")
-    Optional<AvailabilitySlot> findOverlappingSlot(Long userId, Integer weekday, LocalTime startTime, LocalTime endTime);
+            "AND (a.startTime <= :endTime AND a.endTime >= :startTime)")
+    Optional<AvailabilitySlot> findOverlappingSlot(@Param("userId") Long userId, @Param("weekday") Integer weekday, @Param("startTime") LocalTime startTime, @Param("endTime") LocalTime endTime);
 
     List<AvailabilitySlot> findAllByUser(User user);
 }
