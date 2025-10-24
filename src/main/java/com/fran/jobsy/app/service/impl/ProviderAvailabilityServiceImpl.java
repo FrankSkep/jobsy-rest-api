@@ -26,6 +26,7 @@ import java.util.List;
 public class ProviderAvailabilityServiceImpl implements ProviderAvailabilityService {
 
     private static final int MAX_MONTHS_AHEAD = 6;
+    private static final String NO_WORKING_SCHEDULE_MSG = "El proveedor aun no ha definido su horario de trabajo.";
 
     private final UserRepository userRepository;
     private final BookingRepository bookingRepository;
@@ -37,11 +38,11 @@ public class ProviderAvailabilityServiceImpl implements ProviderAvailabilityServ
         validateMaxAdvance(startsAt);
 
         User provider = findProvider(providerId);
-        List<AvailabilitySlot> slots = slotRepository.findAllByUser(provider);
-        if (slots.isEmpty()) {
-            return new AvailabilityCheckResponse(false, "El proveedor aun no ha definido su horario de trabajo.");
+        if (hasNoWorkingSchedule(provider)) {
+            return new AvailabilityCheckResponse(false, NO_WORKING_SCHEDULE_MSG);
         }
 
+        List<AvailabilitySlot> slots = slotRepository.findAllByUser(provider);
         int requestedDay = startsAt.getDayOfWeek().getValue();
         List<AvailabilitySlot> daySlots = getSlotsForDay(slots, requestedDay);
 
@@ -70,6 +71,9 @@ public class ProviderAvailabilityServiceImpl implements ProviderAvailabilityServ
         validateMaxAdvance(date.atStartOfDay());
 
         User provider = findProvider(providerId);
+        if (hasNoWorkingSchedule(provider)) {
+            return new AvailabilityCheckResponse(false, NO_WORKING_SCHEDULE_MSG);
+        }
         int weekday = date.getDayOfWeek().getValue();
 
         List<AvailabilitySlot> slots = getSlotsForDay(slotRepository.findAllByUser(provider), weekday);
@@ -107,7 +111,6 @@ public class ProviderAvailabilityServiceImpl implements ProviderAvailabilityServ
     }
 
     // ----- Private Helpers -----
-
     private User findProvider(Long providerId) {
         return userRepository.findById(providerId)
                 .orElseThrow(() -> new ResourceNotFoundException("Proveedor no encontrado."));
@@ -212,5 +215,10 @@ public class ProviderAvailabilityServiceImpl implements ProviderAvailabilityServ
         if (date.isBefore(LocalDate.now())) {
             throw new IllegalArgumentException("No puedes elegir una fecha pasada.");
         }
+    }
+
+    private boolean hasNoWorkingSchedule(User provider) {
+        List<AvailabilitySlot> slots = slotRepository.findAllByUser(provider);
+        return slots.isEmpty();
     }
 }

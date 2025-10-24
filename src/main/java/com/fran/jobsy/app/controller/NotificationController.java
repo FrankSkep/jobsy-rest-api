@@ -6,10 +6,9 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/notifications")
@@ -19,20 +18,39 @@ public class NotificationController {
 
     private final NotificationService notificationService;
 
-    @Operation(summary = "Obtener mis notificaciones", description = "Devuelve la lista de notificaciones del usuario autenticado.")
+    @Operation(summary = "Obtener mis notificaciones (paginadas)")
     @GetMapping
-    public ResponseEntity<List<NotificationDTO>> getMyNotifications() {
-        return ResponseEntity.ok(notificationService.getMyNotifications());
+    public ResponseEntity<Page<NotificationDTO>> getMyNotifications(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        return ResponseEntity.ok(notificationService.getMyNotifications(page, size));
     }
 
-    @Operation(summary = "Marcar notificación como leída", description = "Marca una notificación específica como leída por su ID.")
+    @Operation(summary = "Obtener cantidad de no leídas")
+    @GetMapping("/unread/count")
+    public ResponseEntity<Long> getUnreadCount() {
+        return ResponseEntity.ok(notificationService.getUnreadCount());
+    }
+
+    @Operation(summary = "Marcar notificación como leída")
     @PostMapping("/{id}/read")
-    public void markAsRead(@Parameter(description = "ID de la notificación a marcar como leída", required = true)
-                           @PathVariable Long id) {
+    public void markAsRead(@Parameter(description = "ID de la notificación") @PathVariable Long id) {
         notificationService.markAsRead(id);
     }
 
-    @Operation(summary = "Enviar notificación de prueba", description = "Envía una notificación en tiempo real de prueba al usuario autenticado.")
+    @Operation(summary = "Marcar todas como leídas")
+    @PostMapping("/read-all")
+    public void markAllAsRead() {
+        notificationService.markAllAsRead();
+    }
+
+    @Operation(summary = "Eliminar notificación")
+    @DeleteMapping("/{id}")
+    public void deleteNotification(@Parameter(description = "ID de la notificación") @PathVariable Long id) {
+        notificationService.deleteNotification(id);
+    }
+
+    @Operation(summary = "Enviar notificación de prueba")
     @PostMapping("/test")
     public void sendTestNotification() {
         notificationService.sendTestNotificationToAuthUser();
