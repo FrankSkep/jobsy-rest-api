@@ -106,7 +106,7 @@ To provide a scalable and secure platform that efficiently connects clients and 
 * **Documentation:** SpringDoc OpenAPI (Swagger)
 * **File management:** Cloudinary
 * **Email:** Spring Mail
-* **Validation:** Spring Boot Validation
+* **Validation:** Jakarta Bean Validation
 * **Build:** Maven
 * **Real-time communication:** WebSockets
 

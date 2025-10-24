@@ -109,7 +109,7 @@ Proveer una plataforma **escalable y segura** que conecte de forma eficiente a c
 * **Documentación:** SpringDoc OpenAPI (Swagger)
 * **Gestión de archivos:** Cloudinary
 * **Correo electrónico:** Spring Mail
-* **Validación:** Spring Boot Validation
+* **Validación:** Jakarta Bean Validation
 * **Compilación:** Maven
 * **Comunicación en tiempo real:** WebSockets
 
