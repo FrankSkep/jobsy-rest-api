@@ -6,8 +6,9 @@ import org.mapstruct.*;
 
 @Mapper(componentModel = "spring", uses = {UserPhotoMapper.class, UserWorkPhotoMapper.class})
 public interface UserMapper {
-
-    UserSummaryDTO toBasic(User user);
+    @Mapping(target = "fullName", expression = "java(user.getFirstname() != null ? user.getFirstname() + \" \" + user.getLastname() : user.getLastname())")
+    @Mapping(source = "photo.url", target = "photoUrl")
+    UserSummaryDTO toSummaryDTO(User user);
 
     @Mapping(source = "username", target = "email")
     UserDTO toDTO(User user);
