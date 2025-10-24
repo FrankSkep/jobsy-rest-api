@@ -190,17 +190,6 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(error, HttpStatus.CONFLICT);
     }
 
-    @ExceptionHandler(BookingConflictException.class)
-    public ResponseEntity<ErrorResponse> handleBookingConflictException(
-            BookingConflictException ex, HttpServletRequest request) {
-        ErrorResponse error = new ErrorResponse(
-                HttpStatus.CONFLICT.value(),
-                ex.getMessage()
-        );
-        error.setPath(request.getRequestURI());
-        return new ResponseEntity<>(error, HttpStatus.CONFLICT);
-    }
-
     @ExceptionHandler(UnauthorizedAccessException.class)
     public ResponseEntity<ErrorResponse> handleUnauthorizedAccessException(
             UnauthorizedAccessException ex, HttpServletRequest request) {

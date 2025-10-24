@@ -84,7 +84,7 @@ public class ReviewServiceImpl implements ReviewService {
         Long clientId = booking.getClient().getId();
 
         if (!authenticatedUserId.equals(clientId)) {
-            throw new ConflictException("No autorizado para crear una reseña en nombre de otro usuario.");
+            throw new UnauthorizedAccessException("No autorizado para crear una reseña en nombre de otro usuario.");
         }
     }
 

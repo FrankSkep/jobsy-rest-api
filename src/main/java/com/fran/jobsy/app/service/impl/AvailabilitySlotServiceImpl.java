@@ -5,9 +5,9 @@ import com.fran.jobsy.app.dto.availability_slot.AvailabilitySlotRequest;
 import com.fran.jobsy.app.entity.AvailabilitySlot;
 import com.fran.jobsy.app.entity.User;
 import com.fran.jobsy.app.enums.Role;
-import com.fran.jobsy.app.exception.custom.ConflictException;
 import com.fran.jobsy.app.exception.custom.ResourceAlreadyExistsException;
 import com.fran.jobsy.app.exception.custom.ResourceNotFoundException;
+import com.fran.jobsy.app.exception.custom.UnauthorizedAccessException;
 import com.fran.jobsy.app.mapper.AvailabilitySlotMapper;
 import com.fran.jobsy.app.repository.AvailabilitySlotRepository;
 import com.fran.jobsy.app.repository.UserRepository;
@@ -33,7 +33,7 @@ public class AvailabilitySlotServiceImpl implements AvailabilitySlotService {
                 .orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado con ID: " + userId));
 
         if (user.getRole() != Role.PROVIDER) {
-            throw new ConflictException("El usuario con ID: " + userId + " no es un proveedor");
+            throw new UnauthorizedAccessException("El usuario con ID: " + userId + " no es un proveedor");
         }
         return availabilitySlotRepository.findAllByUserId(userId);
     }

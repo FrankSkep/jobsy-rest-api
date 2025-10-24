@@ -7,8 +7,8 @@ import com.fran.jobsy.app.entity.Category;
 import com.fran.jobsy.app.entity.Offering;
 import com.fran.jobsy.app.entity.User;
 import com.fran.jobsy.app.enums.Role;
-import com.fran.jobsy.app.exception.custom.ConflictException;
 import com.fran.jobsy.app.exception.custom.ResourceNotFoundException;
+import com.fran.jobsy.app.exception.custom.UnauthorizedAccessException;
 import com.fran.jobsy.app.mapper.OfferingMapper;
 import com.fran.jobsy.app.repository.CategoryRepository;
 import com.fran.jobsy.app.repository.OfferingRepository;
@@ -54,7 +54,7 @@ public class OfferingServiceImpl implements OfferingService {
                 .orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado con ID: " + userId));
 
         if (user.getRole() != Role.PROVIDER) {
-            throw new ConflictException("El usuario con ID: " + userId + " no es un proveedor");
+            throw new UnauthorizedAccessException("El usuario con ID: " + userId + " no es un proveedor");
         }
         return offeringRepository.findByOwnerId(userId);
     }
@@ -64,7 +64,7 @@ public class OfferingServiceImpl implements OfferingService {
         User owner = authenticatedUserProvider.getAuthenticatedUser();
 
         if (owner.getRole() != Role.PROVIDER) {
-            throw new ConflictException("El usuario autenticado no es un proveedor");
+            throw new UnauthorizedAccessException("El usuario autenticado no es un proveedor");
         }
 
         Category category = categoryRepository.findById(offeringRequest.category().id())
@@ -89,7 +89,7 @@ public class OfferingServiceImpl implements OfferingService {
         Long ownerId = authenticatedUserProvider.getAuthenticatedUserId();
 
         if (!offering.getOwner().getId().equals(ownerId)) {
-            throw new ConflictException("El usuario autenticado no es el propietario del servicio");
+            throw new UnauthorizedAccessException("El usuario autenticado no es el propietario del servicio");
         }
 
         Category category = categoryRepository.findById(offeringRequest.category().id())
