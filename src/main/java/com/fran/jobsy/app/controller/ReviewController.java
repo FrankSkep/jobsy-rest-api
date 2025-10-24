@@ -2,6 +2,7 @@ package com.fran.jobsy.app.controller;
 
 import com.fran.jobsy.app.dto.review.ReviewDTO;
 import com.fran.jobsy.app.dto.review.ReviewRequest;
+import com.fran.jobsy.app.dto.review.ReviewSummaryDTO;
 import com.fran.jobsy.app.service.ReviewService;
 import com.fran.jobsy.app.util.RestUtils;
 import jakarta.validation.Valid;
@@ -10,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1")
@@ -26,14 +28,14 @@ public class ReviewController {
     }
 
     @GetMapping("/offerings/{id}/reviews")
-    public ResponseEntity<java.util.List<ReviewDTO>> getOfferingReviews(@PathVariable Long id) {
-        java.util.List<ReviewDTO> reviews = reviewService.getOfferingReviews(id);
+    public ResponseEntity<List<ReviewSummaryDTO>> getOfferingReviews(@PathVariable Long id) {
+        List<ReviewSummaryDTO> reviews = reviewService.getOfferingReviews(id);
         return ResponseEntity.ok(reviews);
     }
 
     @GetMapping("/users/{id}/reviews")
-    public ResponseEntity<java.util.List<ReviewDTO>> getProviderReviews(@PathVariable Long id) {
-        java.util.List<ReviewDTO> reviews = reviewService.getProviderReviews(id);
+    public ResponseEntity<List<ReviewSummaryDTO>> getProviderReviews(@PathVariable Long id) {
+        List<ReviewSummaryDTO> reviews = reviewService.getProviderReviews(id);
         return ResponseEntity.ok(reviews);
     }
 }

@@ -1,15 +1,20 @@
 package com.fran.jobsy.app.service.impl;
 
-import com.fran.jobsy.app.dto.booking.BookingListDTO;
 import com.fran.jobsy.app.dto.review.ReviewDTO;
 import com.fran.jobsy.app.dto.review.ReviewRequest;
+import com.fran.jobsy.app.dto.review.ReviewSummaryDTO;
 import com.fran.jobsy.app.entity.Booking;
 import com.fran.jobsy.app.entity.Review;
+import com.fran.jobsy.app.entity.User;
 import com.fran.jobsy.app.enums.BookingStatus;
+import com.fran.jobsy.app.enums.Role;
 import com.fran.jobsy.app.exception.custom.ConflictException;
 import com.fran.jobsy.app.exception.custom.ResourceNotFoundException;
+import com.fran.jobsy.app.exception.custom.UnauthorizedAccessException;
+import com.fran.jobsy.app.mapper.ReviewMapper;
 import com.fran.jobsy.app.repository.BookingRepository;
 import com.fran.jobsy.app.repository.ReviewRepository;
+import com.fran.jobsy.app.repository.UserRepository;
 import com.fran.jobsy.app.service.ReviewService;
 import com.fran.jobsy.app.util.AuthenticatedUserProvider;
 import lombok.RequiredArgsConstructor;
@@ -24,6 +29,8 @@ public class ReviewServiceImpl implements ReviewService {
     private final ReviewRepository reviewRepository;
     private final BookingRepository bookingRepository;
     private final AuthenticatedUserProvider authenticatedUserProvider;
+    private final ReviewMapper reviewMapper;
+    private final UserRepository userRepository;
 
     @Override
     public ReviewDTO createReview(Long bookingId, ReviewRequest reviewRequest) {
@@ -34,17 +41,23 @@ public class ReviewServiceImpl implements ReviewService {
         validateReviewAuthorization(booking);
 
         Review savedReview = saveReview(booking, reviewRequest);
-
-        return mapToReviewDTO(savedReview, booking);
+        return reviewMapper.toReviewDTO(savedReview);
     }
 
     @Override
-    public List<ReviewDTO> getOfferingReviews(Long offeringId) {
+    public List<ReviewSummaryDTO> getOfferingReviews(Long offeringId) {
         return reviewRepository.findByBooking_OfferingId(offeringId);
     }
 
     @Override
-    public List<ReviewDTO> getProviderReviews(Long providerId) {
+    public List<ReviewSummaryDTO> getProviderReviews(Long providerId) {
+        User user = userRepository.findById(providerId)
+                .orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado. ID: " + providerId));
+
+        if (!user.getRole().equals(Role.PROVIDER)) {
+            throw new UnauthorizedAccessException("El usuario no es un proveedor. ID: " + providerId);
+        }
+
         return reviewRepository.findByProviderId(providerId);
     }
 
@@ -85,26 +98,5 @@ public class ReviewServiceImpl implements ReviewService {
                 .build();
 
         return reviewRepository.save(review);
-    }
-
-    private ReviewDTO mapToReviewDTO(Review review, Booking booking) {
-        return new ReviewDTO(
-                review.getId(),
-                new BookingListDTO(
-                        booking.getId(),
-                        booking.getProvider().getFirstname(),
-                        booking.getClient().getFirstname(),
-                        booking.getOffering().getTitle(),
-                        booking.getStartsAt(),
-                        booking.getEndsAt(),
-                        booking.getStatus(),
-                        booking.getPriceAtBooking()
-                ),
-                booking.getClient().getId(),
-                booking.getProvider().getId(),
-                review.getRating(),
-                review.getComment(),
-                review.getCreatedAt()
-        );
     }
 }

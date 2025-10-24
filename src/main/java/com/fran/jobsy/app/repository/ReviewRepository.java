@@ -1,7 +1,7 @@
 // language: java
 package com.fran.jobsy.app.repository;
 
-import com.fran.jobsy.app.dto.review.ReviewDTO;
+import com.fran.jobsy.app.dto.review.ReviewSummaryDTO;
 import com.fran.jobsy.app.entity.Review;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -14,52 +14,32 @@ import java.util.List;
 public interface ReviewRepository extends JpaRepository<Review, Long> {
 
     @Query("""
-            SELECT new com.fran.jobsy.app.dto.review.ReviewDTO(
+            SELECT new com.fran.jobsy.app.dto.review.ReviewSummaryDTO(
                 r.id,
-                new com.fran.jobsy.app.dto.booking.BookingListDTO(
-                    b.id,
-                    b.provider.firstname,
-                    b.client.firstname,
-                    b.offering.title,
-                    b.startsAt,
-                    b.endsAt,
-                    b.status,
-                    b.priceAtBooking
-                ),
-                r.client.id,
-                r.provider.id,
                 r.rating,
                 r.comment,
+                CONCAT(b.client.firstname, ' ', b.client.lastname),
+                b.offering.title,
                 r.createdAt
             )
             FROM Review r
             JOIN r.booking b
             WHERE b.offering.id = :offeringId
             """)
-    List<ReviewDTO> findByBooking_OfferingId(@Param("offeringId") Long offeringId);
+    List<ReviewSummaryDTO> findByBooking_OfferingId(@Param("offeringId") Long offeringId);
 
     @Query("""
-            SELECT new com.fran.jobsy.app.dto.review.ReviewDTO(
+            SELECT new com.fran.jobsy.app.dto.review.ReviewSummaryDTO(
                 r.id,
-                new com.fran.jobsy.app.dto.booking.BookingListDTO(
-                    b.id,
-                    b.provider.firstname,
-                    b.client.firstname,
-                    b.offering.title,
-                    b.startsAt,
-                    b.endsAt,
-                    b.status,
-                    b.priceAtBooking
-                ),
-                r.client.id,
-                r.provider.id,
                 r.rating,
                 r.comment,
+                CONCAT(b.client.firstname, ' ', b.client.lastname),
+                b.offering.title,
                 r.createdAt
             )
             FROM Review r
             JOIN r.booking b
             WHERE r.provider.id = :providerId
             """)
-    List<ReviewDTO> findByProviderId(@Param("providerId") Long providerId);
+    List<ReviewSummaryDTO> findByProviderId(@Param("providerId") Long providerId);
 }
