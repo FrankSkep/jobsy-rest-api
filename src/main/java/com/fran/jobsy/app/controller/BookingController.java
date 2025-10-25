@@ -6,6 +6,7 @@ import com.fran.jobsy.app.dto.booking.BookingResponseDTO;
 import com.fran.jobsy.app.dto.booking.BookingStatusUpdateReqDTO;
 import com.fran.jobsy.app.service.BookingService;
 import com.fran.jobsy.app.util.RestUtils;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +19,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1/bookings")
 @RequiredArgsConstructor
+@Tag(name = "Bookings", description = "Operaciones relacionadas con las reservas de un servicio")
 public class BookingController {
 
     private final BookingService bookingService;

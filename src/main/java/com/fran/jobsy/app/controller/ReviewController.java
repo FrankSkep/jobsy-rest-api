@@ -5,6 +5,7 @@ import com.fran.jobsy.app.dto.review.ReviewRequest;
 import com.fran.jobsy.app.dto.review.ReviewSummaryDTO;
 import com.fran.jobsy.app.service.ReviewService;
 import com.fran.jobsy.app.util.RestUtils;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +17,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1")
 @RequiredArgsConstructor
+@Tag(name = "Reviews", description = "Operaciones relacionadas con las reseñas")
 public class ReviewController {
 
     private final ReviewService reviewService;

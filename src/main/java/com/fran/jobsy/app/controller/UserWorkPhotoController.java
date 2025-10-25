@@ -16,7 +16,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1/users")
 @RequiredArgsConstructor
-@Tag(name = "User Work Photos", description = "Operaciones sobre el portafolio de fotos de trabajos del usuario")
+@Tag(name = "User Work Photos", description = "Operaciones sobre el portafolio de fotos de trabajos de los proveedores de servicios")
 public class UserWorkPhotoController {
 
     private final UserWorkPhotoService userWorkPhotoService;

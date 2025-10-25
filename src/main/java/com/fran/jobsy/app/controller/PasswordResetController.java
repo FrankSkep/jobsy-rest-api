@@ -2,6 +2,7 @@ package com.fran.jobsy.app.controller;
 
 import com.fran.jobsy.app.dto.auth.PasswordResetDTO;
 import com.fran.jobsy.app.service.PasswordResetService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -12,6 +13,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/v1/auth")
 @RequiredArgsConstructor
+@Tag(name = "PasswordReset", description = "Operaciones para el restablecimiento de contraseñas de usuarios")
 public class PasswordResetController {
 
     private final PasswordResetService passwordResetService;

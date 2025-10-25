@@ -22,7 +22,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1/provider-requests")
 @RequiredArgsConstructor
-@Tag(name = "Provider Requests", description = "Operaciones de postulación y gestión de proveedores")
+@Tag(name = "ProviderRequests", description = "Operaciones de postulación y gestión de proveedores")
 public class ProviderRequestController {
 
     private final ProviderRequestService providerRequestService;
