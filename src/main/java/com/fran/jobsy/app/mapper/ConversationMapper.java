@@ -14,9 +14,9 @@ import java.util.Optional;
 @Mapper(componentModel = "spring", uses = MessageMapper.class)
 public interface ConversationMapper {
 
-    @Mapping(target = "bookingId", source = "booking.id")
-    @Mapping(target = "userAId", source = "userA.id")
-    @Mapping(target = "userBId", source = "userB.id")
+    @Mapping(target = "bookingId", source = "conversation.booking.id")
+    @Mapping(target = "userAId", source = "conversation.userA.id")
+    @Mapping(target = "userBId", source = "conversation.userB.id")
     @Mapping(target = "otherUserId", expression = "java(getOtherUserId(conversation, currentUserId))")
     @Mapping(target = "otherUserName", expression = "java(getOtherUserName(conversation, currentUserId))")
     @Mapping(target = "otherUserPhotoUrl", expression = "java(getOtherUserPhotoUrl(conversation, currentUserId))")

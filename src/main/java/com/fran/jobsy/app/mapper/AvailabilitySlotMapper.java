@@ -7,6 +7,6 @@ import org.mapstruct.Mapping;
 
 @Mapper(componentModel = "spring")
 public interface AvailabilitySlotMapper {
-    @Mapping(source = "user.id", target = "providerId")
+    @Mapping(target = "providerId", source = "user.id")
     AvailabilitySlotDTO toDTO(AvailabilitySlot slot);
 }

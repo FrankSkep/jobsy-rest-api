@@ -10,7 +10,11 @@ import org.mapstruct.Mapping;
 public interface ReviewMapper {
     ReviewDTO toReviewDTO(Review review);
 
-    @Mapping(target = "clientName", expression = "java(review.getClient().getFirstname() + \" \" + review.getClient().getLastname())")
+    @Mapping(target = "clientName", expression = "java(mapClientName(review)))")
     @Mapping(target = "offeringTitle", source = "booking.offering.title")
     ReviewSummaryDTO toReviewSummaryDTO(Review review);
+
+    default String mapClientName(Review review) {
+        return review.getBooking().getClient().getFirstname() + " " + review.getBooking().getClient().getLastname();
+    }
 }

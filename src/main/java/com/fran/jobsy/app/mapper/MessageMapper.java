@@ -7,8 +7,8 @@ import org.mapstruct.Mapping;
 
 @Mapper(componentModel = "spring")
 public interface MessageMapper {
-    @Mapping(source = "conversation.id", target = "conversationId")
-    @Mapping(source = "sender.id", target = "senderId")
+    @Mapping(target = "conversationId", source = "conversation.id")
+    @Mapping(target = "senderId", source = "sender.id")
     @Mapping(target = "recipientId", expression = "java(getRecipientId(message))")
     MessageDTO toMessageDTO(Message message);
 

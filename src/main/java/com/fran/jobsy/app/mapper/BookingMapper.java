@@ -14,6 +14,6 @@ public interface BookingMapper {
     @Mapping(target = "offeringTitle", source = "offering.title")
     BookingListDTO toBookingListDTO(Booking booking);
 
-    @Mapping(source = "status", target = "bookingStatus")
+    @Mapping(target = "bookingStatus", source = "status")
     BookingResponseDTO toBookingResponseDTO(Booking booking);
 }

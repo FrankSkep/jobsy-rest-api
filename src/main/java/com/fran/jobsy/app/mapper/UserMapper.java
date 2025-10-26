@@ -7,14 +7,14 @@ import org.mapstruct.*;
 @Mapper(componentModel = "spring", uses = {UserPhotoMapper.class, UserWorkPhotoMapper.class})
 public interface UserMapper {
     @Mapping(target = "fullName", expression = "java(user.getFirstname() != null ? user.getFirstname() + \" \" + user.getLastname() : user.getLastname())")
-    @Mapping(source = "photo.url", target = "photoUrl")
+    @Mapping(target = "photoUrl", source = "photo.url")
     UserSummaryDTO toSummaryDTO(User user);
 
-    @Mapping(source = "username", target = "email")
+    @Mapping(target = "email", source = "username")
     UserDTO toDTO(User user);
 
     @Mapping(target = "userPhoto", source = "photo")
-    @Mapping(source = "username", target = "email")
+    @Mapping(target = "email", source = "username")
     UserFullDTO toFull(User user);
 
     @Mapping(target = "profilePhotoUrl", source = "photo.url")
@@ -22,7 +22,7 @@ public interface UserMapper {
 
     UserServiceDTO toService(User user);
 
-    @Mapping(source = "email", target = "username")
+    @Mapping(target = "username", source = "email")
     @Mapping(target = "password", ignore = true)
     @Mapping(target = "createdAt", ignore = true)
     @Mapping(target = "authorities", ignore = true)
