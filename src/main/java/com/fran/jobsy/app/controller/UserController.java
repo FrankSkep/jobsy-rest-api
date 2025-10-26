@@ -38,8 +38,8 @@ public class UserController {
     }
 
     @PatchMapping("/{id}/role")
-    @PreAuthorize("hasRole('ADMIN')")
-    @Operation(summary = "Actualizar rol de usuario", description = "Solo accesible para ADMIN. Permite cambiar el rol de un usuario.")
+    @PreAuthorize("hasAnyRole('SUPER_ADMIN', 'ADMIN')")
+    @Operation(summary = "Actualizar rol de usuario", description = "Solo accesible para SUPER_ADMIN y ADMIN. Permite cambiar el rol de un usuario.")
     public ResponseEntity<Void> updateRole(
             @PathVariable Long id,
             @RequestBody Role role) {
@@ -48,7 +48,7 @@ public class UserController {
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('SUPER_ADMIN', 'ADMIN')")
     @Operation(summary = "Eliminar usuario", description = "Solo accesible para ADMIN. Elimina un usuario por su ID.")
     public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
         userService.deleteUser(id);

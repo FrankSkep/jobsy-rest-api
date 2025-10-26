@@ -18,8 +18,6 @@ public interface UserService {
 
     void deleteUser(Long id);
 
-    void deleteUser(String username);
-
     void updatePassword(PasswordRequest password);
 
     void setPasswordByAdmin(Long userId, String newPassword);

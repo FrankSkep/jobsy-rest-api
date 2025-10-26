@@ -6,11 +6,17 @@ import com.fran.jobsy.app.entity.User;
 import com.fran.jobsy.app.enums.Role;
 import com.fran.jobsy.app.exception.custom.AuthenticationException;
 import com.fran.jobsy.app.exception.custom.ResourceNotFoundException;
+import com.fran.jobsy.app.exception.custom.RoleAssignmentException;
+import com.fran.jobsy.app.mapper.UserMapper;
 import com.fran.jobsy.app.repository.UserRepository;
 import com.fran.jobsy.app.repository.UserWorkPhotoRepository;
 import com.fran.jobsy.app.service.UserService;
 import com.fran.jobsy.app.util.AuthenticatedUserProvider;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -24,14 +30,10 @@ public class UserServiceImpl implements UserService {
     private final UserWorkPhotoRepository userWorkPhotoRepository;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticatedUserProvider authenticatedUserProvider;
+    private final UserMapper userMapper;
 
     private User getById(Long id) {
         return userRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("User not found."));
-    }
-
-    private User getByUsername(String username) {
-        return userRepository.findByUsername(username)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found."));
     }
 
@@ -41,6 +43,10 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Caching(evict = {
+            @CacheEvict(value = "usersFull", key = "#root.target.authenticatedUserProvider.getAuthenticatedUserId()"),
+            @CacheEvict(value = "usersPublic", key = "#root.target.authenticatedUserProvider.getAuthenticatedUserId()")
+    })
     public void updateUser(UserInfoUpdateRequest userReq) {
         User user = getById(authenticatedUserProvider.getAuthenticatedUserId());
         user.setFirstname(userReq.firstname());
@@ -50,6 +56,10 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Caching(evict = {
+            @CacheEvict(value = "usersFull", key = "#root.target.authenticatedUserProvider.getAuthenticatedUserId()"),
+            @CacheEvict(value = "usersPublic", key = "#root.target.authenticatedUserProvider.getAuthenticatedUserId()")
+    })
     public void updateUser(ProviderInfoUpdateRequest userReq) {
         User user = getById(authenticatedUserProvider.getAuthenticatedUserId());
 
@@ -65,28 +75,85 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void updateRole(Long userId, Role role) {
-        User user = getById(userId);
-        user.setRole(role);
-        userRepository.save(user);
+    @CachePut(value = "users", key = "#userId")
+    public void updateRole(Long userId, Role newRole) {
+        User target = getById(userId);
+        User authenticatedUser = authenticatedUserProvider.getAuthenticatedUser();
+
+        // 1. No puedes cambiar tu propio rol
+        if (target.getId().equals(authenticatedUser.getId())) {
+            throw new AuthenticationException("No puedes cambiar tu propio rol.");
+        }
+
+        // 2. Ya tiene el rol
+        if (target.getRole() == newRole) {
+            throw new RoleAssignmentException("El usuario ya tiene este rol asignado.");
+        }
+
+        // 3. No se puede cambiar el rol de otro ADMIN si no eres SUPER_ADMIN
+        if (target.getRole() == Role.ADMIN && authenticatedUser.getRole() != Role.SUPER_ADMIN) {
+            throw new AuthenticationException("Solo un SUPER_ADMIN puede modificar el rol de un ADMIN.");
+        }
+
+        // 4. Validar que el rol nuevo sea asignable por el usuario autenticado
+        if (!canAssign(authenticatedUser.getRole(), newRole)) {
+            throw new AuthenticationException("No tienes permisos para asignar este rol.");
+        }
+
+        // 5. Solo puede existir un SUPER_ADMIN
+        if (newRole == Role.SUPER_ADMIN && userRepository.existsByRole(Role.SUPER_ADMIN)) {
+            throw new RoleAssignmentException("Ya existe un SUPER_ADMIN en el sistema.");
+        }
+
+        // 6. Aplicar el cambio
+        target.setRole(newRole);
+        userRepository.save(target);
+    }
+
+    private boolean canAssign(Role assignerRole, Role targetRole) {
+        return switch (assignerRole) {
+            case SUPER_ADMIN ->
+                    targetRole == Role.ADMIN || targetRole == Role.PROVIDER || targetRole == Role.USER;
+            case ADMIN ->
+                    targetRole == Role.PROVIDER || targetRole == Role.USER;
+            default ->
+                    false;
+        };
     }
 
     @Override
+    @CacheEvict(value = "users", key = "#id")
     public void deleteUser(Long id) {
-        Long authenticatedUserId = authenticatedUserProvider.getAuthenticatedUserId();
-        User user = getById(id);
+        User authenticatedUser = authenticatedUserProvider.getAuthenticatedUser();
+        User target = getById(id);
 
-        if (user.getId().equals(authenticatedUserId)) {
+        // 1. No puedes eliminarte a ti mismo
+        if (target.getId().equals(authenticatedUser.getId())) {
             throw new AuthenticationException("No puedes eliminar tu propia cuenta.");
         }
 
-        userRepository.delete(user);
+        // 2. Solo SUPER_ADMIN y ADMIN pueden eliminar usuarios (por si el controller no lo valida)
+        if (authenticatedUser.getRole() != Role.SUPER_ADMIN && authenticatedUser.getRole() != Role.ADMIN) {
+            throw new AuthenticationException("No tienes permisos para eliminar usuarios.");
+        }
+
+        // 3. No puedes eliminar a un usuario con rol igual o superior al tuyo
+        if (!canDelete(authenticatedUser.getRole(), target.getRole())) {
+            throw new AuthenticationException("No tienes permisos para eliminar a este usuario.");
+        }
+
+        userRepository.delete(target);
     }
 
-    @Override
-    public void deleteUser(String username) {
-        User user = getByUsername(username);
-        userRepository.delete(user);
+    private boolean canDelete(Role deleterRole, Role targetRole) {
+        return switch (deleterRole) {
+            case SUPER_ADMIN ->
+                    targetRole != Role.SUPER_ADMIN;
+            case ADMIN ->
+                    targetRole == Role.PROVIDER || targetRole == Role.USER;
+            default ->
+                    false;
+        };
     }
 
     @Override
@@ -111,54 +178,19 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Cacheable(value = "usersPublic", key = "#id")
     public UserPublicDTO getUser(Long id) {
         User user = getById(id);
-
-        return new UserPublicDTO(
-                user.getFirstname(),
-                user.getLastname(),
-                user.getPhoto().getUrl(),
-                userWorkPhotoRepository.findWorkPhotosByUserId(id),
-                user.getCountry(),
-                user.getBio(),
-                user.getHourlyRate(),
-                user.getYearsExperience(),
-                user.getAddressText(),
-                user.getServiceRadiusKm()
-        );
+        return userMapper.toPublic(user);
     }
 
     // === Authenticated User Methods ===
     @Override
+    @Cacheable(value = "usersFull", key = "#root.target.authenticatedUserProvider.getAuthenticatedUserId()")
     public UserFullDTO getUserInfo() {
         User user = authenticatedUserProvider.getAuthenticatedUser();
 
-        UserPhotoDTO photoDto = null;
-        if (user.getPhoto() != null) {
-            photoDto = new UserPhotoDTO(
-                    user.getPhoto().getId(),
-                    user.getPhoto().getImageId(),
-                    user.getPhoto().getUrl()
-            );
-        }
-
-        return new UserFullDTO(
-                user.getId(),
-                user.getUsername(),
-                user.getLastname(),
-                user.getFirstname(),
-                photoDto,
-                user.getCountry(),
-                user.getRole(),
-                user.getBio(),
-                user.getHourlyRate(),
-                user.getYearsExperience(),
-                user.getAddressText(),
-                user.getLat(),
-                user.getLng(),
-                user.getServiceRadiusKm(),
-                user.getVerifiedCert()
-        );
+        return userMapper.toFull(user);
     }
 
     public void deleteMyAccount() {
