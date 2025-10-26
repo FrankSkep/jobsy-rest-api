@@ -13,6 +13,7 @@ import com.fran.jobsy.app.repository.BookingRepository;
 import com.fran.jobsy.app.repository.OfferingRepository;
 import com.fran.jobsy.app.repository.UserRepository;
 import com.fran.jobsy.app.service.BookingService;
+import com.fran.jobsy.app.service.ConversationService;
 import com.fran.jobsy.app.service.NotificationService;
 import com.fran.jobsy.app.service.ProviderAvailabilityService;
 import com.fran.jobsy.app.util.AuthenticatedUserProvider;
@@ -34,6 +35,7 @@ public class BookingServiceImpl implements BookingService {
     private final ProviderAvailabilityService providerAvailabilityService;
     private final NotificationService notificationService;
     private final BookingMapper bookingMapper;
+    private final ConversationService conversationService;
 
     @Override
     @Transactional
@@ -135,6 +137,9 @@ public class BookingServiceImpl implements BookingService {
         validateProviderAction(booking, authId, BookingStatus.PENDING, "confirmar la reserva");
         updateBookingStatusAndNotify(booking, BookingStatus.CONFIRMED, comment, booking.getClient(),
                 "Reserva confirmada", "La reserva fue confirmada");
+
+        // Iniciar o obtener la conversación asociada a esta reserva (si no existe)
+        conversationService.createIfNotExists(booking);
     }
 
     private void handleCanceled(Booking booking, Long authId, String comment) {

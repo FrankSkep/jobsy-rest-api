@@ -24,7 +24,9 @@ public class JwtHandshakeInterceptor implements HandshakeInterceptor {
                                    ServerHttpResponse response,
                                    WebSocketHandler wsHandler,
                                    Map<String, Object> attributes) {
+
         URI uri = request.getURI();
+
         String query = uri.getQuery();
         if (query != null && query.contains("token=")) {
             String token = query.split("token=")[1];
@@ -34,6 +36,7 @@ public class JwtHandshakeInterceptor implements HandshakeInterceptor {
                 return true;
             }
         }
+
         return false;
     }
 
