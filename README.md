@@ -103,10 +103,12 @@ To provide a scalable and secure platform that efficiently connects clients and 
 * **Authentication:** JWT (JSON Web Tokens)
 * **Security:** Spring Security
 * **Persistence:** Spring Data JPA
+* **Mapping:** MapStruct
 * **Documentation:** SpringDoc OpenAPI (Swagger)
 * **File management:** Cloudinary
 * **Email:** Spring Mail
 * **Validation:** Jakarta Bean Validation
+* **Caching:** Redis
 * **Build:** Maven
 * **Real-time communication:** WebSockets
 
