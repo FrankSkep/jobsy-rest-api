@@ -25,7 +25,7 @@ public class UserController {
 
     // General User Endpoints
     @GetMapping
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('SUPER_ADMIN', 'ADMIN')")
     @Operation(summary = "Obtener todos los usuarios", description = "Solo accesible para ADMIN. Devuelve la lista de todos los usuarios registrados.")
     public ResponseEntity<List<UserDTO>> getAllUsers() {
         return ResponseEntity.ok(userService.getAllUsers());
@@ -56,7 +56,7 @@ public class UserController {
     }
 
     @PatchMapping("/{id}/password")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('SUPER_ADMIN', 'ADMIN')")
     @Operation(summary = "Actualizar contraseña de usuario", description = "Solo accesible para ADMIN. Permite al administrador actualizar la contraseña de un usuario.")
     public ResponseEntity<Void> setPasswordByAdmin(
             @PathVariable Long id,

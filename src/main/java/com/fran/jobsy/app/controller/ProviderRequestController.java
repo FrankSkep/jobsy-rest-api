@@ -48,7 +48,7 @@ public class ProviderRequestController {
     }
 
     @GetMapping
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('SUPER_ADMIN', 'ADMIN')")
     @Operation(summary = "Obtener todas las solicitudes de proveedor", description = "Solo accesible para ADMIN. Devuelve todas las solicitudes de proveedor.")
     public ResponseEntity<Page<ProviderRequestResponseDTO>> getAllProviderRequests(Pageable pageable) {
         Page<ProviderRequestResponseDTO> requests = providerRequestService.getAllProviderRequests(pageable);
@@ -56,7 +56,7 @@ public class ProviderRequestController {
     }
 
     @PatchMapping("/{id}/approve")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('SUPER_ADMIN', 'ADMIN')")
     @Operation(summary = "Aprobar solicitud de proveedor", description = "Solo accesible para ADMIN. Aprueba la solicitud de proveedor indicada.")
     public ResponseEntity<Void> approve(@PathVariable Long id) {
         providerRequestService.approve(id);
@@ -64,7 +64,7 @@ public class ProviderRequestController {
     }
 
     @PatchMapping("/{id}/reject")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('SUPER_ADMIN', 'ADMIN')")
     @Operation(summary = "Rechazar solicitud de proveedor", description = "Solo accesible para ADMIN. Rechaza la solicitud de proveedor indicada.")
     public ResponseEntity<Void> reject(@PathVariable Long id,
                                        @Valid @RequestBody ProviderRejectionRequest body) {
