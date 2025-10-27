@@ -10,7 +10,11 @@ import com.fran.jobsy.app.repository.UserPhotoRepository;
 import com.fran.jobsy.app.service.CloudinaryService;
 import com.fran.jobsy.app.service.UserPhotoService;
 import com.fran.jobsy.app.util.AuthenticatedUserProvider;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -22,6 +26,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class UserPhotoServiceImpl implements UserPhotoService {
 
+    @Getter
     private final AuthenticatedUserProvider authenticatedUserProvider;
     private final CloudinaryService cloudinaryService;
     private final UserPhotoRepository userPhotoRepository;
@@ -29,6 +34,11 @@ public class UserPhotoServiceImpl implements UserPhotoService {
 
     @Override
     @Transactional
+    @Caching(evict = {
+            @CacheEvict(value = "usersFull", key = "#root.target.authenticatedUserProvider.getAuthenticatedUserId()"),
+            @CacheEvict(value = "usersPublic", key = "#root.target.authenticatedUserProvider.getAuthenticatedUserId()"),
+            @CacheEvict(value = "userPhotos", key = "#root.target.authenticatedUserProvider.getAuthenticatedUserId()")
+    })
     public UserPhotoDTO updateUserPhoto(MultipartFile file) {
         Long userId = authenticatedUserProvider.getAuthenticatedUserId();
         String newImageId = null;
@@ -91,6 +101,7 @@ public class UserPhotoServiceImpl implements UserPhotoService {
     }
 
     @Override
+    @Cacheable(value = "userPhotos", key = "#id")
     public UserPhotoDTO getUserPhoto(Long id) {
         UserPhoto userPhoto = userPhotoRepository.findByUserId(id)
                 .orElseThrow(() -> new ResourceNotFoundException("No se encontró la foto de perfil para el usuario con id: " + id));
@@ -99,6 +110,11 @@ public class UserPhotoServiceImpl implements UserPhotoService {
 
     @Override
     @Transactional
+    @Caching(evict = {
+            @CacheEvict(value = "usersFull", key = "#root.target.authenticatedUserProvider.getAuthenticatedUserId()"),
+            @CacheEvict(value = "usersPublic", key = "#root.target.authenticatedUserProvider.getAuthenticatedUserId()"),
+            @CacheEvict(value = "userPhotos", key = "#root.target.authenticatedUserProvider.getAuthenticatedUserId()")
+    })
     public void deleteUserPhoto() {
         Long userId = authenticatedUserProvider.getAuthenticatedUserId();
 

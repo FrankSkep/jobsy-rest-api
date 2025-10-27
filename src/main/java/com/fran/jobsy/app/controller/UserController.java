@@ -65,7 +65,7 @@ public class UserController {
         return ResponseEntity.noContent().build();
     }
 
-    @PatchMapping("/{id}/password-update")
+    @PatchMapping("/me/password-update")
     @Operation
     public ResponseEntity<Void> updateMyPassword(@RequestBody @Valid PasswordRequest passwordRequest) {
         userService.updatePassword(passwordRequest);

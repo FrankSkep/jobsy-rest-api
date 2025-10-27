@@ -189,7 +189,6 @@ public class UserServiceImpl implements UserService {
     @Cacheable(value = "usersFull", key = "#root.target.authenticatedUserProvider.getAuthenticatedUserId()")
     public UserFullDTO getUserInfo() {
         User user = authenticatedUserProvider.getAuthenticatedUser();
-
         return userMapper.toFull(user);
     }
 
