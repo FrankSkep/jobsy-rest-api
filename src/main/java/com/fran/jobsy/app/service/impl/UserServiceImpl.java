@@ -52,6 +52,7 @@ public class UserServiceImpl implements UserService {
         user.setFirstname(userReq.firstname());
         user.setLastname(userReq.lastname());
         user.setCountry(userReq.country());
+        user.setPhone(userReq.phone());
         userRepository.save(user);
     }
 
