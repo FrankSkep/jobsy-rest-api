@@ -108,7 +108,7 @@ To provide a scalable and secure platform that efficiently connects clients and 
 * **File management:** Cloudinary
 * **Email:** Spring Mail
 * **Validation:** Jakarta Bean Validation
-* **Caching:** Redis
+* **Caching:** Caffeine
 * **Build:** Maven
 * **Real-time communication:** WebSockets
 

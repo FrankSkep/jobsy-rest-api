@@ -11,6 +11,4 @@ public interface UserWorkPhotoMapper {
     UserWorkPhotoDTO toDto(UserWorkPhoto entity);
 
     List<UserWorkPhotoDTO> toDtoList(List<UserWorkPhoto> entities);
-
-    UserWorkPhoto toEntity(UserWorkPhotoDTO dto);
 }

@@ -111,7 +111,7 @@ Proveer una plataforma **escalable y segura** que conecte de forma eficiente a c
 * **Gestión de archivos:** Cloudinary
 * **Correo electrónico:** Spring Mail
 * **Validación:** Jakarta Bean Validation
-* **Cacheo:** Redis
+* **Cacheo:** Caffeine
 * **Compilación:** Maven
 * **Comunicación en tiempo real:** WebSockets
 

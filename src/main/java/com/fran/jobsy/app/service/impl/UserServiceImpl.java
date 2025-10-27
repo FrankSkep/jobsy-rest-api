@@ -80,32 +80,32 @@ public class UserServiceImpl implements UserService {
         User target = getById(userId);
         User authenticatedUser = authenticatedUserProvider.getAuthenticatedUser();
 
-        // 1. No puedes cambiar tu propio rol
+        // 1. You cannot change your own role
         if (target.getId().equals(authenticatedUser.getId())) {
             throw new AuthenticationException("No puedes cambiar tu propio rol.");
         }
 
-        // 2. Ya tiene el rol
+        // 2. Already has the role
         if (target.getRole() == newRole) {
             throw new RoleAssignmentException("El usuario ya tiene este rol asignado.");
         }
 
-        // 3. No se puede cambiar el rol de otro ADMIN si no eres SUPER_ADMIN
+        // 3. Cannot change the role of another ADMIN unless you are SUPER_ADMIN
         if (target.getRole() == Role.ADMIN && authenticatedUser.getRole() != Role.SUPER_ADMIN) {
             throw new AuthenticationException("Solo un SUPER_ADMIN puede modificar el rol de un ADMIN.");
         }
 
-        // 4. Validar que el rol nuevo sea asignable por el usuario autenticado
+        // 4. Validate that the new role can be assigned by the authenticated user
         if (!canAssign(authenticatedUser.getRole(), newRole)) {
             throw new AuthenticationException("No tienes permisos para asignar este rol.");
         }
 
-        // 5. Solo puede existir un SUPER_ADMIN
+        // 5. Only one SUPER_ADMIN can exist
         if (newRole == Role.SUPER_ADMIN && userRepository.existsByRole(Role.SUPER_ADMIN)) {
             throw new RoleAssignmentException("Ya existe un SUPER_ADMIN en el sistema.");
         }
 
-        // 6. Aplicar el cambio
+        // 6. Apply the change
         target.setRole(newRole);
         userRepository.save(target);
     }
@@ -127,17 +127,17 @@ public class UserServiceImpl implements UserService {
         User authenticatedUser = authenticatedUserProvider.getAuthenticatedUser();
         User target = getById(id);
 
-        // 1. No puedes eliminarte a ti mismo
+        // You cannot delete yourself
         if (target.getId().equals(authenticatedUser.getId())) {
             throw new AuthenticationException("No puedes eliminar tu propia cuenta.");
         }
 
-        // 2. Solo SUPER_ADMIN y ADMIN pueden eliminar usuarios (por si el controller no lo valida)
+        // Only SUPER_ADMIN and ADMIN can delete users (in case the controller doesn't validate it)
         if (authenticatedUser.getRole() != Role.SUPER_ADMIN && authenticatedUser.getRole() != Role.ADMIN) {
             throw new AuthenticationException("No tienes permisos para eliminar usuarios.");
         }
 
-        // 3. No puedes eliminar a un usuario con rol igual o superior al tuyo
+        // You cannot delete a user with a role equal to or higher than yours
         if (!canDelete(authenticatedUser.getRole(), target.getRole())) {
             throw new AuthenticationException("No tienes permisos para eliminar a este usuario.");
         }
