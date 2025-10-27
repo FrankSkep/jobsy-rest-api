@@ -1,7 +1,7 @@
 package com.fran.jobsy.app.controller;
 
-import com.fran.jobsy.app.dto.message.MessageResponse;
 import com.fran.jobsy.app.dto.message.MessageRequest;
+import com.fran.jobsy.app.dto.message.MessageResponse;
 import com.fran.jobsy.app.service.MessageService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.handler.annotation.DestinationVariable;

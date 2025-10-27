@@ -1,7 +1,7 @@
 package com.fran.jobsy.app.service.impl;
 
-import com.fran.jobsy.app.dto.availability_slot.AvailabilitySlotResponse;
 import com.fran.jobsy.app.dto.availability_slot.AvailabilitySlotRequest;
+import com.fran.jobsy.app.dto.availability_slot.AvailabilitySlotResponse;
 import com.fran.jobsy.app.entity.AvailabilitySlot;
 import com.fran.jobsy.app.entity.User;
 import com.fran.jobsy.app.enums.Role;

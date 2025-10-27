@@ -1,7 +1,7 @@
 package com.fran.jobsy.app.service;
 
-import com.fran.jobsy.app.dto.CertificationResponse;
 import com.fran.jobsy.app.dto.CertificationRequest;
+import com.fran.jobsy.app.dto.CertificationResponse;
 
 import java.util.List;
 

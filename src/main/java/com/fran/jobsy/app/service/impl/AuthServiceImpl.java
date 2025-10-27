@@ -1,8 +1,8 @@
 package com.fran.jobsy.app.service.impl;
 
-import com.fran.jobsy.app.dto.auth.TokenResponse;
 import com.fran.jobsy.app.dto.auth.LoginRequest;
 import com.fran.jobsy.app.dto.auth.RegisterRequest;
+import com.fran.jobsy.app.dto.auth.TokenResponse;
 import com.fran.jobsy.app.entity.User;
 import com.fran.jobsy.app.enums.Role;
 import com.fran.jobsy.app.exception.custom.AuthenticationException;

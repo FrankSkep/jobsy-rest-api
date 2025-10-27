@@ -1,7 +1,10 @@
 package com.fran.jobsy.app.mapper;
 
 import com.fran.jobsy.app.dto.offering.UserMinimalResponse;
-import com.fran.jobsy.app.dto.user.*;
+import com.fran.jobsy.app.dto.user.UserFullResponse;
+import com.fran.jobsy.app.dto.user.UserPublicDTO;
+import com.fran.jobsy.app.dto.user.UserResponse;
+import com.fran.jobsy.app.dto.user.UserSummaryResponse;
 import com.fran.jobsy.app.entity.User;
 import org.mapstruct.*;
 

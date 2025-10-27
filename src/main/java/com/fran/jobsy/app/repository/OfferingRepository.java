@@ -15,12 +15,12 @@ import java.util.List;
 public interface OfferingRepository extends JpaRepository<Offering, Long> {
 
     @Query("SELECT new com.fran.jobsy.app.dto.offering.OfferingResponse(s.id, " +
-            "new com.fran.jobsy.app.dto.user.UserMinimalResponse(s.owner.id, s.owner.lastname, s.owner.firstname), " +
+            "new com.fran.jobsy.app.dto.offering.UserMinimalResponse(s.owner.id, s.owner.lastname, s.owner.firstname), " +
             "s.category.name, s.title, s.description, s.basePrice) FROM Offering s")
     Page<OfferingResponse> findAllServicesPaged(Pageable pageable);
 
     @Query("SELECT new com.fran.jobsy.app.dto.offering.OfferingResponse(s.id, " +
-            "new com.fran.jobsy.app.dto.user.UserMinimalResponse(s.owner.id, s.owner.lastname, s.owner.firstname), " +
+            "new com.fran.jobsy.app.dto.offering.UserMinimalResponse(s.owner.id, s.owner.lastname, s.owner.firstname), " +
             "s.category.name, s.title, s.description, s.basePrice) FROM Offering s " +
             "WHERE (:categoryId IS NULL OR s.category.id = :categoryId) " +
             "AND (:minPrice IS NULL OR s.basePrice >= :minPrice) " +
@@ -37,7 +37,7 @@ public interface OfferingRepository extends JpaRepository<Offering, Long> {
     );
 
     @Query("SELECT new com.fran.jobsy.app.dto.offering.OfferingResponse(s.id, " +
-            "new com.fran.jobsy.app.dto.user.UserMinimalResponse(s.owner.id, s.owner.lastname, s.owner.firstname), " +
+            "new com.fran.jobsy.app.dto.offering.UserMinimalResponse(s.owner.id, s.owner.lastname, s.owner.firstname), " +
             "s.category.name, s.title, s.description, s.basePrice) FROM Offering s " +
             "WHERE s.owner.id = :ownerId")
     List<OfferingResponse> findByOwnerId(@Param("ownerId") Long ownerId);

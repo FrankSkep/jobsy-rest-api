@@ -1,9 +1,9 @@
 package com.fran.jobsy.app.service;
 
-import com.fran.jobsy.app.dto.booking.BookingResponse;
-import com.fran.jobsy.app.dto.booking.BookingSummaryResponse;
 import com.fran.jobsy.app.dto.booking.BookingRequest;
+import com.fran.jobsy.app.dto.booking.BookingResponse;
 import com.fran.jobsy.app.dto.booking.BookingStatusUpdateRequest;
+import com.fran.jobsy.app.dto.booking.BookingSummaryResponse;
 
 import java.util.List;
 

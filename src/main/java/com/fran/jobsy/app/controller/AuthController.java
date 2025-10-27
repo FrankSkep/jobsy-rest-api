@@ -1,8 +1,8 @@
 package com.fran.jobsy.app.controller;
 
-import com.fran.jobsy.app.dto.auth.TokenResponse;
 import com.fran.jobsy.app.dto.auth.LoginRequest;
 import com.fran.jobsy.app.dto.auth.RegisterRequest;
+import com.fran.jobsy.app.dto.auth.TokenResponse;
 import com.fran.jobsy.app.service.impl.AuthServiceImpl;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;

@@ -1,7 +1,7 @@
 package com.fran.jobsy.app.controller;
 
-import com.fran.jobsy.app.dto.CertificationResponse;
 import com.fran.jobsy.app.dto.CertificationRequest;
+import com.fran.jobsy.app.dto.CertificationResponse;
 import com.fran.jobsy.app.service.CertificationService;
 import com.fran.jobsy.app.util.RestUtils;
 import io.swagger.v3.oas.annotations.Operation;

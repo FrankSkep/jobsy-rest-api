@@ -1,7 +1,7 @@
 package com.fran.jobsy.app.controller;
 
-import com.fran.jobsy.app.dto.auth.PasswordUpdateRequest;
 import com.fran.jobsy.app.dto.auth.PasswordRequestADMIN;
+import com.fran.jobsy.app.dto.auth.PasswordUpdateRequest;
 import com.fran.jobsy.app.dto.user.*;
 import com.fran.jobsy.app.enums.Role;
 import com.fran.jobsy.app.service.UserService;

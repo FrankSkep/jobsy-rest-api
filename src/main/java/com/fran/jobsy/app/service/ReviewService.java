@@ -1,7 +1,7 @@
 package com.fran.jobsy.app.service;
 
-import com.fran.jobsy.app.dto.review.ReviewResponse;
 import com.fran.jobsy.app.dto.review.ReviewRequest;
+import com.fran.jobsy.app.dto.review.ReviewResponse;
 import com.fran.jobsy.app.dto.review.ReviewSummaryResponse;
 
 import java.util.List;

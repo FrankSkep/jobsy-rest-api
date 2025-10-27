@@ -1,7 +1,7 @@
 package com.fran.jobsy.app.controller;
 
-import com.fran.jobsy.app.dto.availability_slot.AvailabilitySlotResponse;
 import com.fran.jobsy.app.dto.availability_slot.AvailabilitySlotRequest;
+import com.fran.jobsy.app.dto.availability_slot.AvailabilitySlotResponse;
 import com.fran.jobsy.app.service.AvailabilitySlotService;
 import com.fran.jobsy.app.util.RestUtils;
 import io.swagger.v3.oas.annotations.Operation;

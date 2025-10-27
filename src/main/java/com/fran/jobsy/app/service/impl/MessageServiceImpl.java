@@ -1,7 +1,7 @@
 package com.fran.jobsy.app.service.impl;
 
-import com.fran.jobsy.app.dto.message.MessageResponse;
 import com.fran.jobsy.app.dto.message.MessageRequest;
+import com.fran.jobsy.app.dto.message.MessageResponse;
 import com.fran.jobsy.app.entity.Conversation;
 import com.fran.jobsy.app.entity.Message;
 import com.fran.jobsy.app.entity.User;

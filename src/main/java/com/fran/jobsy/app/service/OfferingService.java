@@ -1,8 +1,8 @@
 package com.fran.jobsy.app.service;
 
-import com.fran.jobsy.app.dto.offering.OfferingResponse;
 import com.fran.jobsy.app.dto.offering.OfferingFilterModel;
 import com.fran.jobsy.app.dto.offering.OfferingRequest;
+import com.fran.jobsy.app.dto.offering.OfferingResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 

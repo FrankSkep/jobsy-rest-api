@@ -1,7 +1,7 @@
 package com.fran.jobsy.app.service;
 
-import com.fran.jobsy.app.dto.availability_slot.AvailabilitySlotResponse;
 import com.fran.jobsy.app.dto.availability_slot.AvailabilitySlotRequest;
+import com.fran.jobsy.app.dto.availability_slot.AvailabilitySlotResponse;
 
 import java.util.List;
 

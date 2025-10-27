@@ -1,9 +1,9 @@
 package com.fran.jobsy.app.controller;
 
-import com.fran.jobsy.app.dto.booking.BookingResponse;
-import com.fran.jobsy.app.dto.booking.BookingSummaryResponse;
 import com.fran.jobsy.app.dto.booking.BookingRequest;
+import com.fran.jobsy.app.dto.booking.BookingResponse;
 import com.fran.jobsy.app.dto.booking.BookingStatusUpdateRequest;
+import com.fran.jobsy.app.dto.booking.BookingSummaryResponse;
 import com.fran.jobsy.app.service.BookingService;
 import com.fran.jobsy.app.util.RestUtils;
 import io.swagger.v3.oas.annotations.tags.Tag;
