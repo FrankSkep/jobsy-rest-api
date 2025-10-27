@@ -7,6 +7,7 @@ public record UserFullResponse(
         String email,
         String lastname,
         String firstname,
+        String phone,
         UserPhotoResponse userPhoto,
         String country,
         Role role,
