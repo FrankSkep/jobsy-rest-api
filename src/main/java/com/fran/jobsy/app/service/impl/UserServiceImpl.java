@@ -9,9 +9,9 @@ import com.fran.jobsy.app.exception.custom.ResourceNotFoundException;
 import com.fran.jobsy.app.exception.custom.RoleAssignmentException;
 import com.fran.jobsy.app.mapper.UserMapper;
 import com.fran.jobsy.app.repository.UserRepository;
-import com.fran.jobsy.app.repository.UserWorkPhotoRepository;
 import com.fran.jobsy.app.service.UserService;
 import com.fran.jobsy.app.util.AuthenticatedUserProvider;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
@@ -27,10 +27,10 @@ import java.util.List;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
-    private final UserWorkPhotoRepository userWorkPhotoRepository;
     private final PasswordEncoder passwordEncoder;
-    private final AuthenticatedUserProvider authenticatedUserProvider;
     private final UserMapper userMapper;
+    @Getter
+    private final AuthenticatedUserProvider authenticatedUserProvider;
 
     private User getById(Long id) {
         return userRepository.findById(id)
