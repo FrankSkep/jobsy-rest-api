@@ -1,6 +1,6 @@
 package com.fran.jobsy.app.service.impl;
 
-import com.fran.jobsy.app.dto.auth.AuthResponse;
+import com.fran.jobsy.app.dto.auth.TokenResponse;
 import com.fran.jobsy.app.dto.auth.LoginRequest;
 import com.fran.jobsy.app.dto.auth.RegisterRequest;
 import com.fran.jobsy.app.entity.User;
@@ -27,13 +27,13 @@ public class AuthServiceImpl implements AuthService {
     private final AuthenticationManager authenticationManager;
 
     @Override
-    public AuthResponse login(LoginRequest request) {
+    public TokenResponse login(LoginRequest request) {
         try {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.email(), request.password()));
             UserDetails user = userRepository.findByUsername(request.email())
                     .orElseThrow(() -> new ResourceNotFoundException("User not found."));
             String token = jwtService.getToken(user);
-            return new AuthResponse(token);
+            return new TokenResponse(token);
         } catch (
                 Exception e) {
             throw new AuthenticationException("Incorrect user or password.");
@@ -41,7 +41,7 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public AuthResponse register(RegisterRequest request) {
+    public TokenResponse register(RegisterRequest request) {
 
         if (userRepository.existsByUsername(request.email())) {
             throw new AuthenticationException("User already exists.");
@@ -57,6 +57,6 @@ public class AuthServiceImpl implements AuthService {
 
         userRepository.save(user);
 
-        return new AuthResponse(jwtService.getToken(user));
+        return new TokenResponse(jwtService.getToken(user));
     }
 }

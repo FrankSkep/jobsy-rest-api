@@ -1,12 +1,12 @@
 package com.fran.jobsy.app.dto.review;
 
-import com.fran.jobsy.app.dto.booking.BookingListDTO;
+import com.fran.jobsy.app.dto.booking.BookingSummaryResponse;
 
 import java.time.LocalDateTime;
 
-public record ReviewDTO(
+public record ReviewResponse(
         Long id,
-        BookingListDTO booking,
+        BookingSummaryResponse booking,
         // this include Client and Provider names
         Long clientId,
         Long providerId,

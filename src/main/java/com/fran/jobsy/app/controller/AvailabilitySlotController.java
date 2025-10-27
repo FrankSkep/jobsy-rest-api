@@ -1,6 +1,6 @@
 package com.fran.jobsy.app.controller;
 
-import com.fran.jobsy.app.dto.availability_slot.AvailabilitySlotDTO;
+import com.fran.jobsy.app.dto.availability_slot.AvailabilitySlotResponse;
 import com.fran.jobsy.app.dto.availability_slot.AvailabilitySlotRequest;
 import com.fran.jobsy.app.service.AvailabilitySlotService;
 import com.fran.jobsy.app.util.RestUtils;
@@ -25,15 +25,15 @@ public class AvailabilitySlotController {
 
     @GetMapping("/{id}/availability")
     @Operation(summary = "Obtener disponibilidad de usuario", description = "Devuelve la lista de horarios de disponibilidad de un usuario público.")
-    public ResponseEntity<List<AvailabilitySlotDTO>> getAvailabilitySlots(@PathVariable Long id) {
+    public ResponseEntity<List<AvailabilitySlotResponse>> getAvailabilitySlots(@PathVariable Long id) {
         return ResponseEntity.ok(availabilitySlotService.getAllByUserId(id));
     }
 
     @PostMapping("/me/availability")
     @PreAuthorize("hasRole('PROVIDER')")
     @Operation(summary = "Crear horario de disponibilidad", description = "Permite a un usuario con rol PROVIDER crear un horario de disponibilidad. Requiere autenticación y rol PROVIDER.")
-    public ResponseEntity<AvailabilitySlotDTO> createAvailabilitySlot(@RequestBody @Valid AvailabilitySlotRequest availabilitySlotReq) {
-        AvailabilitySlotDTO slot = availabilitySlotService.create(availabilitySlotReq);
+    public ResponseEntity<AvailabilitySlotResponse> createAvailabilitySlot(@RequestBody @Valid AvailabilitySlotRequest availabilitySlotReq) {
+        AvailabilitySlotResponse slot = availabilitySlotService.create(availabilitySlotReq);
         URI location = RestUtils.buildCreatedLocation(slot.id());
         return ResponseEntity.created(location).body(slot);
     }
@@ -41,8 +41,8 @@ public class AvailabilitySlotController {
     @PutMapping("/me/availability/{slotId}")
     @PreAuthorize("hasRole('PROVIDER')")
     @Operation(summary = "Actualizar horario de disponibilidad", description = "Permite a un usuario con rol PROVIDER actualizar un horario de disponibilidad. Requiere autenticación y rol PROVIDER.")
-    public ResponseEntity<AvailabilitySlotDTO> updateAvailabilitySlot(@PathVariable Long slotId, @RequestBody @Valid AvailabilitySlotRequest availabilitySlotReq) {
-        AvailabilitySlotDTO slot = availabilitySlotService.update(slotId, availabilitySlotReq);
+    public ResponseEntity<AvailabilitySlotResponse> updateAvailabilitySlot(@PathVariable Long slotId, @RequestBody @Valid AvailabilitySlotRequest availabilitySlotReq) {
+        AvailabilitySlotResponse slot = availabilitySlotService.update(slotId, availabilitySlotReq);
         return ResponseEntity.ok(slot);
     }
 

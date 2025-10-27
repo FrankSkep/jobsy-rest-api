@@ -1,6 +1,6 @@
 package com.fran.jobsy.app.service.impl;
 
-import com.fran.jobsy.app.dto.message.MessageDTO;
+import com.fran.jobsy.app.dto.message.MessageResponse;
 import com.fran.jobsy.app.dto.message.MessageRequest;
 import com.fran.jobsy.app.entity.Conversation;
 import com.fran.jobsy.app.entity.Message;
@@ -25,7 +25,7 @@ public class MessageServiceImpl implements MessageService {
     private final UserRepository userRepository;
     private final MessageMapper messageMapper;
 
-    public MessageDTO sendMessage(Long conversationId, MessageRequest req) {
+    public MessageResponse sendMessage(Long conversationId, MessageRequest req) {
         Conversation conversation = conversationRepository.findById(conversationId)
                 .orElseThrow(() -> new ResourceNotFoundException("Conversación no encontrada"));
 
@@ -39,13 +39,13 @@ public class MessageServiceImpl implements MessageService {
 
         Message saved = messageRepository.save(message);
 
-        return messageMapper.toMessageDTO(saved);
+        return messageMapper.toDTO(saved);
     }
 
-    public List<MessageDTO> getMessagesByConversation(Long conversationId) {
+    public List<MessageResponse> getMessagesByConversation(Long conversationId) {
         return messageRepository.findByConversationIdOrderBySentAtAsc(conversationId)
                 .stream()
-                .map(messageMapper::toMessageDTO)
+                .map(messageMapper::toDTO)
                 .toList();
     }
 }

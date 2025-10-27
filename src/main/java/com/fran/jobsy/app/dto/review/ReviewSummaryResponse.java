@@ -2,7 +2,7 @@ package com.fran.jobsy.app.dto.review;
 
 import java.time.LocalDateTime;
 
-public record ReviewSummaryDTO(
+public record ReviewSummaryResponse(
         Long id,
         Integer rating,
         String comment,

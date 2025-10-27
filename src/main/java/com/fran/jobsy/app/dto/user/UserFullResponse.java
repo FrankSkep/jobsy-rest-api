@@ -2,12 +2,12 @@ package com.fran.jobsy.app.dto.user;
 
 import com.fran.jobsy.app.enums.Role;
 
-public record UserFullDTO(
+public record UserFullResponse(
         Long id,
         String email,
         String lastname,
         String firstname,
-        UserPhotoDTO userPhoto,
+        UserPhotoResponse userPhoto,
         String country,
         Role role,
         String bio,
@@ -19,7 +19,7 @@ public record UserFullDTO(
         Double serviceRadiusKm,
         Boolean verifiedCert
 ) {
-    public UserFullDTO {
+    public UserFullResponse {
         if (verifiedCert == null) {
             verifiedCert = false;
         }

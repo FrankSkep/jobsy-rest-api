@@ -1,10 +1,8 @@
 package com.fran.jobsy.app.dto.offering;
 
-import com.fran.jobsy.app.dto.user.UserServiceDTO;
-
-public record OfferingDTO(
+public record OfferingResponse(
         Long id,
-        UserServiceDTO user,
+        UserMinimalResponse user,
         String category,
         String title,
         String description,

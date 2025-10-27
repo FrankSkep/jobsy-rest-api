@@ -1,6 +1,6 @@
 package com.fran.jobsy.app.controller;
 
-import com.fran.jobsy.app.dto.user.UserPhotoDTO;
+import com.fran.jobsy.app.dto.user.UserPhotoResponse;
 import com.fran.jobsy.app.service.UserPhotoService;
 import com.fran.jobsy.app.util.FileValidator;
 import io.swagger.v3.oas.annotations.Operation;
@@ -21,14 +21,14 @@ public class UserPhotoController {
 
     @PostMapping("/me/photo")
     @Operation(summary = "Actualizar foto de perfil", description = "Permite al usuario autenticado actualizar su foto de perfil.")
-    public ResponseEntity<UserPhotoDTO> updateProfileImage(@RequestParam("file") MultipartFile photo) {
+    public ResponseEntity<UserPhotoResponse> updateProfileImage(@RequestParam("file") MultipartFile photo) {
         fileValidator.validate(photo);
         return ResponseEntity.ok(userPhotoService.updateUserPhoto(photo));
     }
 
     @GetMapping("/{id}/photo")
     @Operation(summary = "Obtener foto de perfil", description = "Devuelve la foto de perfil pública de un usuario.")
-    public ResponseEntity<UserPhotoDTO> getProfileImage(@PathVariable Long id) {
+    public ResponseEntity<UserPhotoResponse> getProfileImage(@PathVariable Long id) {
         return ResponseEntity.ok(userPhotoService.getUserPhoto(id));
     }
 

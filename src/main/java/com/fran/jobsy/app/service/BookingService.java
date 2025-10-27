@@ -1,20 +1,20 @@
 package com.fran.jobsy.app.service;
 
-import com.fran.jobsy.app.dto.booking.BookingListDTO;
+import com.fran.jobsy.app.dto.booking.BookingResponse;
+import com.fran.jobsy.app.dto.booking.BookingSummaryResponse;
 import com.fran.jobsy.app.dto.booking.BookingRequest;
-import com.fran.jobsy.app.dto.booking.BookingResponseDTO;
-import com.fran.jobsy.app.dto.booking.BookingStatusUpdateReqDTO;
+import com.fran.jobsy.app.dto.booking.BookingStatusUpdateRequest;
 
 import java.util.List;
 
 public interface BookingService {
-    BookingResponseDTO createBooking(BookingRequest bookingReq);
+    BookingResponse createBooking(BookingRequest bookingReq);
 
-    List<BookingListDTO> getClientBookings();
+    List<BookingSummaryResponse> getClientBookings();
 
-    List<BookingListDTO> getProviderBookings();
+    List<BookingSummaryResponse> getProviderBookings();
 
-    BookingResponseDTO getBooking(Long id);
+    BookingResponse getBooking(Long id);
 
-    BookingResponseDTO updateBookingStatus(Long id, BookingStatusUpdateReqDTO statusUpdateReqDTO);
+    BookingResponse updateBookingStatus(Long id, BookingStatusUpdateRequest statusUpdateReqDTO);
 }

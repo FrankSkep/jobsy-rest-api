@@ -1,6 +1,6 @@
 package com.fran.jobsy.app.service.impl;
 
-import com.fran.jobsy.app.dto.auth.PasswordRequest;
+import com.fran.jobsy.app.dto.auth.PasswordUpdateRequest;
 import com.fran.jobsy.app.dto.user.*;
 import com.fran.jobsy.app.entity.User;
 import com.fran.jobsy.app.enums.Role;
@@ -38,7 +38,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<UserDTO> getAllUsers() {
+    public List<UserResponse> getAllUsers() {
         return userRepository.findAllAsUserDTO();
     }
 
@@ -47,7 +47,7 @@ public class UserServiceImpl implements UserService {
             @CacheEvict(value = "usersFull", key = "#root.target.authenticatedUserProvider.getAuthenticatedUserId()"),
             @CacheEvict(value = "usersPublic", key = "#root.target.authenticatedUserProvider.getAuthenticatedUserId()")
     })
-    public void updateUser(UserInfoUpdateRequest userReq) {
+    public void updateUser(UserUpdateRequest userReq) {
         User user = getById(authenticatedUserProvider.getAuthenticatedUserId());
         user.setFirstname(userReq.firstname());
         user.setLastname(userReq.lastname());
@@ -60,7 +60,7 @@ public class UserServiceImpl implements UserService {
             @CacheEvict(value = "usersFull", key = "#root.target.authenticatedUserProvider.getAuthenticatedUserId()"),
             @CacheEvict(value = "usersPublic", key = "#root.target.authenticatedUserProvider.getAuthenticatedUserId()")
     })
-    public void updateUser(ProviderInfoUpdateRequest userReq) {
+    public void updateUser(UserFullUpdateRequest userReq) {
         User user = getById(authenticatedUserProvider.getAuthenticatedUserId());
 
         user.setBio(userReq.bio());
@@ -157,7 +157,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void updatePassword(PasswordRequest password) {
+    public void updatePassword(PasswordUpdateRequest password) {
         Long authenticatedUserId = authenticatedUserProvider.getAuthenticatedUserId();
 
         User user = getById(authenticatedUserId);
@@ -187,7 +187,7 @@ public class UserServiceImpl implements UserService {
     // === Authenticated User Methods ===
     @Override
     @Cacheable(value = "usersFull", key = "#root.target.authenticatedUserProvider.getAuthenticatedUserId()")
-    public UserFullDTO getUserInfo() {
+    public UserFullResponse getUserInfo() {
         User user = authenticatedUserProvider.getAuthenticatedUser();
         return userMapper.toFull(user);
     }

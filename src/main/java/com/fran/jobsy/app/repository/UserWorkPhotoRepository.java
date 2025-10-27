@@ -1,6 +1,6 @@
 package com.fran.jobsy.app.repository;
 
-import com.fran.jobsy.app.dto.user.UserWorkPhotoDTO;
+import com.fran.jobsy.app.dto.user.UserWorkPhotoResponse;
 import com.fran.jobsy.app.entity.UserWorkPhoto;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -10,7 +10,7 @@ import java.util.List;
 
 public interface UserWorkPhotoRepository extends JpaRepository<UserWorkPhoto, Long> {
 
-    @Query("SELECT new com.fran.jobsy.app.dto.user.UserWorkPhotoDTO(uwp.id, uwp.url, uwp.uploadedAt) " +
+    @Query("SELECT new com.fran.jobsy.app.dto.user.UserWorkPhotoResponse(uwp.id, uwp.url, uwp.uploadedAt) " +
             "FROM UserWorkPhoto uwp WHERE uwp.user.id = :userId")
-    List<UserWorkPhotoDTO> findWorkPhotosByUserId(@Param("userId") Long userId);
+    List<UserWorkPhotoResponse> findWorkPhotosByUserId(@Param("userId") Long userId);
 }

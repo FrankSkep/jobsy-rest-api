@@ -1,6 +1,6 @@
 package com.fran.jobsy.app.service.impl;
 
-import com.fran.jobsy.app.dto.availability_slot.AvailabilitySlotDTO;
+import com.fran.jobsy.app.dto.availability_slot.AvailabilitySlotResponse;
 import com.fran.jobsy.app.dto.availability_slot.AvailabilitySlotRequest;
 import com.fran.jobsy.app.entity.AvailabilitySlot;
 import com.fran.jobsy.app.entity.User;
@@ -67,10 +67,10 @@ class AvailabilitySlotServiceImplTest {
         });
         when(availabilitySlotMapper.toDTO(any(AvailabilitySlot.class))).thenAnswer(inv -> {
             AvailabilitySlot s = inv.getArgument(0);
-            return new AvailabilitySlotDTO(s.getId(), s.getUser().getId(), s.getWeekday(), s.getStartTime(), s.getEndTime());
+            return new AvailabilitySlotResponse(s.getId(), s.getUser().getId(), s.getWeekday(), s.getStartTime(), s.getEndTime());
         });
 
-        AvailabilitySlotDTO dto = service.create(req);
+        AvailabilitySlotResponse dto = service.create(req);
         assertEquals(10L, dto.id());
         assertEquals(userId, dto.providerId());
         assertEquals(1, dto.weekday());
@@ -97,10 +97,10 @@ class AvailabilitySlotServiceImplTest {
         when(availabilitySlotRepository.save(any(AvailabilitySlot.class))).thenAnswer(inv -> inv.getArgument(0));
         when(availabilitySlotMapper.toDTO(any(AvailabilitySlot.class))).thenAnswer(inv -> {
             AvailabilitySlot s = inv.getArgument(0);
-            return new AvailabilitySlotDTO(s.getId(), s.getUser().getId(), s.getWeekday(), s.getStartTime(), s.getEndTime());
+            return new AvailabilitySlotResponse(s.getId(), s.getUser().getId(), s.getWeekday(), s.getStartTime(), s.getEndTime());
         });
 
-        AvailabilitySlotDTO dto = service.update(slotId, req);
+        AvailabilitySlotResponse dto = service.update(slotId, req);
         assertEquals(slotId, dto.id());
         assertEquals(userId, dto.providerId());
         assertEquals(3, dto.weekday());
@@ -123,12 +123,12 @@ class AvailabilitySlotServiceImplTest {
     @Test
     void testGetAllByUserId() {
         Long userId = 1L;
-        List<AvailabilitySlotDTO> dtos = Arrays.asList(
-                new AvailabilitySlotDTO(1L, userId, 1, LocalTime.parse("09:00"), LocalTime.parse("12:00")),
-                new AvailabilitySlotDTO(2L, userId, 2, LocalTime.parse("13:00"), LocalTime.parse("15:00"))
+        List<AvailabilitySlotResponse> dtos = Arrays.asList(
+                new AvailabilitySlotResponse(1L, userId, 1, LocalTime.parse("09:00"), LocalTime.parse("12:00")),
+                new AvailabilitySlotResponse(2L, userId, 2, LocalTime.parse("13:00"), LocalTime.parse("15:00"))
         );
         when(availabilitySlotRepository.findAllByUserId(userId)).thenReturn(dtos);
-        List<AvailabilitySlotDTO> result = service.getAllByUserId(userId);
+        List<AvailabilitySlotResponse> result = service.getAllByUserId(userId);
         assertEquals(2, result.size());
         assertEquals(1L, result.get(0).id());
         assertEquals(2L, result.get(1).id());

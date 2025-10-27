@@ -1,6 +1,6 @@
 package com.fran.jobsy.app.controller;
 
-import com.fran.jobsy.app.dto.auth.AuthResponse;
+import com.fran.jobsy.app.dto.auth.TokenResponse;
 import com.fran.jobsy.app.dto.auth.LoginRequest;
 import com.fran.jobsy.app.dto.auth.RegisterRequest;
 import com.fran.jobsy.app.service.impl.AuthServiceImpl;
@@ -25,13 +25,13 @@ public class AuthController {
 
     @PostMapping("/signin")
     @Operation(summary = "Iniciar sesión", description = "Permite a un usuario autenticarse en el sistema.")
-    public ResponseEntity<AuthResponse> login(@RequestBody @Valid LoginRequest request) {
+    public ResponseEntity<TokenResponse> login(@RequestBody @Valid LoginRequest request) {
         return ResponseEntity.ok(authService.login(request));
     }
 
     @PostMapping("/signup")
     @Operation(summary = "Registrar usuario", description = "Permite a un nuevo usuario registrarse en el sistema.")
-    public ResponseEntity<AuthResponse> register(@RequestBody @Valid RegisterRequest request) {
+    public ResponseEntity<TokenResponse> register(@RequestBody @Valid RegisterRequest request) {
         return ResponseEntity.status(HttpStatus.CREATED).body(authService.register(request));
     }
 }

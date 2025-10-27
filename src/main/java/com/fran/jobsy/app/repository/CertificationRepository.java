@@ -1,6 +1,6 @@
 package com.fran.jobsy.app.repository;
 
-import com.fran.jobsy.app.dto.CertificationDTO;
+import com.fran.jobsy.app.dto.CertificationResponse;
 import com.fran.jobsy.app.entity.Certification;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -16,7 +16,7 @@ public interface CertificationRepository extends JpaRepository<Certification, Lo
 
     Optional<Certification> findByIdAndUserId(Long certificationId, Long userId);
 
-    @Query("SELECT NEW com.fran.jobsy.app.dto.CertificationDTO(" +
+    @Query("SELECT NEW com.fran.jobsy.app.dto.CertificationResponse(" +
             "c.id, c.name, c.issuer, c.year ) FROM Certification c WHERE c.user.id = :userId")
-    List<CertificationDTO> findAllByUserId(@Param("userId") Long userId);
+    List<CertificationResponse> findAllByUserId(@Param("userId") Long userId);
 }

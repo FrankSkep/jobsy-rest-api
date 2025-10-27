@@ -1,6 +1,6 @@
 package com.fran.jobsy.app.controller;
 
-import com.fran.jobsy.app.dto.CertificationDTO;
+import com.fran.jobsy.app.dto.CertificationResponse;
 import com.fran.jobsy.app.dto.CertificationRequest;
 import com.fran.jobsy.app.service.CertificationService;
 import com.fran.jobsy.app.util.RestUtils;
@@ -26,16 +26,16 @@ public class CertificationController {
 
     @GetMapping("/{id}/certifications")
     @Operation(summary = "Obtener certificaciones de usuario", description = "Devuelve la lista de certificaciones públicas de un usuario.")
-    public ResponseEntity<List<CertificationDTO>> getMyCertifications(@PathVariable Long id) {
-        List<CertificationDTO> certifications = certificationService.getUserCertifications(id);
+    public ResponseEntity<List<CertificationResponse>> getMyCertifications(@PathVariable Long id) {
+        List<CertificationResponse> certifications = certificationService.getUserCertifications(id);
         return ResponseEntity.ok(certifications);
     }
 
     @PostMapping("/me/certifications")
     @PreAuthorize("hasRole('PROVIDER')")
     @Operation(summary = "Agregar certificación", description = "Permite a un usuario con rol PROVIDER agregar una certificación. Requiere autenticación y rol PROVIDER.")
-    public ResponseEntity<CertificationDTO> addCertification(@RequestBody @Valid CertificationRequest certificationRequest) {
-        CertificationDTO certification = certificationService.addCertification(certificationRequest);
+    public ResponseEntity<CertificationResponse> addCertification(@RequestBody @Valid CertificationRequest certificationRequest) {
+        CertificationResponse certification = certificationService.addCertification(certificationRequest);
         URI location = RestUtils.buildCreatedLocation(certification.id());
         return ResponseEntity.created(location).body(certification);
     }
@@ -51,8 +51,8 @@ public class CertificationController {
     @PutMapping("/me/certifications/{certId}")
     @PreAuthorize("hasRole('PROVIDER')")
     @Operation(summary = "Actualizar certificación", description = "Permite a un usuario con rol PROVIDER actualizar una certificación. Requiere autenticación y rol PROVIDER.")
-    public ResponseEntity<CertificationDTO> updateCertification(@PathVariable Long certId, @RequestBody @Valid CertificationRequest certificationRequest) {
-        CertificationDTO updatedCert = certificationService.updateCertification(certId, certificationRequest);
+    public ResponseEntity<CertificationResponse> updateCertification(@PathVariable Long certId, @RequestBody @Valid CertificationRequest certificationRequest) {
+        CertificationResponse updatedCert = certificationService.updateCertification(certId, certificationRequest);
         return ResponseEntity.ok(updatedCert);
     }
 }

@@ -1,6 +1,6 @@
 package com.fran.jobsy.app.controller;
 
-import com.fran.jobsy.app.dto.user.UserWorkPhotoDTO;
+import com.fran.jobsy.app.dto.user.UserWorkPhotoResponse;
 import com.fran.jobsy.app.exception.custom.InvalidFileException;
 import com.fran.jobsy.app.service.UserWorkPhotoService;
 import com.fran.jobsy.app.util.FileValidator;
@@ -37,7 +37,7 @@ public class UserWorkPhotoController {
 
     @GetMapping("/{id}/portfolio")
     @Operation(summary = "Obtener portafolio de usuario", description = "Devuelve la lista de fotos de trabajos de un usuario público.")
-    public ResponseEntity<List<UserWorkPhotoDTO>> getWorkPhotos(@PathVariable Long id) {
+    public ResponseEntity<List<UserWorkPhotoResponse>> getWorkPhotos(@PathVariable Long id) {
         return ResponseEntity.ok(userWorkPhotoService.getUserWorkPhotos(id));
     }
 

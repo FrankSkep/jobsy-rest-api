@@ -1,8 +1,8 @@
 package com.fran.jobsy.app.service.impl;
 
-import com.fran.jobsy.app.dto.review.ReviewDTO;
+import com.fran.jobsy.app.dto.review.ReviewResponse;
 import com.fran.jobsy.app.dto.review.ReviewRequest;
-import com.fran.jobsy.app.dto.review.ReviewSummaryDTO;
+import com.fran.jobsy.app.dto.review.ReviewSummaryResponse;
 import com.fran.jobsy.app.entity.Booking;
 import com.fran.jobsy.app.entity.Review;
 import com.fran.jobsy.app.entity.User;
@@ -33,7 +33,7 @@ public class ReviewServiceImpl implements ReviewService {
     private final UserRepository userRepository;
 
     @Override
-    public ReviewDTO createReview(Long bookingId, ReviewRequest reviewRequest) {
+    public ReviewResponse createReview(Long bookingId, ReviewRequest reviewRequest) {
         Booking booking = findBookingOrThrow(bookingId);
 
         validateBookingStatus(booking);
@@ -45,12 +45,12 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     @Override
-    public List<ReviewSummaryDTO> getOfferingReviews(Long offeringId) {
+    public List<ReviewSummaryResponse> getOfferingReviews(Long offeringId) {
         return reviewRepository.findByBooking_OfferingId(offeringId);
     }
 
     @Override
-    public List<ReviewSummaryDTO> getProviderReviews(Long providerId) {
+    public List<ReviewSummaryResponse> getProviderReviews(Long providerId) {
         User user = userRepository.findById(providerId)
                 .orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado. ID: " + providerId));
 

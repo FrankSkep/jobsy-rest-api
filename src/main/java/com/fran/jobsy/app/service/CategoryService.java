@@ -1,17 +1,17 @@
 package com.fran.jobsy.app.service;
 
-import com.fran.jobsy.app.dto.category.CategoryDTO;
+import com.fran.jobsy.app.dto.category.CategoryResponse;
 import com.fran.jobsy.app.dto.category.CategoryRequest;
 
 import java.util.List;
 
 public interface CategoryService {
 
-    List<CategoryDTO> getAll();
+    List<CategoryResponse> getAll();
 
-    CategoryDTO create(CategoryRequest categoryReq);
+    CategoryResponse create(CategoryRequest categoryReq);
 
-    CategoryDTO update(Long id, CategoryRequest categoryReq);
+    CategoryResponse update(Long id, CategoryRequest categoryReq);
 
     void delete(Long id);
 }

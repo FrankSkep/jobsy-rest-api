@@ -10,7 +10,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @Getter
 @Setter
-public class PasswordRequest {
+public class PasswordUpdateRequest {
     private String oldPassword;
 
     @NotBlank(message = "Password is mandatory")

@@ -2,7 +2,7 @@ package com.fran.jobsy.app.dto.user;
 
 import java.time.LocalDateTime;
 
-public record UserWorkPhotoDTO(
+public record UserWorkPhotoResponse(
         Long id,
         String url,
         LocalDateTime uploadedAt

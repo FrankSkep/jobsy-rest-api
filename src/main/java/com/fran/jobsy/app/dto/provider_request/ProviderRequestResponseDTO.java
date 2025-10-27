@@ -1,13 +1,13 @@
 package com.fran.jobsy.app.dto.provider_request;
 
-import com.fran.jobsy.app.dto.user.UserSummaryDTO;
+import com.fran.jobsy.app.dto.user.UserSummaryResponse;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
 public record ProviderRequestResponseDTO(
         Long id,
-        UserSummaryDTO user,
+        UserSummaryResponse user,
         String bio,
         Double hourlyRate,
         Integer yearsExperience,
@@ -19,6 +19,6 @@ public record ProviderRequestResponseDTO(
         String status,
         LocalDateTime createdAt,
         LocalDateTime updatedAt,
-        List<ProviderDocumentDTO> documents
+        List<ProviderDocumentResponse> documents
 ) {
 }

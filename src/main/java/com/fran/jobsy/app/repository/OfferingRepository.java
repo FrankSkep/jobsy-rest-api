@@ -1,6 +1,6 @@
 package com.fran.jobsy.app.repository;
 
-import com.fran.jobsy.app.dto.offering.OfferingDTO;
+import com.fran.jobsy.app.dto.offering.OfferingResponse;
 import com.fran.jobsy.app.entity.Offering;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -14,20 +14,20 @@ import java.util.List;
 @Repository
 public interface OfferingRepository extends JpaRepository<Offering, Long> {
 
-    @Query("SELECT new com.fran.jobsy.app.dto.offering.OfferingDTO(s.id, " +
-            "new com.fran.jobsy.app.dto.user.UserServiceDTO(s.owner.id, s.owner.lastname, s.owner.firstname), " +
+    @Query("SELECT new com.fran.jobsy.app.dto.offering.OfferingResponse(s.id, " +
+            "new com.fran.jobsy.app.dto.user.UserMinimalResponse(s.owner.id, s.owner.lastname, s.owner.firstname), " +
             "s.category.name, s.title, s.description, s.basePrice) FROM Offering s")
-    Page<OfferingDTO> findAllServicesPaged(Pageable pageable);
+    Page<OfferingResponse> findAllServicesPaged(Pageable pageable);
 
-    @Query("SELECT new com.fran.jobsy.app.dto.offering.OfferingDTO(s.id, " +
-            "new com.fran.jobsy.app.dto.user.UserServiceDTO(s.owner.id, s.owner.lastname, s.owner.firstname), " +
+    @Query("SELECT new com.fran.jobsy.app.dto.offering.OfferingResponse(s.id, " +
+            "new com.fran.jobsy.app.dto.user.UserMinimalResponse(s.owner.id, s.owner.lastname, s.owner.firstname), " +
             "s.category.name, s.title, s.description, s.basePrice) FROM Offering s " +
             "WHERE (:categoryId IS NULL OR s.category.id = :categoryId) " +
             "AND (:minPrice IS NULL OR s.basePrice >= :minPrice) " +
             "AND (:maxPrice IS NULL OR s.basePrice <= :maxPrice) " +
             "AND (:minRating IS NULL OR s.owner.avgRatingCache >= :minRating) " +
             "AND (:location IS NULL OR LOWER(s.owner.addressText) LIKE LOWER(CONCAT('%', :location, '%')))")
-    Page<OfferingDTO> findServicesWithFiltersPaged(
+    Page<OfferingResponse> findServicesWithFiltersPaged(
             @Param("categoryId") Long categoryId,
             @Param("minPrice") Double minPrice,
             @Param("maxPrice") Double maxPrice,
@@ -36,9 +36,9 @@ public interface OfferingRepository extends JpaRepository<Offering, Long> {
             Pageable pageable
     );
 
-    @Query("SELECT new com.fran.jobsy.app.dto.offering.OfferingDTO(s.id, " +
-            "new com.fran.jobsy.app.dto.user.UserServiceDTO(s.owner.id, s.owner.lastname, s.owner.firstname), " +
+    @Query("SELECT new com.fran.jobsy.app.dto.offering.OfferingResponse(s.id, " +
+            "new com.fran.jobsy.app.dto.user.UserMinimalResponse(s.owner.id, s.owner.lastname, s.owner.firstname), " +
             "s.category.name, s.title, s.description, s.basePrice) FROM Offering s " +
             "WHERE s.owner.id = :ownerId")
-    List<OfferingDTO> findByOwnerId(@Param("ownerId") Long ownerId);
+    List<OfferingResponse> findByOwnerId(@Param("ownerId") Long ownerId);
 }

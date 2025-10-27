@@ -1,12 +1,12 @@
 package com.fran.jobsy.app.service;
 
-import com.fran.jobsy.app.dto.user.UserPhotoDTO;
+import com.fran.jobsy.app.dto.user.UserPhotoResponse;
 import org.springframework.web.multipart.MultipartFile;
 
 public interface UserPhotoService {
-    UserPhotoDTO updateUserPhoto(MultipartFile file);
+    UserPhotoResponse updateUserPhoto(MultipartFile file);
 
-    UserPhotoDTO getUserPhoto(Long id);
+    UserPhotoResponse getUserPhoto(Long id);
 
     void deleteUserPhoto();
 }

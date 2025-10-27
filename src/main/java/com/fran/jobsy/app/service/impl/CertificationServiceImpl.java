@@ -1,6 +1,6 @@
 package com.fran.jobsy.app.service.impl;
 
-import com.fran.jobsy.app.dto.CertificationDTO;
+import com.fran.jobsy.app.dto.CertificationResponse;
 import com.fran.jobsy.app.dto.CertificationRequest;
 import com.fran.jobsy.app.entity.Certification;
 import com.fran.jobsy.app.exception.custom.ResourceNotFoundException;
@@ -24,7 +24,7 @@ public class CertificationServiceImpl implements CertificationService {
 
     @Override
     @Transactional
-    public CertificationDTO addCertification(CertificationRequest request) {
+    public CertificationResponse addCertification(CertificationRequest request) {
         Long userId = authenticatedUserProvider.getAuthenticatedUserId();
 
         boolean exists = certificationRepository
@@ -53,7 +53,7 @@ public class CertificationServiceImpl implements CertificationService {
                 .build();
 
         Certification saved = certificationRepository.save(certification);
-        return new CertificationDTO(saved.getId(), saved.getName(), saved.getIssuer(), saved.getYear());
+        return new CertificationResponse(saved.getId(), saved.getName(), saved.getIssuer(), saved.getYear());
     }
 
     @Override
@@ -67,12 +67,12 @@ public class CertificationServiceImpl implements CertificationService {
     }
 
     @Override
-    public List<CertificationDTO> getUserCertifications(Long id) {
+    public List<CertificationResponse> getUserCertifications(Long id) {
         return certificationRepository.findAllByUserId(id);
     }
 
     @Override
-    public CertificationDTO updateCertification(Long id, CertificationRequest request) {
+    public CertificationResponse updateCertification(Long id, CertificationRequest request) {
         Certification cert = certificationRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Certificacion con id " + id + "no encontrada."));
 
@@ -88,7 +88,7 @@ public class CertificationServiceImpl implements CertificationService {
 
         certificationRepository.save(cert);
 
-        return new CertificationDTO(cert.getId(), cert.getName(),
+        return new CertificationResponse(cert.getId(), cert.getName(),
                 cert.getIssuer(), cert.getYear());
     }
 }

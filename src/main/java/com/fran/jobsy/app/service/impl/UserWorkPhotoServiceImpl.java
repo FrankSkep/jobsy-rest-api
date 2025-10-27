@@ -1,6 +1,6 @@
 package com.fran.jobsy.app.service.impl;
 
-import com.fran.jobsy.app.dto.user.UserWorkPhotoDTO;
+import com.fran.jobsy.app.dto.user.UserWorkPhotoResponse;
 import com.fran.jobsy.app.entity.UserWorkPhoto;
 import com.fran.jobsy.app.exception.custom.CloudinaryException;
 import com.fran.jobsy.app.exception.custom.FileOperationException;
@@ -84,7 +84,7 @@ public class UserWorkPhotoServiceImpl implements UserWorkPhotoService {
     }
 
     @Override
-    public List<UserWorkPhotoDTO> getUserWorkPhotos(Long userId) {
+    public List<UserWorkPhotoResponse> getUserWorkPhotos(Long userId) {
         return userWorkPhotoRepository.findWorkPhotosByUserId(userId);
     }
 }

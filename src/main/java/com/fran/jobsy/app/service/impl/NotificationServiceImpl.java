@@ -1,6 +1,6 @@
 package com.fran.jobsy.app.service.impl;
 
-import com.fran.jobsy.app.dto.notification.NotificationDTO;
+import com.fran.jobsy.app.dto.notification.NotificationResponse;
 import com.fran.jobsy.app.entity.Notification;
 import com.fran.jobsy.app.entity.User;
 import com.fran.jobsy.app.enums.NotificationType;
@@ -30,12 +30,12 @@ public class NotificationServiceImpl implements NotificationService {
     private final AuthenticatedUserProvider authenticatedUserProvider;
 
     @Override
-    public Page<NotificationDTO> getMyNotifications(int page, int size) {
+    public Page<NotificationResponse> getMyNotifications(int page, int size) {
         Long userId = authenticatedUserProvider.getAuthenticatedUserId();
         Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdAt"));
 
         return notificationRepository.findAllByRecipientIdOrderByCreatedAtDesc(userId, pageable)
-                .map(n -> new NotificationDTO(
+                .map(n -> new NotificationResponse(
                         n.getId(),
                         n.getTitle(),
                         n.getMessage(),
@@ -89,7 +89,7 @@ public class NotificationServiceImpl implements NotificationService {
             emailService.sendEmail(recipient.getUsername(), title, message);
         }
 
-        NotificationDTO dto = new NotificationDTO(
+        NotificationResponse dto = new NotificationResponse(
                 notification.getId(),
                 notification.getTitle(),
                 notification.getMessage(),
@@ -110,7 +110,7 @@ public class NotificationServiceImpl implements NotificationService {
     public void sendTestNotificationToAuthUser() {
         Long userId = authenticatedUserProvider.getAuthenticatedUserId();
 
-        NotificationDTO dto = new NotificationDTO(
+        NotificationResponse dto = new NotificationResponse(
                 null,
                 "Notificación de prueba",
                 "Este es un mensaje de prueba para verificar notificaciones en tiempo real.",

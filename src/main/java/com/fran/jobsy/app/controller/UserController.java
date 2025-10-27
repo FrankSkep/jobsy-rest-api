@@ -1,6 +1,6 @@
 package com.fran.jobsy.app.controller;
 
-import com.fran.jobsy.app.dto.auth.PasswordRequest;
+import com.fran.jobsy.app.dto.auth.PasswordUpdateRequest;
 import com.fran.jobsy.app.dto.auth.PasswordRequestADMIN;
 import com.fran.jobsy.app.dto.user.*;
 import com.fran.jobsy.app.enums.Role;
@@ -27,7 +27,7 @@ public class UserController {
     @GetMapping
     @PreAuthorize("hasAnyRole('SUPER_ADMIN', 'ADMIN')")
     @Operation(summary = "Obtener todos los usuarios", description = "Solo accesible para ADMIN. Devuelve la lista de todos los usuarios registrados.")
-    public ResponseEntity<List<UserDTO>> getAllUsers() {
+    public ResponseEntity<List<UserResponse>> getAllUsers() {
         return ResponseEntity.ok(userService.getAllUsers());
     }
 
@@ -67,15 +67,15 @@ public class UserController {
 
     @PatchMapping("/me/password-update")
     @Operation
-    public ResponseEntity<Void> updateMyPassword(@RequestBody @Valid PasswordRequest passwordRequest) {
-        userService.updatePassword(passwordRequest);
+    public ResponseEntity<Void> updateMyPassword(@RequestBody @Valid PasswordUpdateRequest passwordUpdateRequest) {
+        userService.updatePassword(passwordUpdateRequest);
         return ResponseEntity.noContent().build();
     }
 
     //=== Authenticated User Endpoints ===//
     @GetMapping("/me")
     @Operation(summary = "Obtener mi información completa", description = "Devuelve la información completa del usuario autenticado.")
-    public ResponseEntity<UserFullDTO> getMyInfo() {
+    public ResponseEntity<UserFullResponse> getMyInfo() {
         return ResponseEntity.ok(userService.getUserInfo());
     }
 
@@ -89,8 +89,8 @@ public class UserController {
     @PutMapping("/me/basic")
     @Operation(summary = "Actualizar mi información básica", description = "Permite al usuario autenticado actualizar su información básica.")
     public ResponseEntity<Void> updateMyBasicInfo(
-            @RequestBody @Valid UserInfoUpdateRequest userInfoUpdateRequest) {
-        userService.updateUser(userInfoUpdateRequest);
+            @RequestBody @Valid UserUpdateRequest userUpdateRequest) {
+        userService.updateUser(userUpdateRequest);
         return ResponseEntity.noContent().build();
     }
 
@@ -98,7 +98,7 @@ public class UserController {
     @PreAuthorize("hasRole('PROVIDER')")
     @Operation(summary = "Actualizar mi información completa", description = "Permite al usuario autenticado actualizar su información completa. Requiere autenticación y rol PROVIDER.")
     public ResponseEntity<Void> updateMyFullInfo(
-            @RequestBody @Valid ProviderInfoUpdateRequest userFullDTO) {
+            @RequestBody @Valid UserFullUpdateRequest userFullDTO) {
         userService.updateUser(userFullDTO);
         return ResponseEntity.noContent().build();
     }

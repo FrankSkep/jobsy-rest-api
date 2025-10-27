@@ -2,7 +2,7 @@ package com.fran.jobsy.app.service.impl;
 
 import com.fran.jobsy.app.dto.booking.AvailabilityCheckResponse;
 import com.fran.jobsy.app.dto.booking.DailyAvailabilityResponse;
-import com.fran.jobsy.app.dto.booking.SlotDTO;
+import com.fran.jobsy.app.dto.booking.SlotResponse;
 import com.fran.jobsy.app.entity.AvailabilitySlot;
 import com.fran.jobsy.app.entity.Booking;
 import com.fran.jobsy.app.entity.User;
@@ -14,6 +14,7 @@ import com.fran.jobsy.app.repository.UserRepository;
 import com.fran.jobsy.app.service.ProviderAvailabilityService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -23,6 +24,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class ProviderAvailabilityServiceImpl implements ProviderAvailabilityService {
 
     private static final int MAX_MONTHS_AHEAD = 6;
@@ -105,7 +107,7 @@ public class ProviderAvailabilityServiceImpl implements ProviderAvailabilityServ
         }
 
         List<Booking> bookings = findBookingsForDay(provider, date);
-        List<SlotDTO> availableSlots = buildSlotDTOs(slots, date, bookings);
+        List<SlotResponse> availableSlots = buildSlotDTOs(slots, date, bookings);
 
         return new DailyAvailabilityResponse(date, availableSlots);
     }
@@ -178,8 +180,8 @@ public class ProviderAvailabilityServiceImpl implements ProviderAvailabilityServ
         return false;
     }
 
-    private List<SlotDTO> buildSlotDTOs(List<AvailabilitySlot> slots, LocalDate date, List<Booking> bookings) {
-        List<SlotDTO> availableSlots = new ArrayList<>();
+    private List<SlotResponse> buildSlotDTOs(List<AvailabilitySlot> slots, LocalDate date, List<Booking> bookings) {
+        List<SlotResponse> availableSlots = new ArrayList<>();
 
         for (AvailabilitySlot slot : slots) {
             LocalTime current = slot.getStartTime();
@@ -193,7 +195,7 @@ public class ProviderAvailabilityServiceImpl implements ProviderAvailabilityServ
                         b.getStartsAt().isBefore(endTime) && b.getEndsAt().isAfter(startTime)
                 );
 
-                availableSlots.add(new SlotDTO(
+                availableSlots.add(new SlotResponse(
                         current.toString(),
                         current.plusHours(1).toString(),
                         !overlaps

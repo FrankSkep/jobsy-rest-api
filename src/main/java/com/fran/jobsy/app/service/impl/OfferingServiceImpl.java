@@ -1,7 +1,7 @@
 package com.fran.jobsy.app.service.impl;
 
-import com.fran.jobsy.app.dto.offering.OfferingDTO;
-import com.fran.jobsy.app.dto.offering.OfferingFilterDTO;
+import com.fran.jobsy.app.dto.offering.OfferingResponse;
+import com.fran.jobsy.app.dto.offering.OfferingFilterModel;
 import com.fran.jobsy.app.dto.offering.OfferingRequest;
 import com.fran.jobsy.app.entity.Category;
 import com.fran.jobsy.app.entity.Offering;
@@ -32,7 +32,7 @@ public class OfferingServiceImpl implements OfferingService {
     private final OfferingMapper offeringMapper;
 
     @Override
-    public Page<OfferingDTO> getOfferingsWithFiltersPaged(OfferingFilterDTO filters, Pageable pageable) {
+    public Page<OfferingResponse> getOfferingsWithFiltersPaged(OfferingFilterModel filters, Pageable pageable) {
         return offeringRepository.findServicesWithFiltersPaged(
                 filters.categoryId(),
                 filters.minPrice(),
@@ -44,12 +44,12 @@ public class OfferingServiceImpl implements OfferingService {
     }
 
     @Override
-    public Page<OfferingDTO> getOfferingsPage(Pageable pageable) {
+    public Page<OfferingResponse> getOfferingsPage(Pageable pageable) {
         return offeringRepository.findAllServicesPaged(pageable);
     }
 
     @Override
-    public List<OfferingDTO> getOfferingsByUserId(Long userId) {
+    public List<OfferingResponse> getOfferingsByUserId(Long userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado con ID: " + userId));
 
@@ -60,7 +60,7 @@ public class OfferingServiceImpl implements OfferingService {
     }
 
     @Override
-    public OfferingDTO createOffering(OfferingRequest offeringRequest) {
+    public OfferingResponse createOffering(OfferingRequest offeringRequest) {
         User owner = authenticatedUserProvider.getAuthenticatedUser();
 
         if (owner.getRole() != Role.PROVIDER) {
@@ -82,7 +82,7 @@ public class OfferingServiceImpl implements OfferingService {
     }
 
     @Override
-    public OfferingDTO updateOffering(Long offeringId, OfferingRequest offeringRequest) {
+    public OfferingResponse updateOffering(Long offeringId, OfferingRequest offeringRequest) {
         Offering offering = offeringRepository.findById(offeringId)
                 .orElseThrow(() -> new ResourceNotFoundException("Servicio no encontrado con ID: " + offeringId));
 
@@ -104,7 +104,7 @@ public class OfferingServiceImpl implements OfferingService {
     }
 
     @Override
-    public OfferingDTO getOffering(Long offeringId) {
+    public OfferingResponse getOffering(Long offeringId) {
         Offering offering = offeringRepository.findById(offeringId)
                 .orElseThrow(() -> new ResourceNotFoundException("Servicio no encontrado con ID: " + offeringId));
 

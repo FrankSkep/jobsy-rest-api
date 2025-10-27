@@ -1,9 +1,9 @@
 package com.fran.jobsy.app.dto.offering;
 
-import com.fran.jobsy.app.dto.category.CategoryDTO;
+import com.fran.jobsy.app.dto.category.CategoryResponse;
 
 public record OfferingRequest(
-        CategoryDTO category,
+        CategoryResponse category,
         String title,
         String description,
         Double basePrice

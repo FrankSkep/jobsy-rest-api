@@ -4,7 +4,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
-public record PasswordResetDTO(
+public record PasswordResetRequest(
         @NotBlank
         String token,
 

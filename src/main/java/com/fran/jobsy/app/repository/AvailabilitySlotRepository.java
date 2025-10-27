@@ -1,6 +1,6 @@
 package com.fran.jobsy.app.repository;
 
-import com.fran.jobsy.app.dto.availability_slot.AvailabilitySlotDTO;
+import com.fran.jobsy.app.dto.availability_slot.AvailabilitySlotResponse;
 import com.fran.jobsy.app.entity.AvailabilitySlot;
 import com.fran.jobsy.app.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -14,10 +14,10 @@ import java.util.Optional;
 
 @Repository
 public interface AvailabilitySlotRepository extends JpaRepository<AvailabilitySlot, Long> {
-    @Query("SELECT new com.fran.jobsy.app.dto.availability_slot.AvailabilitySlotDTO(" +
+    @Query("SELECT new com.fran.jobsy.app.dto.availability_slot.AvailabilitySlotResponse(" +
             "a.id, a.user.id, a.weekday, a.startTime, a.endTime) " +
             "FROM AvailabilitySlot a WHERE a.user.id = :userId")
-    List<AvailabilitySlotDTO> findAllByUserId(@Param("userId") Long userId);
+    List<AvailabilitySlotResponse> findAllByUserId(@Param("userId") Long userId);
 
     Optional<AvailabilitySlot> findByUserIdAndWeekdayAndStartTimeAndEndTime(Long userId, Integer weekday, LocalTime startTime, LocalTime endTime);
 

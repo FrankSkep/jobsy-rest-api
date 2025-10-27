@@ -1,6 +1,6 @@
 package com.fran.jobsy.app.dto.offering;
 
-public record OfferingSummaryDTO(
+public record OfferingSummaryResponse(
         Long id,
         String category,
         String title,

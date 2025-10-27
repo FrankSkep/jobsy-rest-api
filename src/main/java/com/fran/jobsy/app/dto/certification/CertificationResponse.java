@@ -1,6 +1,6 @@
 package com.fran.jobsy.app.dto;
 
-public record CertificationDTO(
+public record CertificationResponse(
         Long id,
         String name,
         String issuer,

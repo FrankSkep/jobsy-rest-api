@@ -1,7 +1,7 @@
 package com.fran.jobsy.app.controller;
 
-import com.fran.jobsy.app.dto.conversation.ConversationDTO;
-import com.fran.jobsy.app.dto.message.MessageDTO;
+import com.fran.jobsy.app.dto.conversation.ConversationResponse;
+import com.fran.jobsy.app.dto.message.MessageResponse;
 import com.fran.jobsy.app.dto.message.MessageRequest;
 import com.fran.jobsy.app.service.ConversationService;
 import com.fran.jobsy.app.service.MessageService;
@@ -24,18 +24,18 @@ public class ConversationController {
     private final MessageService messageService;
 
     @GetMapping
-    public ResponseEntity<List<ConversationDTO>> listMyConversations() {
+    public ResponseEntity<List<ConversationResponse>> listMyConversations() {
         return ResponseEntity.ok(conversationService.getMyConversations());
     }
 
     @GetMapping("/{id}/messages")
-    public ResponseEntity<List<MessageDTO>> getMessages(@PathVariable Long id) {
+    public ResponseEntity<List<MessageResponse>> getMessages(@PathVariable Long id) {
         return ResponseEntity.ok(messageService.getMessagesByConversation(id));
     }
 
     @PostMapping("/{id}/messages")
-    public ResponseEntity<MessageDTO> sendMessage(@PathVariable Long id, @RequestBody MessageRequest request) {
-        MessageDTO message = messageService.sendMessage(id, request);
+    public ResponseEntity<MessageResponse> sendMessage(@PathVariable Long id, @RequestBody MessageRequest request) {
+        MessageResponse message = messageService.sendMessage(id, request);
         URI location = RestUtils.buildCreatedLocation(message.id());
         return ResponseEntity.created(location).body(message);
     }

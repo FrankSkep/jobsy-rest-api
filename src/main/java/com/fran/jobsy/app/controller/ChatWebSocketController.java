@@ -1,6 +1,6 @@
 package com.fran.jobsy.app.controller;
 
-import com.fran.jobsy.app.dto.message.MessageDTO;
+import com.fran.jobsy.app.dto.message.MessageResponse;
 import com.fran.jobsy.app.dto.message.MessageRequest;
 import com.fran.jobsy.app.service.MessageService;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +20,7 @@ public class ChatWebSocketController {
 
     @MessageMapping("/chat.send/{conversationId}")
     public void sendMessage(@DestinationVariable Long conversationId, MessageRequest request, Principal principal) {
-        MessageDTO savedMessage = messageService.sendMessage(conversationId, request);
+        MessageResponse savedMessage = messageService.sendMessage(conversationId, request);
 
         messagingTemplate.convertAndSendToUser(
                 savedMessage.recipientId().toString(),

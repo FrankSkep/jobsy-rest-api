@@ -1,6 +1,6 @@
 package com.fran.jobsy.app.dto.offering;
 
-public record OfferingFilterDTO(
+public record OfferingFilterModel(
         Long categoryId,
         Double minPrice,
         Double maxPrice,

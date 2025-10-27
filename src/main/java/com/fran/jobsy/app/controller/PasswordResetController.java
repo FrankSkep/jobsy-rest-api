@@ -1,6 +1,6 @@
 package com.fran.jobsy.app.controller;
 
-import com.fran.jobsy.app.dto.auth.PasswordResetDTO;
+import com.fran.jobsy.app.dto.auth.PasswordResetRequest;
 import com.fran.jobsy.app.service.PasswordResetService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -25,8 +25,8 @@ public class PasswordResetController {
     }
 
     @PostMapping("/reset-password")
-    public ResponseEntity<Map<String, String>> resetPassword(@RequestBody @Valid PasswordResetDTO passwordResetDTO) {
-        passwordResetService.resetPassword(passwordResetDTO.token(), passwordResetDTO.newPassword());
+    public ResponseEntity<Map<String, String>> resetPassword(@RequestBody @Valid PasswordResetRequest passwordResetRequest) {
+        passwordResetService.resetPassword(passwordResetRequest.token(), passwordResetRequest.newPassword());
         return ResponseEntity.ok(Map.of("message", "Contraseña actualizada correctamente."));
     }
 }

@@ -1,10 +1,10 @@
 package com.fran.jobsy.app.dto.conversation;
 
-import com.fran.jobsy.app.dto.message.MessageDTO;
+import com.fran.jobsy.app.dto.message.MessageResponse;
 
 import java.time.LocalDateTime;
 
-public record ConversationDTO(
+public record ConversationResponse(
         Long id,
         Long bookingId,
         Long userAId,
@@ -12,7 +12,7 @@ public record ConversationDTO(
         Long otherUserId,
         String otherUserName,
         String otherUserPhotoUrl,
-        MessageDTO lastMessage,
+        MessageResponse lastMessage,
         LocalDateTime updatedAt
 ) {
 }

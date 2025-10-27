@@ -1,6 +1,6 @@
 package com.fran.jobsy.app.service.impl;
 
-import com.fran.jobsy.app.dto.availability_slot.AvailabilitySlotDTO;
+import com.fran.jobsy.app.dto.availability_slot.AvailabilitySlotResponse;
 import com.fran.jobsy.app.dto.availability_slot.AvailabilitySlotRequest;
 import com.fran.jobsy.app.entity.AvailabilitySlot;
 import com.fran.jobsy.app.entity.User;
@@ -28,7 +28,7 @@ public class AvailabilitySlotServiceImpl implements AvailabilitySlotService {
     private final UserRepository userRepository;
 
     @Override
-    public List<AvailabilitySlotDTO> getAllByUserId(Long userId) {
+    public List<AvailabilitySlotResponse> getAllByUserId(Long userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado con ID: " + userId));
 
@@ -39,7 +39,7 @@ public class AvailabilitySlotServiceImpl implements AvailabilitySlotService {
     }
 
     @Override
-    public AvailabilitySlotDTO create(AvailabilitySlotRequest availabilitySlotReq) {
+    public AvailabilitySlotResponse create(AvailabilitySlotRequest availabilitySlotReq) {
         Long userId = authenticatedUserProvider.getAuthenticatedUserId();
 
         if (availabilitySlotRepository.findOverlappingSlot(
@@ -64,7 +64,7 @@ public class AvailabilitySlotServiceImpl implements AvailabilitySlotService {
     }
 
     @Override
-    public AvailabilitySlotDTO update(Long slotId, AvailabilitySlotRequest availabilitySlotReq) {
+    public AvailabilitySlotResponse update(Long slotId, AvailabilitySlotRequest availabilitySlotReq) {
         AvailabilitySlot slot = getAvailabilitySlotIfExists(slotId);
 
         slot.setWeekday(availabilitySlotReq.weekday());

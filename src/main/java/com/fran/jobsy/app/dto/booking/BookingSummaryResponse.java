@@ -4,7 +4,7 @@ import com.fran.jobsy.app.enums.BookingStatus;
 
 import java.time.LocalDateTime;
 
-public record BookingListDTO(
+public record BookingSummaryResponse(
         Long id,
         String providerName,
         String clientName,

@@ -9,7 +9,7 @@ public record UserPublicDTO(
         String firstname,
         String lastname,
         String profilePhotoUrl,
-        List<UserWorkPhotoDTO> workPhotos,
+        List<UserWorkPhotoResponse> workPhotos,
         String country,
         String bio,
         Double hourlyRate,

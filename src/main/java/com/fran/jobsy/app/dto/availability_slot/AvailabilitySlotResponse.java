@@ -2,7 +2,7 @@ package com.fran.jobsy.app.dto.availability_slot;
 
 import java.time.LocalTime;
 
-public record AvailabilitySlotDTO(
+public record AvailabilitySlotResponse(
         Long id,
         Long providerId,
         Integer weekday,

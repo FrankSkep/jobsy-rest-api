@@ -1,7 +1,7 @@
 package com.fran.jobsy.app.mapper;
 
-import com.fran.jobsy.app.dto.conversation.ConversationDTO;
-import com.fran.jobsy.app.dto.message.MessageDTO;
+import com.fran.jobsy.app.dto.conversation.ConversationResponse;
+import com.fran.jobsy.app.dto.message.MessageResponse;
 import com.fran.jobsy.app.entity.Conversation;
 import com.fran.jobsy.app.entity.Message;
 import org.mapstruct.Mapper;
@@ -22,7 +22,7 @@ public interface ConversationMapper {
     @Mapping(target = "otherUserPhotoUrl", expression = "java(getOtherUserPhotoUrl(conversation, currentUserId))")
     @Mapping(target = "lastMessage", expression = "java(getLastMessage(conversation))")
     @Mapping(target = "updatedAt", expression = "java(getUpdatedAt(conversation))")
-    ConversationDTO toDTO(Conversation conversation, Long currentUserId);
+    ConversationResponse toDTO(Conversation conversation, Long currentUserId);
 
     default Long getOtherUserId(Conversation conversation, Long currentUserId) {
         if (conversation.getUserA().getId().equals(currentUserId)) {
@@ -48,7 +48,7 @@ public interface ConversationMapper {
         }
     }
 
-    default MessageDTO getLastMessage(Conversation conversation) {
+    default MessageResponse getLastMessage(Conversation conversation) {
         if (conversation.getMessages() == null || conversation.getMessages().isEmpty()) {
             return null;
         }
@@ -66,5 +66,5 @@ public interface ConversationMapper {
         return lastMessage.map(Message::getSentAt).orElse(null);
     }
 
-    MessageDTO toMessageDTO(Message message);
+    MessageResponse toMessageDTO(Message message);
 }

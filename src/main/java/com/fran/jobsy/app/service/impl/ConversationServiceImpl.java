@@ -1,7 +1,7 @@
 package com.fran.jobsy.app.service.impl;
 
-import com.fran.jobsy.app.dto.conversation.ConversationDTO;
-import com.fran.jobsy.app.dto.message.MessageDTO;
+import com.fran.jobsy.app.dto.conversation.ConversationResponse;
+import com.fran.jobsy.app.dto.message.MessageResponse;
 import com.fran.jobsy.app.entity.Booking;
 import com.fran.jobsy.app.entity.Conversation;
 import com.fran.jobsy.app.entity.Message;
@@ -32,7 +32,7 @@ public class ConversationServiceImpl implements ConversationService {
                 });
     }
 
-    public List<ConversationDTO> getMyConversations() {
+    public List<ConversationResponse> getMyConversations() {
         Long authUserId = authenticatedUserProvider.getAuthenticatedUserId();
 
         List<Conversation> conversations = conversationRepository.findByUserId(authUserId);
@@ -46,8 +46,8 @@ public class ConversationServiceImpl implements ConversationService {
                     ? null
                     : conv.getMessages().getLast();
 
-            MessageDTO lastMessageDTO = (lastMsg != null)
-                    ? new MessageDTO(
+            MessageResponse lastMessageResponse = (lastMsg != null)
+                    ? new MessageResponse(
                     lastMsg.getId(),
                     conv.getId(),
                     lastMsg.getSender().getId(),
@@ -58,7 +58,7 @@ public class ConversationServiceImpl implements ConversationService {
             )
                     : null;
 
-            return new ConversationDTO(
+            return new ConversationResponse(
                     conv.getId(),
                     conv.getBooking() != null ? conv.getBooking().getId() : null,
                     conv.getUserA().getId(),
@@ -66,7 +66,7 @@ public class ConversationServiceImpl implements ConversationService {
                     other.getId(),
                     other.getFirstname() + " " + other.getLastname(),
                     other.getPhoto() != null ? other.getPhoto().getUrl() : null,
-                    lastMessageDTO,
+                    lastMessageResponse,
                     lastMsg != null ? lastMsg.getSentAt() : conv.getMessages().isEmpty() ? null : conv.getMessages().get(0).getSentAt()
             );
         }).toList();

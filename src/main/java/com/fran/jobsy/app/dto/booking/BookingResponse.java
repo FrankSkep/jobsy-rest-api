@@ -1,16 +1,16 @@
 package com.fran.jobsy.app.dto.booking;
 
-import com.fran.jobsy.app.dto.offering.OfferingSummaryDTO;
-import com.fran.jobsy.app.dto.user.UserSummaryDTO;
+import com.fran.jobsy.app.dto.offering.OfferingSummaryResponse;
+import com.fran.jobsy.app.dto.user.UserSummaryResponse;
 import com.fran.jobsy.app.enums.BookingStatus;
 
 import java.time.LocalDateTime;
 
-public record BookingResponseDTO(
+public record BookingResponse(
         Long id,
-        UserSummaryDTO client,
-        UserSummaryDTO provider,
-        OfferingSummaryDTO offering,
+        UserSummaryResponse client,
+        UserSummaryResponse provider,
+        OfferingSummaryResponse offering,
         LocalDateTime startsAt,
         LocalDateTime endsAt,
         BookingStatus bookingStatus,

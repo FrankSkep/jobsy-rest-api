@@ -1,9 +1,9 @@
 package com.fran.jobsy.app.service.impl;
 
 import com.fran.jobsy.app.dto.provider_request.ProviderApplyRequest;
-import com.fran.jobsy.app.dto.provider_request.ProviderDocumentDTO;
+import com.fran.jobsy.app.dto.provider_request.ProviderDocumentResponse;
 import com.fran.jobsy.app.dto.provider_request.ProviderRequestResponseDTO;
-import com.fran.jobsy.app.dto.user.UserSummaryDTO;
+import com.fran.jobsy.app.dto.user.UserSummaryResponse;
 import com.fran.jobsy.app.entity.ProviderDocument;
 import com.fran.jobsy.app.entity.ProviderRequest;
 import com.fran.jobsy.app.entity.User;
@@ -106,7 +106,7 @@ public class ProviderRequestServiceImpl implements ProviderRequestService {
     private ProviderRequestResponseDTO toDTO(ProviderRequest pr) {
         return new ProviderRequestResponseDTO(
                 pr.getId(),
-                new UserSummaryDTO(
+                new UserSummaryResponse(
                         pr.getUser().getId(),
                         pr.getUser().getFirstname(),
                         pr.getUser().getLastname(),
@@ -124,7 +124,7 @@ public class ProviderRequestServiceImpl implements ProviderRequestService {
                 pr.getCreatedAt(),
                 pr.getUpdatedAt(),
                 pr.getDocuments().stream()
-                        .map(doc -> new ProviderDocumentDTO(doc.getId(), doc.getPublicId(), doc.getUrl()))
+                        .map(doc -> new ProviderDocumentResponse(doc.getId(), doc.getPublicId(), doc.getUrl()))
                         .toList()
         );
     }

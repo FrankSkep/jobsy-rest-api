@@ -1,9 +1,9 @@
 package com.fran.jobsy.app.controller;
 
-import com.fran.jobsy.app.dto.booking.BookingListDTO;
+import com.fran.jobsy.app.dto.booking.BookingResponse;
+import com.fran.jobsy.app.dto.booking.BookingSummaryResponse;
 import com.fran.jobsy.app.dto.booking.BookingRequest;
-import com.fran.jobsy.app.dto.booking.BookingResponseDTO;
-import com.fran.jobsy.app.dto.booking.BookingStatusUpdateReqDTO;
+import com.fran.jobsy.app.dto.booking.BookingStatusUpdateRequest;
 import com.fran.jobsy.app.service.BookingService;
 import com.fran.jobsy.app.util.RestUtils;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -26,33 +26,33 @@ public class BookingController {
 
     @PostMapping
     @PreAuthorize("hasRole('PROVIDER')")
-    public ResponseEntity<BookingResponseDTO> createBooking(@RequestBody @Valid BookingRequest bookingRequest) {
-        BookingResponseDTO bookingResponseDTO = bookingService.createBooking(bookingRequest);
-        URI location = RestUtils.buildCreatedLocation(bookingResponseDTO.id());
-        return ResponseEntity.created(location).body(bookingResponseDTO);
+    public ResponseEntity<BookingResponse> createBooking(@RequestBody @Valid BookingRequest bookingRequest) {
+        BookingResponse bookingResponse = bookingService.createBooking(bookingRequest);
+        URI location = RestUtils.buildCreatedLocation(bookingResponse.id());
+        return ResponseEntity.created(location).body(bookingResponse);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<BookingResponseDTO> getBooking(@PathVariable Long id) {
+    public ResponseEntity<BookingResponse> getBooking(@PathVariable Long id) {
         return ResponseEntity.ok(bookingService.getBooking(id));
     }
 
     @GetMapping("/client")
-    public ResponseEntity<List<BookingListDTO>> getClientBookings() {
+    public ResponseEntity<List<BookingSummaryResponse>> getClientBookings() {
         return ResponseEntity.ok(bookingService.getClientBookings());
     }
 
     @GetMapping("/provider")
     @PreAuthorize("hasRole('PROVIDER')")
-    public ResponseEntity<List<BookingListDTO>> getProviderBookings() {
+    public ResponseEntity<List<BookingSummaryResponse>> getProviderBookings() {
         return ResponseEntity.ok(bookingService.getProviderBookings());
     }
 
     @PatchMapping("/{id}/status")
-    public ResponseEntity<BookingResponseDTO> updateBookingStatus(
+    public ResponseEntity<BookingResponse> updateBookingStatus(
             @PathVariable Long id,
-            @RequestBody @Valid BookingStatusUpdateReqDTO updateStatusReq) {
-        BookingResponseDTO updatedBooking = bookingService.updateBookingStatus(id, updateStatusReq);
+            @RequestBody @Valid BookingStatusUpdateRequest updateStatusReq) {
+        BookingResponse updatedBooking = bookingService.updateBookingStatus(id, updateStatusReq);
         return ResponseEntity.ok(updatedBooking);
     }
 }

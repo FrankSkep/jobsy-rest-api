@@ -1,7 +1,7 @@
 package com.fran.jobsy.app.controller;
 
-import com.fran.jobsy.app.dto.offering.OfferingDTO;
-import com.fran.jobsy.app.dto.offering.OfferingFilterDTO;
+import com.fran.jobsy.app.dto.offering.OfferingResponse;
+import com.fran.jobsy.app.dto.offering.OfferingFilterModel;
 import com.fran.jobsy.app.dto.offering.OfferingRequest;
 import com.fran.jobsy.app.service.OfferingService;
 import com.fran.jobsy.app.util.RestUtils;
@@ -30,15 +30,15 @@ public class OfferingController {
     @PostMapping
     @PreAuthorize("hasRole('PROVIDER')")
     @Operation(summary = "Crear servicio", description = "Crea un nuevo servicio ofrecido por un proveedor.")
-    public ResponseEntity<OfferingDTO> createOffering(@RequestBody @Valid OfferingRequest offeringRequest) {
-        OfferingDTO offering = offeringService.createOffering(offeringRequest);
+    public ResponseEntity<OfferingResponse> createOffering(@RequestBody @Valid OfferingRequest offeringRequest) {
+        OfferingResponse offering = offeringService.createOffering(offeringRequest);
         URI location = RestUtils.buildCreatedLocation(offering.id());
         return ResponseEntity.created(location).body(offering);
     }
 
     @GetMapping
     @Operation(summary = "Listar servicios", description = "Devuelve una lista paginada de servicios, con posibilidad de filtrar por categoría, precio, calificación y ubicación.")
-    public ResponseEntity<Page<OfferingDTO>> getOfferings(
+    public ResponseEntity<Page<OfferingResponse>> getOfferings(
             @RequestParam(required = false) Long categoryId,
             @RequestParam(required = false) Double minPrice,
             @RequestParam(required = false) Double maxPrice,
@@ -58,32 +58,32 @@ public class OfferingController {
         Pageable pageable = PageRequest.of(page, size, sort);
 
         if (hasFilters) {
-            OfferingFilterDTO filters = new OfferingFilterDTO(
+            OfferingFilterModel filters = new OfferingFilterModel(
                     categoryId, minPrice, maxPrice, minRating, null, null, null, location
             );
 
-            Page<OfferingDTO> result = offeringService.getOfferingsWithFiltersPaged(filters, pageable);
+            Page<OfferingResponse> result = offeringService.getOfferingsWithFiltersPaged(filters, pageable);
             return ResponseEntity.ok(result);
         }
 
-        Page<OfferingDTO> result = offeringService.getOfferingsPage(pageable);
+        Page<OfferingResponse> result = offeringService.getOfferingsPage(pageable);
         return ResponseEntity.ok(result);
     }
 
     @GetMapping("/{id}")
     @Operation(summary = "Obtener servicio por ID", description = "Devuelve los detalles de un servicio específico por su ID.")
-    public ResponseEntity<OfferingDTO> getOfferingById(@PathVariable Long id) {
-        OfferingDTO offering = offeringService.getOffering(id);
+    public ResponseEntity<OfferingResponse> getOfferingById(@PathVariable Long id) {
+        OfferingResponse offering = offeringService.getOffering(id);
         return ResponseEntity.ok(offering);
     }
 
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('PROVIDER')")
     @Operation(summary = "Actualizar servicio", description = "Actualiza los detalles de un servicio ofrecido por un proveedor.")
-    public ResponseEntity<OfferingDTO> updateOffering(
+    public ResponseEntity<OfferingResponse> updateOffering(
             @PathVariable Long id,
             @RequestBody @Valid OfferingRequest offeringRequest) {
-        OfferingDTO updatedOffering = offeringService.updateOffering(id, offeringRequest);
+        OfferingResponse updatedOffering = offeringService.updateOffering(id, offeringRequest);
         return ResponseEntity.ok(updatedOffering);
     }
 

@@ -1,6 +1,6 @@
 package com.fran.jobsy.app.controller;
 
-import com.fran.jobsy.app.dto.notification.NotificationDTO;
+import com.fran.jobsy.app.dto.notification.NotificationResponse;
 import com.fran.jobsy.app.service.NotificationService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -20,7 +20,7 @@ public class NotificationController {
 
     @Operation(summary = "Obtener mis notificaciones (paginadas)")
     @GetMapping
-    public ResponseEntity<Page<NotificationDTO>> getMyNotifications(
+    public ResponseEntity<Page<NotificationResponse>> getMyNotifications(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {
         return ResponseEntity.ok(notificationService.getMyNotifications(page, size));

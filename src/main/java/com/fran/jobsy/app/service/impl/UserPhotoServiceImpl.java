@@ -1,6 +1,6 @@
 package com.fran.jobsy.app.service.impl;
 
-import com.fran.jobsy.app.dto.user.UserPhotoDTO;
+import com.fran.jobsy.app.dto.user.UserPhotoResponse;
 import com.fran.jobsy.app.entity.UserPhoto;
 import com.fran.jobsy.app.exception.custom.CloudinaryException;
 import com.fran.jobsy.app.exception.custom.FileOperationException;
@@ -39,7 +39,7 @@ public class UserPhotoServiceImpl implements UserPhotoService {
             @CacheEvict(value = "usersPublic", key = "#root.target.authenticatedUserProvider.getAuthenticatedUserId()"),
             @CacheEvict(value = "userPhotos", key = "#root.target.authenticatedUserProvider.getAuthenticatedUserId()")
     })
-    public UserPhotoDTO updateUserPhoto(MultipartFile file) {
+    public UserPhotoResponse updateUserPhoto(MultipartFile file) {
         Long userId = authenticatedUserProvider.getAuthenticatedUserId();
         String newImageId = null;
         String oldImageId = null;
@@ -102,7 +102,7 @@ public class UserPhotoServiceImpl implements UserPhotoService {
 
     @Override
     @Cacheable(value = "userPhotos", key = "#id")
-    public UserPhotoDTO getUserPhoto(Long id) {
+    public UserPhotoResponse getUserPhoto(Long id) {
         UserPhoto userPhoto = userPhotoRepository.findByUserId(id)
                 .orElseThrow(() -> new ResourceNotFoundException("No se encontró la foto de perfil para el usuario con id: " + id));
         return userPhotoMapper.toDTO(userPhoto);

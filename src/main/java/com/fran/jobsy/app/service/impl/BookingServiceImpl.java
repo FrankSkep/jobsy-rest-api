@@ -39,7 +39,7 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     @Transactional
-    public BookingResponseDTO createBooking(BookingRequest bookingReq) {
+    public BookingResponse createBooking(BookingRequest bookingReq) {
         User provider = findUserById(bookingReq.providerId());
         Offering offering = findOfferingById(bookingReq.offeringId());
         User client = authenticatedUserProvider.getAuthenticatedUser();
@@ -78,22 +78,22 @@ public class BookingServiceImpl implements BookingService {
                 true
         );
 
-        return bookingMapper.toBookingResponseDTO(booking);
+        return bookingMapper.toDTO(booking);
     }
 
     @Override
-    public List<BookingListDTO> getClientBookings() {
+    public List<BookingSummaryResponse> getClientBookings() {
         return mapBookingsToDTOs(bookingRepository.findAllByClientId(authenticatedUserProvider.getAuthenticatedUserId()));
     }
 
     @Override
-    public List<BookingListDTO> getProviderBookings() {
+    public List<BookingSummaryResponse> getProviderBookings() {
         return mapBookingsToDTOs(bookingRepository.findAllByProviderId(authenticatedUserProvider.getAuthenticatedUserId()));
     }
 
     @Override
-    public BookingResponseDTO getBooking(Long id) {
-        return bookingMapper.toBookingResponseDTO(
+    public BookingResponse getBooking(Long id) {
+        return bookingMapper.toDTO(
                 bookingRepository.findById(id)
                         .orElseThrow(() -> new ResourceNotFoundException("Reserva no encontrada con ID: " + id))
         );
@@ -101,7 +101,7 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     @Transactional
-    public BookingResponseDTO updateBookingStatus(Long id, BookingStatusUpdateReqDTO dto) {
+    public BookingResponse updateBookingStatus(Long id, BookingStatusUpdateRequest dto) {
         Booking booking = bookingRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Reserva no encontrada con ID: " + id));
 
@@ -129,8 +129,8 @@ public class BookingServiceImpl implements BookingService {
         return offeringRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Oferta no encontrada."));
     }
 
-    private List<BookingListDTO> mapBookingsToDTOs(List<Booking> bookings) {
-        return bookings.stream().map(bookingMapper::toBookingListDTO).toList();
+    private List<BookingSummaryResponse> mapBookingsToDTOs(List<Booking> bookings) {
+        return bookings.stream().map(bookingMapper::toSummaryDTO).toList();
     }
 
     private void handleConfirmed(Booking booking, Long authId, String comment) {

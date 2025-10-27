@@ -5,5 +5,5 @@ import java.util.List;
 
 public record DailyAvailabilityResponse(
         LocalDate date,
-        List<SlotDTO> slots) {
+        List<SlotResponse> slots) {
 }
