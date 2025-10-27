@@ -34,25 +34,29 @@ public class NotificationController {
 
     @Operation(summary = "Marcar notificación como leída")
     @PostMapping("/{id}/read")
-    public void markAsRead(@Parameter(description = "ID de la notificación") @PathVariable Long id) {
+    public ResponseEntity<Void> markAsRead(@Parameter(description = "ID de la notificación") @PathVariable Long id) {
         notificationService.markAsRead(id);
+        return ResponseEntity.noContent().build();
     }
 
     @Operation(summary = "Marcar todas como leídas")
     @PostMapping("/read-all")
-    public void markAllAsRead() {
+    public ResponseEntity<Void> markAllAsRead() {
         notificationService.markAllAsRead();
+        return ResponseEntity.noContent().build();
     }
 
     @Operation(summary = "Eliminar notificación")
     @DeleteMapping("/{id}")
-    public void deleteNotification(@Parameter(description = "ID de la notificación") @PathVariable Long id) {
+    public ResponseEntity<Void> deleteNotification(@Parameter(description = "ID de la notificación") @PathVariable Long id) {
         notificationService.deleteNotification(id);
+        return ResponseEntity.noContent().build();
     }
 
     @Operation(summary = "Enviar notificación de prueba")
     @PostMapping("/test")
-    public void sendTestNotification() {
+    public ResponseEntity<Void> sendTestNotification() {
         notificationService.sendTestNotificationToAuthUser();
+        return ResponseEntity.noContent().build();
     }
 }

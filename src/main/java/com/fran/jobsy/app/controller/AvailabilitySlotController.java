@@ -25,8 +25,8 @@ public class AvailabilitySlotController {
 
     @GetMapping("/{id}/availability")
     @Operation(summary = "Obtener disponibilidad de usuario", description = "Devuelve la lista de horarios de disponibilidad de un usuario público.")
-    public List<AvailabilitySlotDTO> getAvailabilitySlots(@PathVariable Long id) {
-        return availabilitySlotService.getAllByUserId(id);
+    public ResponseEntity<List<AvailabilitySlotDTO>> getAvailabilitySlots(@PathVariable Long id) {
+        return ResponseEntity.ok(availabilitySlotService.getAllByUserId(id));
     }
 
     @PostMapping("/me/availability")

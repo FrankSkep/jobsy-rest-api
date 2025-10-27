@@ -19,13 +19,13 @@ public class PasswordResetController {
     private final PasswordResetService passwordResetService;
 
     @PostMapping("/forgot-password")
-    public ResponseEntity<?> forgotPassword(@RequestParam String email) {
+    public ResponseEntity<Map<String, String>> forgotPassword(@RequestParam String email) {
         passwordResetService.sendResetLink(email);
         return ResponseEntity.ok(Map.of("message", "Correo de restablecimiento enviado si el usuario existe."));
     }
 
     @PostMapping("/reset-password")
-    public ResponseEntity<?> resetPassword(@RequestBody @Valid PasswordResetDTO passwordResetDTO) {
+    public ResponseEntity<Map<String, String>> resetPassword(@RequestBody @Valid PasswordResetDTO passwordResetDTO) {
         passwordResetService.resetPassword(passwordResetDTO.token(), passwordResetDTO.newPassword());
         return ResponseEntity.ok(Map.of("message", "Contraseña actualizada correctamente."));
     }

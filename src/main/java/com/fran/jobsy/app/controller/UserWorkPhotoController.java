@@ -7,6 +7,7 @@ import com.fran.jobsy.app.util.FileValidator;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -25,24 +26,26 @@ public class UserWorkPhotoController {
     @PostMapping("/me/portfolio")
     @PreAuthorize("hasRole('PROVIDER')")
     @Operation(summary = "Subir fotos de trabajos", description = "Permite a un usuario con rol PROVIDER subir fotos a su portafolio. Requiere autenticación y rol PROVIDER.")
-    public void uploadWorkPhotos(@RequestParam("files") List<MultipartFile> files) {
+    public ResponseEntity<Void> uploadWorkPhotos(@RequestParam("files") List<MultipartFile> files) {
         if (files == null || files.isEmpty()) {
             throw new InvalidFileException("Debe enviar al menos un archivo.");
         }
         files.forEach(fileValidator::validate);
         userWorkPhotoService.uploadWorkPhotos(files);
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping("/{id}/portfolio")
     @Operation(summary = "Obtener portafolio de usuario", description = "Devuelve la lista de fotos de trabajos de un usuario público.")
-    public List<UserWorkPhotoDTO> getWorkPhotos(@PathVariable Long id) {
-        return userWorkPhotoService.getUserWorkPhotos(id);
+    public ResponseEntity<List<UserWorkPhotoDTO>> getWorkPhotos(@PathVariable Long id) {
+        return ResponseEntity.ok(userWorkPhotoService.getUserWorkPhotos(id));
     }
 
     @DeleteMapping("me/portfolio/{photoId}")
     @PreAuthorize("hasRole('PROVIDER')")
     @Operation(summary = "Eliminar foto de portafolio", description = "Permite a un usuario con rol PROVIDER eliminar una foto de su portafolio. Requiere autenticación y rol PROVIDER.")
-    public void removeWorkPhoto(@PathVariable Long photoId) {
+    public ResponseEntity<Void> removeWorkPhoto(@PathVariable Long photoId) {
         userWorkPhotoService.removeWorkPhoto(photoId);
+        return ResponseEntity.noContent().build();
     }
 }
