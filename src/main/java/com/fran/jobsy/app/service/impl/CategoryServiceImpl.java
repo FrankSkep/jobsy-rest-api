@@ -1,7 +1,7 @@
 package com.fran.jobsy.app.service.impl;
 
 import com.fran.jobsy.app.dto.category.CategoryRequest;
-import com.fran.jobsy.app.dto.category.CategoryResponse;
+import com.fran.jobsy.app.dto.category.CategoryDTO;
 import com.fran.jobsy.app.entity.Category;
 import com.fran.jobsy.app.exception.custom.ResourceAlreadyExistsException;
 import com.fran.jobsy.app.exception.custom.ResourceNotFoundException;
@@ -21,12 +21,12 @@ public class CategoryServiceImpl implements CategoryService {
     private final CategoryMapper categoryMapper;
 
     @Override
-    public List<CategoryResponse> getAll() {
+    public List<CategoryDTO> getAll() {
         return categoryRepository.findAllAsDTO();
     }
 
     @Override
-    public CategoryResponse create(CategoryRequest categoryReq) {
+    public CategoryDTO create(CategoryRequest categoryReq) {
         String newCategory = categoryReq.name().toUpperCase();
 
         if (categoryRepository.existsByName(newCategory)) {
@@ -41,7 +41,7 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public CategoryResponse update(Long id, CategoryRequest categoryReq) {
+    public CategoryDTO update(Long id, CategoryRequest categoryReq) {
         String newCategory = categoryReq.name().toUpperCase();
 
         Category category = categoryRepository.findById(id)

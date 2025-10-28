@@ -1,7 +1,7 @@
 package com.fran.jobsy.app.controller;
 
 import com.fran.jobsy.app.dto.category.CategoryRequest;
-import com.fran.jobsy.app.dto.category.CategoryResponse;
+import com.fran.jobsy.app.dto.category.CategoryDTO;
 import com.fran.jobsy.app.service.CategoryService;
 import com.fran.jobsy.app.util.RestUtils;
 import io.swagger.v3.oas.annotations.Operation;
@@ -25,15 +25,15 @@ public class CategoryController {
 
     @GetMapping
     @Operation(summary = "Listar categorías", description = "Devuelve la lista de todas las categorías disponibles.")
-    public ResponseEntity<List<CategoryResponse>> getCategories() {
+    public ResponseEntity<List<CategoryDTO>> getCategories() {
         return ResponseEntity.ok(categoryService.getAll());
     }
 
     @PostMapping
     @PreAuthorize("hasAnyRole('SUPER_ADMIN', 'ADMIN')")
     @Operation(summary = "Crear categoría", description = "Solo accesible para ADMIN. Permite crear una nueva categoría de servicios.")
-    public ResponseEntity<CategoryResponse> createCategory(@RequestBody @Valid CategoryRequest categoryReq) {
-        CategoryResponse category = categoryService.create(categoryReq);
+    public ResponseEntity<CategoryDTO> createCategory(@RequestBody @Valid CategoryRequest categoryReq) {
+        CategoryDTO category = categoryService.create(categoryReq);
         URI location = RestUtils.buildCreatedLocation(category.id());
         return ResponseEntity.created(location).body(category);
     }
@@ -41,7 +41,7 @@ public class CategoryController {
     @PutMapping("/{id}")
     @PreAuthorize("hasAnyRole('SUPER_ADMIN', 'ADMIN')")
     @Operation(summary = "Actualizar categoría", description = "Solo accesible para ADMIN. Permite actualizar una categoría existente.")
-    public ResponseEntity<CategoryResponse> updateCategory(@PathVariable Long id, @RequestBody @Valid CategoryRequest categoryReq) {
+    public ResponseEntity<CategoryDTO> updateCategory(@PathVariable Long id, @RequestBody @Valid CategoryRequest categoryReq) {
         return ResponseEntity.ok(categoryService.update(id, categoryReq));
     }
 

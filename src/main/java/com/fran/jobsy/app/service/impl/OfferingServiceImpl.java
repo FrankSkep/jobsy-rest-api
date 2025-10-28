@@ -75,7 +75,7 @@ public class OfferingServiceImpl implements OfferingService {
                 .orElseThrow(() -> new ResourceNotFoundException("Categoría no existente: " + offeringRequest.category().name()));
 
         Offering offering = Offering.builder()
-                .owner(authenticatedUserProvider.getUserReference(owner.getId()))
+                .owner(owner)
                 .category(category)
                 .title(offeringRequest.title())
                 .description(offeringRequest.description())

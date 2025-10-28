@@ -1,6 +1,6 @@
 package com.fran.jobsy.app.dto.category;
 
-public record CategoryResponse(
+public record CategoryDTO(
         Long id,
         String name
 ) {
