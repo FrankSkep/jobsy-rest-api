@@ -1,13 +1,14 @@
 package com.fran.jobsy.app.service.impl;
 
-import com.fran.jobsy.app.dto.availability_slot.AvailabilitySlotResponse;
-import com.fran.jobsy.app.dto.availability_slot.AvailabilitySlotRequest;
+import com.fran.jobsy.app.dto.availabilityslot.AvailabilitySlotResponse;
+import com.fran.jobsy.app.dto.availabilityslot.AvailabilitySlotRequest;
 import com.fran.jobsy.app.entity.AvailabilitySlot;
 import com.fran.jobsy.app.entity.User;
 import com.fran.jobsy.app.exception.custom.ResourceNotFoundException;
 import com.fran.jobsy.app.mapper.AvailabilitySlotMapper;
 import com.fran.jobsy.app.repository.AvailabilitySlotRepository;
 import com.fran.jobsy.app.repository.UserRepository;
+import com.fran.jobsy.app.service.availabilityslot.AvailabilitySlotServiceImpl;
 import com.fran.jobsy.app.util.AuthenticatedUserProvider;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

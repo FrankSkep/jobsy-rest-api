@@ -4,8 +4,8 @@ import com.fran.jobsy.app.dto.booking.BookingRequest;
 import com.fran.jobsy.app.dto.booking.BookingResponse;
 import com.fran.jobsy.app.dto.booking.BookingStatusUpdateRequest;
 import com.fran.jobsy.app.dto.booking.BookingSummaryResponse;
-import com.fran.jobsy.app.service.BookingService;
-import com.fran.jobsy.app.util.RestUtils;
+import com.fran.jobsy.app.service.booking.BookingService;
+import com.fran.jobsy.app.util.UriBuilder;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -28,7 +28,7 @@ public class BookingController {
     @PreAuthorize("hasRole('PROVIDER')")
     public ResponseEntity<BookingResponse> createBooking(@RequestBody @Valid BookingRequest bookingRequest) {
         BookingResponse bookingResponse = bookingService.createBooking(bookingRequest);
-        URI location = RestUtils.buildCreatedLocation(bookingResponse.id());
+        URI location = UriBuilder.buildCreatedLocation(bookingResponse.id());
         return ResponseEntity.created(location).body(bookingResponse);
     }
 

@@ -1,7 +1,7 @@
 package com.fran.jobsy.app.controller;
 
 import com.fran.jobsy.app.dto.notification.NotificationResponse;
-import com.fran.jobsy.app.service.NotificationService;
+import com.fran.jobsy.app.service.notification.NotificationService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;

@@ -2,7 +2,7 @@ package com.fran.jobsy.app.controller;
 
 import com.fran.jobsy.app.dto.user.UserWorkPhotoResponse;
 import com.fran.jobsy.app.exception.custom.InvalidFileException;
-import com.fran.jobsy.app.service.UserWorkPhotoService;
+import com.fran.jobsy.app.service.userworkphoto.UserWorkPhotoService;
 import com.fran.jobsy.app.util.FileValidator;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;

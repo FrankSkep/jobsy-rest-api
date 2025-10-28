@@ -1,10 +1,10 @@
 package com.fran.jobsy.app.controller;
 
-import com.fran.jobsy.app.dto.provider_request.ProviderApplyRequest;
-import com.fran.jobsy.app.dto.provider_request.ProviderRejectionRequest;
-import com.fran.jobsy.app.dto.provider_request.ProviderRequestResponse;
+import com.fran.jobsy.app.dto.providerrequest.ProviderApplyRequest;
+import com.fran.jobsy.app.dto.providerrequest.ProviderRejectionRequest;
+import com.fran.jobsy.app.dto.providerrequest.ProviderRequestResponse;
 import com.fran.jobsy.app.exception.custom.InvalidFileException;
-import com.fran.jobsy.app.service.ProviderRequestService;
+import com.fran.jobsy.app.service.providerrequest.ProviderRequestService;
 import com.fran.jobsy.app.util.FileValidator;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;

@@ -2,8 +2,8 @@ package com.fran.jobsy.app.controller;
 
 import com.fran.jobsy.app.dto.CertificationRequest;
 import com.fran.jobsy.app.dto.CertificationResponse;
-import com.fran.jobsy.app.service.CertificationService;
-import com.fran.jobsy.app.util.RestUtils;
+import com.fran.jobsy.app.service.certification.CertificationService;
+import com.fran.jobsy.app.util.UriBuilder;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -36,7 +36,7 @@ public class CertificationController {
     @Operation(summary = "Agregar certificación", description = "Permite a un usuario con rol PROVIDER agregar una certificación. Requiere autenticación y rol PROVIDER.")
     public ResponseEntity<CertificationResponse> addCertification(@RequestBody @Valid CertificationRequest certificationRequest) {
         CertificationResponse certification = certificationService.addCertification(certificationRequest);
-        URI location = RestUtils.buildCreatedLocation(certification.id());
+        URI location = UriBuilder.buildCreatedLocation(certification.id());
         return ResponseEntity.created(location).body(certification);
     }
 

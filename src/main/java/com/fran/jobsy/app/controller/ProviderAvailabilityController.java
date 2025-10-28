@@ -2,7 +2,7 @@ package com.fran.jobsy.app.controller;
 
 import com.fran.jobsy.app.dto.booking.AvailabilityCheckResponse;
 import com.fran.jobsy.app.dto.booking.DailyAvailabilityResponse;
-import com.fran.jobsy.app.service.ProviderAvailabilityService;
+import com.fran.jobsy.app.service.provideravailability.ProviderAvailabilityService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;

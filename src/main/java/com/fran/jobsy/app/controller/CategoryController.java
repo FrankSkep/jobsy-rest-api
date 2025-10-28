@@ -2,8 +2,8 @@ package com.fran.jobsy.app.controller;
 
 import com.fran.jobsy.app.dto.category.CategoryDTO;
 import com.fran.jobsy.app.dto.category.CategoryRequest;
-import com.fran.jobsy.app.service.CategoryService;
-import com.fran.jobsy.app.util.RestUtils;
+import com.fran.jobsy.app.service.category.CategoryService;
+import com.fran.jobsy.app.util.UriBuilder;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -34,7 +34,7 @@ public class CategoryController {
     @Operation(summary = "Crear categoría", description = "Solo accesible para ADMIN. Permite crear una nueva categoría de servicios.")
     public ResponseEntity<CategoryDTO> createCategory(@RequestBody @Valid CategoryRequest categoryReq) {
         CategoryDTO category = categoryService.create(categoryReq);
-        URI location = RestUtils.buildCreatedLocation(category.id());
+        URI location = UriBuilder.buildCreatedLocation(category.id());
         return ResponseEntity.created(location).body(category);
     }
 

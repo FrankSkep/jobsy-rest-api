@@ -1,9 +1,9 @@
 package com.fran.jobsy.app.controller;
 
-import com.fran.jobsy.app.dto.availability_slot.AvailabilitySlotRequest;
-import com.fran.jobsy.app.dto.availability_slot.AvailabilitySlotResponse;
-import com.fran.jobsy.app.service.AvailabilitySlotService;
-import com.fran.jobsy.app.util.RestUtils;
+import com.fran.jobsy.app.dto.availabilityslot.AvailabilitySlotRequest;
+import com.fran.jobsy.app.dto.availabilityslot.AvailabilitySlotResponse;
+import com.fran.jobsy.app.service.availabilityslot.AvailabilitySlotService;
+import com.fran.jobsy.app.util.UriBuilder;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -34,7 +34,7 @@ public class AvailabilitySlotController {
     @Operation(summary = "Crear horario de disponibilidad", description = "Permite a un usuario con rol PROVIDER crear un horario de disponibilidad. Requiere autenticación y rol PROVIDER.")
     public ResponseEntity<AvailabilitySlotResponse> createAvailabilitySlot(@RequestBody @Valid AvailabilitySlotRequest availabilitySlotReq) {
         AvailabilitySlotResponse slot = availabilitySlotService.create(availabilitySlotReq);
-        URI location = RestUtils.buildCreatedLocation(slot.id());
+        URI location = UriBuilder.buildCreatedLocation(slot.id());
         return ResponseEntity.created(location).body(slot);
     }
 

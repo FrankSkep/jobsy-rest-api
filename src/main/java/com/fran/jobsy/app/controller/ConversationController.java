@@ -3,9 +3,9 @@ package com.fran.jobsy.app.controller;
 import com.fran.jobsy.app.dto.conversation.ConversationResponse;
 import com.fran.jobsy.app.dto.message.MessageRequest;
 import com.fran.jobsy.app.dto.message.MessageResponse;
-import com.fran.jobsy.app.service.ConversationService;
-import com.fran.jobsy.app.service.MessageService;
-import com.fran.jobsy.app.util.RestUtils;
+import com.fran.jobsy.app.service.conversation.ConversationService;
+import com.fran.jobsy.app.service.message.MessageService;
+import com.fran.jobsy.app.util.UriBuilder;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -36,7 +36,7 @@ public class ConversationController {
     @PostMapping("/{id}/messages")
     public ResponseEntity<MessageResponse> sendMessage(@PathVariable Long id, @RequestBody MessageRequest request) {
         MessageResponse message = messageService.sendMessage(id, request);
-        URI location = RestUtils.buildCreatedLocation(message.id());
+        URI location = UriBuilder.buildCreatedLocation(message.id());
         return ResponseEntity.created(location).body(message);
     }
 }

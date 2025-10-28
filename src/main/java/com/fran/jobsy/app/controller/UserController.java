@@ -4,7 +4,7 @@ import com.fran.jobsy.app.dto.auth.PasswordRequestADMIN;
 import com.fran.jobsy.app.dto.auth.PasswordUpdateRequest;
 import com.fran.jobsy.app.dto.user.*;
 import com.fran.jobsy.app.enums.Role;
-import com.fran.jobsy.app.service.UserService;
+import com.fran.jobsy.app.service.user.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;

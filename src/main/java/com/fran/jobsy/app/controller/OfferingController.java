@@ -3,8 +3,8 @@ package com.fran.jobsy.app.controller;
 import com.fran.jobsy.app.dto.offering.OfferingFilterModel;
 import com.fran.jobsy.app.dto.offering.OfferingRequest;
 import com.fran.jobsy.app.dto.offering.OfferingResponse;
-import com.fran.jobsy.app.service.OfferingService;
-import com.fran.jobsy.app.util.RestUtils;
+import com.fran.jobsy.app.service.offering.OfferingService;
+import com.fran.jobsy.app.util.UriBuilder;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -32,7 +32,7 @@ public class OfferingController {
     @Operation(summary = "Crear servicio", description = "Crea un nuevo servicio ofrecido por un proveedor.")
     public ResponseEntity<OfferingResponse> createOffering(@RequestBody @Valid OfferingRequest offeringRequest) {
         OfferingResponse offering = offeringService.createOffering(offeringRequest);
-        URI location = RestUtils.buildCreatedLocation(offering.id());
+        URI location = UriBuilder.buildCreatedLocation(offering.id());
         return ResponseEntity.created(location).body(offering);
     }
 
