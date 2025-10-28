@@ -17,11 +17,10 @@ Proveer una plataforma **escalable y segura** que conecte de forma eficiente a c
 
 ## Roles de Usuario
 
-* **USER**: Rol predeterminado tras el registro. Puede buscar servicios, reservar proveedores y dejar reseñas.
-  También puede solicitar convertirse en proveedor enviando documentos de verificación.
-* **PROVIDER**: Usuario verificado y aprobado por un administrador. Puede publicar servicios, gestionar su disponibilidad y recibir reservas.
-  Antes de obtener este rol, debe enviar una solicitud de verificación (INE, fotos y datos del perfil).
-* **ADMIN**: Supervisa usuarios y solicitudes de proveedor, gestiona categorías y mantiene la integridad del sistema.
+* **USER**: Rol predeterminado tras el registro. Puede buscar servicios, reservar proveedores y dejar reseñas. También puede solicitar convertirse en proveedor enviando documentos de verificación.
+* **PROVIDER**: Usuario verificado y aprobado por un administrador. Puede publicar servicios, gestionar su disponibilidad y recibir reservas. Antes de obtener este rol, debe enviar una solicitud de verificación (INE, fotos y datos del perfil).
+* **ADMIN**: Supervisa usuarios y solicitudes de proveedor, gestiona categorías y mantiene la integridad del sistema. Puede aprobar o rechazar solicitudes de verificación y gestionar el contenido de la plataforma.
+* **SUPER_ADMIN**: Rol con privilegios máximos. Puede gestionar administradores, realizar configuraciones críticas del sistema, acceder a todos los registros y auditorías, y restaurar o eliminar datos sensibles. Es responsable de la seguridad global y el mantenimiento avanzado de la plataforma.
 
 ---
 

@@ -19,7 +19,10 @@ To provide a scalable and secure platform that efficiently connects clients and 
   May apply to become a provider by submitting verification documents.
 * **PROVIDER**: Verified user approved by an admin. Can publish services, manage availability, and receive bookings.  
   Must first submit a verification request (INE, photos, and profile details).
-* **ADMIN**: Oversees users and provider requests, manages categories, and maintains system integrity.
+* **ADMIN**: Oversees users and provider requests, manages categories, and maintains system integrity.  
+  Can approve or reject provider verification requests and manage platform content.
+* **SUPER_ADMIN**: Highest privilege role. Can manage administrators, perform critical system configurations, access all logs and audits, and restore or delete sensitive data.  
+  Responsible for global security and advanced platform maintenance.
 
 ---
 

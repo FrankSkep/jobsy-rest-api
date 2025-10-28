@@ -17,5 +17,5 @@ public record UserFullResponse(
         Double lat,
         Double lng,
         Double serviceRadiusKm
-        ) {
+) {
 }
