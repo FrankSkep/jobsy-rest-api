@@ -2,7 +2,7 @@ package com.fran.jobsy.app.service.impl;
 
 import com.fran.jobsy.app.dto.provider_request.ProviderApplyRequest;
 import com.fran.jobsy.app.dto.provider_request.ProviderDocumentResponse;
-import com.fran.jobsy.app.dto.provider_request.ProviderRequestResponseDTO;
+import com.fran.jobsy.app.dto.provider_request.ProviderRequestResponse;
 import com.fran.jobsy.app.dto.user.UserSummaryResponse;
 import com.fran.jobsy.app.entity.ProviderDocument;
 import com.fran.jobsy.app.entity.ProviderRequest;
@@ -92,13 +92,13 @@ public class ProviderRequestServiceImpl implements ProviderRequestService {
 
     @Override
     @Transactional(readOnly = true)
-    public Page<ProviderRequestResponseDTO> getAllProviderRequests(Pageable pageable) {
+    public Page<ProviderRequestResponse> getAllProviderRequests(Pageable pageable) {
         return providerRequestRepository.findAll(pageable)
                 .map(this::toDTO);
     }
 
-    private ProviderRequestResponseDTO toDTO(ProviderRequest pr) {
-        return new ProviderRequestResponseDTO(
+    private ProviderRequestResponse toDTO(ProviderRequest pr) {
+        return new ProviderRequestResponse(
                 pr.getId(),
                 new UserSummaryResponse(
                         pr.getUser().getId(),
@@ -108,9 +108,7 @@ public class ProviderRequestServiceImpl implements ProviderRequestService {
                 ),
                 pr.getBio(),
                 pr.getAddressText(),
-                pr.getLat(),
-                pr.getLng(),
-                pr.getServiceRadiusKm(),
+                pr.getRfcHomoclave(),
                 pr.getStatus().name(),
                 pr.getCreatedAt(),
                 pr.getUpdatedAt(),
@@ -178,6 +176,15 @@ public class ProviderRequestServiceImpl implements ProviderRequestService {
         notificationService.notifyUser(request.getUser(), "Jobsy - Solicitud de proveedor rechazada",
                 "Lamentamos informarte que tu solicitud para ser proveedor fue rechazada. Motivo: " + reason,
                 NotificationType.SYSTEM, true);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public ProviderRequestResponse getMyProviderRequest() {
+        Long userId = authenticatedUserProvider.getAuthenticatedUserId();
+        ProviderRequest request = providerRequestRepository.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("No se encontró una solicitud de proveedor para el usuario autenticado"));
+        return toDTO(request);
     }
 
 

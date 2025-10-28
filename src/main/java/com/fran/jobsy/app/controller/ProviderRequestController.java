@@ -2,7 +2,7 @@ package com.fran.jobsy.app.controller;
 
 import com.fran.jobsy.app.dto.provider_request.ProviderApplyRequest;
 import com.fran.jobsy.app.dto.provider_request.ProviderRejectionRequest;
-import com.fran.jobsy.app.dto.provider_request.ProviderRequestResponseDTO;
+import com.fran.jobsy.app.dto.provider_request.ProviderRequestResponse;
 import com.fran.jobsy.app.exception.custom.InvalidFileException;
 import com.fran.jobsy.app.service.ProviderRequestService;
 import com.fran.jobsy.app.util.FileValidator;
@@ -50,8 +50,8 @@ public class ProviderRequestController {
     @GetMapping
     @PreAuthorize("hasAnyRole('SUPER_ADMIN', 'ADMIN')")
     @Operation(summary = "Obtener todas las solicitudes de proveedor", description = "Solo accesible para ADMIN. Devuelve todas las solicitudes de proveedor.")
-    public ResponseEntity<Page<ProviderRequestResponseDTO>> getAllProviderRequests(Pageable pageable) {
-        Page<ProviderRequestResponseDTO> requests = providerRequestService.getAllProviderRequests(pageable);
+    public ResponseEntity<Page<ProviderRequestResponse>> getAllProviderRequests(Pageable pageable) {
+        Page<ProviderRequestResponse> requests = providerRequestService.getAllProviderRequests(pageable);
         return ResponseEntity.ok(requests);
     }
 
@@ -70,5 +70,12 @@ public class ProviderRequestController {
                                        @Valid @RequestBody ProviderRejectionRequest body) {
         providerRequestService.reject(id, body.reason());
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/me")
+    @Operation(summary = "Obtener mi solicitud de proveedor", description = "Devuelve la solicitud de proveedor del usuario autenticado.")
+    public ResponseEntity<ProviderRequestResponse> getMyProviderRequest() {
+        ProviderRequestResponse request = providerRequestService.getMyProviderRequest();
+        return ResponseEntity.ok(request);
     }
 }
