@@ -54,8 +54,6 @@ public class User implements UserDetails {
     // --- Provider optional info ---
     private String bio;
 
-    private Integer yearsExperience;
-
     private Double avgRatingCache;
 
     private String addressText;
