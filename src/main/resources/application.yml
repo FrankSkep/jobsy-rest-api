@@ -43,6 +43,12 @@ spring:
           starttls:
             enable: true
 
+  devtools:
+    restart:
+      enabled: false
+    livereload:
+      enabled: false
+
 server:
   error:
     include-message: always
