@@ -45,9 +45,6 @@ public class Booking {
 
     private String statusComment;
 
-    @OneToMany(mappedBy = "booking", cascade = CascadeType.ALL)
-    private List<Payment> payments;
-
     @OneToOne(mappedBy = "booking", cascade = CascadeType.ALL)
     private Review review;
 
