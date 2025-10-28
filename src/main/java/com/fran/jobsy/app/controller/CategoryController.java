@@ -1,7 +1,7 @@
 package com.fran.jobsy.app.controller;
 
-import com.fran.jobsy.app.dto.category.CategoryRequest;
 import com.fran.jobsy.app.dto.category.CategoryDTO;
+import com.fran.jobsy.app.dto.category.CategoryRequest;
 import com.fran.jobsy.app.service.CategoryService;
 import com.fran.jobsy.app.util.RestUtils;
 import io.swagger.v3.oas.annotations.Operation;

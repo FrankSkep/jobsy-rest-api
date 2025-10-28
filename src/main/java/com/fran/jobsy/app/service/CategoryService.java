@@ -1,7 +1,7 @@
 package com.fran.jobsy.app.service;
 
-import com.fran.jobsy.app.dto.category.CategoryRequest;
 import com.fran.jobsy.app.dto.category.CategoryDTO;
+import com.fran.jobsy.app.dto.category.CategoryRequest;
 
 import java.util.List;
 

@@ -1,7 +1,7 @@
 package com.fran.jobsy.app.service.impl;
 
-import com.fran.jobsy.app.dto.category.CategoryRequest;
 import com.fran.jobsy.app.dto.category.CategoryDTO;
+import com.fran.jobsy.app.dto.category.CategoryRequest;
 import com.fran.jobsy.app.entity.Category;
 import com.fran.jobsy.app.exception.custom.ResourceAlreadyExistsException;
 import com.fran.jobsy.app.exception.custom.ResourceNotFoundException;
