@@ -179,10 +179,10 @@ public class ProviderRequestServiceImpl implements ProviderRequestService {
     }
 
     @Override
-    @Transactional(readOnly = true)
+    @Transactional
     public ProviderRequestResponse getMyProviderRequest() {
         Long userId = authenticatedUserProvider.getAuthenticatedUserId();
-        ProviderRequest request = providerRequestRepository.findById(userId)
+        ProviderRequest request = providerRequestRepository.findByUserId(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("No se encontró una solicitud de proveedor para el usuario autenticado"));
         return toDTO(request);
     }

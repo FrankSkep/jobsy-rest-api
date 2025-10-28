@@ -7,10 +7,14 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 @Repository
 public interface ProviderRequestRepository extends JpaRepository<ProviderRequest, Long> {
 
     boolean existsByUserIdAndStatus(Long userId, ProviderRequestStatus status);
 
     Page<ProviderRequest> findAll(Pageable pageable);
+
+    Optional<ProviderRequest> findByUserId(Long userId);
 }
