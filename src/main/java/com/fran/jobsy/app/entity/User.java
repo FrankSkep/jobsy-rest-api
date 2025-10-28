@@ -66,6 +66,8 @@ public class User implements UserDetails {
 
     private String rfcHomoclave;
 
+    private String curp;
+
     // --- Relationships ---
     @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Offering> offerings;

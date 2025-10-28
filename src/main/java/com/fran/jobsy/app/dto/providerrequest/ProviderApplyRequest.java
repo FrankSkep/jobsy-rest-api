@@ -15,6 +15,10 @@ public record ProviderApplyRequest(
 
         @NotBlank(message = "RFC homoclave es obligatorio")
         @Pattern(regexp = "^[A-ZÑ&]{3,4}[0-9]{6}[A-Z0-9]{3}$", message = "RFC homoclave inválido")
-        String rfcHomoclave
+        String rfcHomoclave,
+
+        @NotBlank(message = "CURP is mandatory")
+        @Pattern(regexp = "^[A-Z]{4}[0-9]{6}[A-Z]{6}[0-9]{2}$", message = "CURP inválido")
+        String curp
 ) {
 }

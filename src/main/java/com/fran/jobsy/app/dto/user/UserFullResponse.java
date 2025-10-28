@@ -7,14 +7,17 @@ public record UserFullResponse(
         String email,
         String lastname,
         String firstname,
-        String phone,
-        UserPhotoResponse userPhoto,
         String country,
+        String phone,
         Role role,
+        UserPhotoResponse userPhoto,
         String bio,
+        String avgRatingCache,
         String addressText,
         Double lat,
         Double lng,
-        Double serviceRadiusKm
+        Double serviceRadiusKm,
+        String rfcHomoclave,
+        String curp
 ) {
 }
