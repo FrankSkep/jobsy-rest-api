@@ -45,7 +45,6 @@ public class ProviderRequest {
 
     // Detailed provider information
     private String bio;
-    private Integer yearsExperience;
     private String addressText;
     private Double lat;
     private Double lng;

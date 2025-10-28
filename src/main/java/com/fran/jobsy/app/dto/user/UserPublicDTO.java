@@ -13,7 +13,6 @@ public record UserPublicDTO(
         List<UserWorkPhotoResponse> workPhotos,
         String country,
         String bio,
-        Integer yearsExperience,
         String addressText,
         Double serviceRadiusKm
 ) {

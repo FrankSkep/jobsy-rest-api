@@ -12,7 +12,6 @@ public record UserFullResponse(
         String country,
         Role role,
         String bio,
-        Integer yearsExperience,
         String addressText,
         Double lat,
         Double lng,

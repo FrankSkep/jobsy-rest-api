@@ -54,11 +54,7 @@ public class ProviderRequestServiceImpl implements ProviderRequestService {
                 .user(userRef)
                 .status(ProviderRequestStatus.PENDING)
                 .bio(request.bio())
-                .yearsExperience(request.yearsExperience())
                 .addressText(request.addressText())
-                .lat(request.lat())
-                .lng(request.lng())
-                .serviceRadiusKm(request.serviceRadiusKm())
                 .rfcHomoclave(request.rfcHomoclave())
                 .build();
 
@@ -111,7 +107,6 @@ public class ProviderRequestServiceImpl implements ProviderRequestService {
                         pr.getUser().getCountry()
                 ),
                 pr.getBio(),
-                pr.getYearsExperience(),
                 pr.getAddressText(),
                 pr.getLat(),
                 pr.getLng(),
@@ -141,7 +136,6 @@ public class ProviderRequestServiceImpl implements ProviderRequestService {
         User user = request.getUser();
         user.setRole(Role.PROVIDER);
         user.setBio(request.getBio());
-        user.setYearsExperience(request.getYearsExperience());
         user.setAddressText(request.getAddressText());
         user.setLat(request.getLat());
         user.setLng(request.getLng());

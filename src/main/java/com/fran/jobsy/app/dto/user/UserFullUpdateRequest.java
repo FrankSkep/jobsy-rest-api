@@ -7,11 +7,6 @@ public record UserFullUpdateRequest(
         @Size(max = 500, message = "Bio must not exceed 500 characters")
         String bio,
 
-        @NotNull(message = "Years of experience is mandatory")
-        @Min(value = 0, message = "Years of experience cannot be negative")
-        @Max(value = 50, message = "Years of experience must not exceed 50")
-        Integer yearsExperience,
-
         @NotBlank(message = "Address is mandatory")
         @Size(max = 255, message = "Address must not exceed 255 characters")
         String addressText,

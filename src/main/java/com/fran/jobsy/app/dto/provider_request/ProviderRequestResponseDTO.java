@@ -9,7 +9,6 @@ public record ProviderRequestResponseDTO(
         Long id,
         UserSummaryResponse user,
         String bio,
-        Integer yearsExperience,
         String addressText,
         Double lat,
         Double lng,
