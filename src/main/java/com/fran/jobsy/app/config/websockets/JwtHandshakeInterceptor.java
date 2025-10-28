@@ -1,6 +1,6 @@
 package com.fran.jobsy.app.config.websockets;
 
-import com.fran.jobsy.app.security.jwt.JwtService;
+import com.fran.jobsy.app.config.security.jwt.JwtService;
 import org.springframework.http.server.ServerHttpRequest;
 import org.springframework.http.server.ServerHttpResponse;
 import org.springframework.stereotype.Component;

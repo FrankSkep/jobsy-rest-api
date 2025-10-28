@@ -2,7 +2,7 @@ package com.fran.jobsy.app.mapper;
 
 import com.fran.jobsy.app.dto.offering.UserMinimalResponse;
 import com.fran.jobsy.app.dto.user.UserFullResponse;
-import com.fran.jobsy.app.dto.user.UserPublicDTO;
+import com.fran.jobsy.app.dto.user.UserPublicResponse;
 import com.fran.jobsy.app.dto.user.UserResponse;
 import com.fran.jobsy.app.dto.user.UserSummaryResponse;
 import com.fran.jobsy.app.entity.User;
@@ -22,7 +22,7 @@ public interface UserMapper {
     UserFullResponse toFull(User user);
 
     @Mapping(target = "profilePhotoUrl", source = "photo.url")
-    UserPublicDTO toPublic(User user);
+    UserPublicResponse toPublic(User user);
 
     UserMinimalResponse toMinimal(User user);
 

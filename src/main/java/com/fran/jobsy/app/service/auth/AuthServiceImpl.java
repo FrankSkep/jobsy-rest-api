@@ -8,7 +8,7 @@ import com.fran.jobsy.app.enums.Role;
 import com.fran.jobsy.app.exception.custom.AuthenticationException;
 import com.fran.jobsy.app.exception.custom.ResourceNotFoundException;
 import com.fran.jobsy.app.repository.UserRepository;
-import com.fran.jobsy.app.security.jwt.JwtService;
+import com.fran.jobsy.app.config.security.jwt.JwtService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

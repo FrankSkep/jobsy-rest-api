@@ -9,7 +9,7 @@ import com.fran.jobsy.app.mapper.AvailabilitySlotMapper;
 import com.fran.jobsy.app.repository.AvailabilitySlotRepository;
 import com.fran.jobsy.app.repository.UserRepository;
 import com.fran.jobsy.app.service.availabilityslot.AvailabilitySlotServiceImpl;
-import com.fran.jobsy.app.util.AuthenticatedUserProvider;
+import com.fran.jobsy.app.common.AuthenticatedUserProvider;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;

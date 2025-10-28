@@ -1,4 +1,4 @@
-package com.fran.jobsy.app.service.password_reset;
+package com.fran.jobsy.app.service.passwordreset;
 
 import com.fran.jobsy.app.entity.PasswordResetToken;
 import com.fran.jobsy.app.entity.User;

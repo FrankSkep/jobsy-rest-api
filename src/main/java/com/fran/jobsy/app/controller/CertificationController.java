@@ -3,7 +3,7 @@ package com.fran.jobsy.app.controller;
 import com.fran.jobsy.app.dto.CertificationRequest;
 import com.fran.jobsy.app.dto.CertificationResponse;
 import com.fran.jobsy.app.service.certification.CertificationService;
-import com.fran.jobsy.app.util.UriBuilder;
+import com.fran.jobsy.app.common.UriBuilder;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;

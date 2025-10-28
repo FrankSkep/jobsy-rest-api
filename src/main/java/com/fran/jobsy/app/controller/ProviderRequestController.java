@@ -5,7 +5,7 @@ import com.fran.jobsy.app.dto.providerrequest.ProviderRejectionRequest;
 import com.fran.jobsy.app.dto.providerrequest.ProviderRequestResponse;
 import com.fran.jobsy.app.exception.custom.InvalidFileException;
 import com.fran.jobsy.app.service.providerrequest.ProviderRequestService;
-import com.fran.jobsy.app.util.FileValidator;
+import com.fran.jobsy.app.common.FileValidator;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;

@@ -5,7 +5,7 @@ import lombok.Builder;
 import java.util.List;
 
 @Builder
-public record UserPublicDTO(
+public record UserPublicResponse(
         String firstname,
         String lastname,
         String phone,

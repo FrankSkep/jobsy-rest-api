@@ -5,7 +5,7 @@ import com.fran.jobsy.app.dto.message.MessageRequest;
 import com.fran.jobsy.app.dto.message.MessageResponse;
 import com.fran.jobsy.app.service.conversation.ConversationService;
 import com.fran.jobsy.app.service.message.MessageService;
-import com.fran.jobsy.app.util.UriBuilder;
+import com.fran.jobsy.app.common.UriBuilder;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

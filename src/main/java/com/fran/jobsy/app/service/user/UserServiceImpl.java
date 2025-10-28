@@ -9,7 +9,7 @@ import com.fran.jobsy.app.exception.custom.ResourceNotFoundException;
 import com.fran.jobsy.app.exception.custom.RoleAssignmentException;
 import com.fran.jobsy.app.mapper.UserMapper;
 import com.fran.jobsy.app.repository.UserRepository;
-import com.fran.jobsy.app.util.AuthenticatedUserProvider;
+import com.fran.jobsy.app.common.AuthenticatedUserProvider;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
@@ -177,7 +177,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Cacheable(value = "usersPublic", key = "#id")
-    public UserPublicDTO getUser(Long id) {
+    public UserPublicResponse getUser(Long id) {
         User user = getById(id);
         return userMapper.toPublic(user);
     }

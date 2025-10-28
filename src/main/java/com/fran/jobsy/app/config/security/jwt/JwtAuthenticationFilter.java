@@ -1,4 +1,4 @@
-package com.fran.jobsy.app.security.jwt;
+package com.fran.jobsy.app.config.security.jwt;
 
 import com.fran.jobsy.app.exception.custom.InvalidTokenException;
 import jakarta.servlet.FilterChain;

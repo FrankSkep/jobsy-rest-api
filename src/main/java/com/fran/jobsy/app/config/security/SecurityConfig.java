@@ -1,6 +1,6 @@
-package com.fran.jobsy.app.security.config;
+package com.fran.jobsy.app.config.security;
 
-import com.fran.jobsy.app.security.jwt.JwtAuthenticationFilter;
+import com.fran.jobsy.app.config.security.jwt.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

@@ -4,7 +4,7 @@ import com.fran.jobsy.app.dto.review.ReviewRequest;
 import com.fran.jobsy.app.dto.review.ReviewResponse;
 import com.fran.jobsy.app.dto.review.ReviewSummaryResponse;
 import com.fran.jobsy.app.service.review.ReviewService;
-import com.fran.jobsy.app.util.UriBuilder;
+import com.fran.jobsy.app.common.UriBuilder;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

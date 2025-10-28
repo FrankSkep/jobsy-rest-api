@@ -15,7 +15,7 @@ import com.fran.jobsy.app.repository.UserRepository;
 import com.fran.jobsy.app.service.conversation.ConversationService;
 import com.fran.jobsy.app.service.notification.NotificationService;
 import com.fran.jobsy.app.service.provideravailability.ProviderAvailabilityService;
-import com.fran.jobsy.app.util.AuthenticatedUserProvider;
+import com.fran.jobsy.app.common.AuthenticatedUserProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;

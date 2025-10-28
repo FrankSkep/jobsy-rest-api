@@ -15,7 +15,7 @@ import com.fran.jobsy.app.mapper.ReviewMapper;
 import com.fran.jobsy.app.repository.BookingRepository;
 import com.fran.jobsy.app.repository.ReviewRepository;
 import com.fran.jobsy.app.repository.UserRepository;
-import com.fran.jobsy.app.util.AuthenticatedUserProvider;
+import com.fran.jobsy.app.common.AuthenticatedUserProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

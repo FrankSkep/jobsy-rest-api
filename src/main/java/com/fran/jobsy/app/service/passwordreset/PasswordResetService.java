@@ -1,4 +1,4 @@
-package com.fran.jobsy.app.service.password_reset;
+package com.fran.jobsy.app.service.passwordreset;
 
 public interface PasswordResetService {
     void sendResetLink(String email);

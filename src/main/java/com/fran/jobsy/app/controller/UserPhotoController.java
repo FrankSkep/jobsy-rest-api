@@ -2,7 +2,7 @@ package com.fran.jobsy.app.controller;
 
 import com.fran.jobsy.app.dto.user.UserPhotoResponse;
 import com.fran.jobsy.app.service.userphoto.UserPhotoService;
-import com.fran.jobsy.app.util.FileValidator;
+import com.fran.jobsy.app.common.FileValidator;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;

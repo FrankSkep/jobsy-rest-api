@@ -1,4 +1,4 @@
-package com.fran.jobsy.app.util;
+package com.fran.jobsy.app.common;
 
 import com.fran.jobsy.app.exception.custom.InvalidFileException;
 import org.junit.jupiter.api.BeforeEach;

@@ -1,4 +1,4 @@
-package com.fran.jobsy.app.security.config;
+package com.fran.jobsy.app.config.security;
 
 import com.fran.jobsy.app.repository.UserRepository;
 import lombok.RequiredArgsConstructor;

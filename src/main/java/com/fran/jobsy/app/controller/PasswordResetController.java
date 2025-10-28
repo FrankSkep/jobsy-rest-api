@@ -1,7 +1,7 @@
 package com.fran.jobsy.app.controller;
 
 import com.fran.jobsy.app.dto.auth.PasswordResetRequest;
-import com.fran.jobsy.app.service.password_reset.PasswordResetService;
+import com.fran.jobsy.app.service.passwordreset.PasswordResetService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

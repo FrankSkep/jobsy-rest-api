@@ -17,7 +17,7 @@ import com.fran.jobsy.app.exception.custom.ResourceNotFoundException;
 import com.fran.jobsy.app.repository.ProviderRequestRepository;
 import com.fran.jobsy.app.service.cloudinary.CloudinaryService;
 import com.fran.jobsy.app.service.notification.NotificationServiceImpl;
-import com.fran.jobsy.app.util.AuthenticatedUserProvider;
+import com.fran.jobsy.app.common.AuthenticatedUserProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

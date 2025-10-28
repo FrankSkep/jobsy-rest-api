@@ -7,7 +7,7 @@ import com.fran.jobsy.app.entity.Conversation;
 import com.fran.jobsy.app.entity.Message;
 import com.fran.jobsy.app.entity.User;
 import com.fran.jobsy.app.repository.ConversationRepository;
-import com.fran.jobsy.app.util.AuthenticatedUserProvider;
+import com.fran.jobsy.app.common.AuthenticatedUserProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

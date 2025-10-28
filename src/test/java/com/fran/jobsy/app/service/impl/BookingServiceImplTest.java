@@ -18,7 +18,7 @@ import com.fran.jobsy.app.service.conversation.ConversationService;
 import com.fran.jobsy.app.service.notification.NotificationService;
 import com.fran.jobsy.app.service.provideravailability.ProviderAvailabilityService;
 import com.fran.jobsy.app.service.booking.BookingServiceImpl;
-import com.fran.jobsy.app.util.AuthenticatedUserProvider;
+import com.fran.jobsy.app.common.AuthenticatedUserProvider;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
