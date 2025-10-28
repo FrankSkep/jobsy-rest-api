@@ -54,14 +54,12 @@ public class ProviderRequestServiceImpl implements ProviderRequestService {
                 .user(userRef)
                 .status(ProviderRequestStatus.PENDING)
                 .bio(request.bio())
-                .hourlyRate(request.hourlyRate())
                 .yearsExperience(request.yearsExperience())
                 .addressText(request.addressText())
                 .lat(request.lat())
                 .lng(request.lng())
                 .serviceRadiusKm(request.serviceRadiusKm())
                 .rfcHomoclave(request.rfcHomoclave())
-                .verifiedCert(request.verifiedCert())
                 .build();
 
         List<ProviderDocument> uploadedDocs = new ArrayList<>();
@@ -113,13 +111,11 @@ public class ProviderRequestServiceImpl implements ProviderRequestService {
                         pr.getUser().getCountry()
                 ),
                 pr.getBio(),
-                pr.getHourlyRate(),
                 pr.getYearsExperience(),
                 pr.getAddressText(),
                 pr.getLat(),
                 pr.getLng(),
                 pr.getServiceRadiusKm(),
-                pr.getVerifiedCert(),
                 pr.getStatus().name(),
                 pr.getCreatedAt(),
                 pr.getUpdatedAt(),
@@ -145,14 +141,12 @@ public class ProviderRequestServiceImpl implements ProviderRequestService {
         User user = request.getUser();
         user.setRole(Role.PROVIDER);
         user.setBio(request.getBio());
-        user.setHourlyRate(request.getHourlyRate());
         user.setYearsExperience(request.getYearsExperience());
         user.setAddressText(request.getAddressText());
         user.setLat(request.getLat());
         user.setLng(request.getLng());
         user.setServiceRadiusKm(request.getServiceRadiusKm());
         user.setRfcHomoclave(request.getRfcHomoclave());
-        user.setVerifiedCert(request.getVerifiedCert());
 
         // update request data
         request.setStatus(ProviderRequestStatus.APPROVED);

@@ -67,6 +67,10 @@ public class OfferingServiceImpl implements OfferingService {
             throw new UnauthorizedAccessException("El usuario autenticado no es un proveedor");
         }
 
+        if (owner.getLat() == null || owner.getLng() == null) {
+            throw new UnauthorizedAccessException("El proveedor debe tener una ubicación establecida para crear un servicio");
+        }
+
         Category category = categoryRepository.findById(offeringRequest.category().id())
                 .orElseThrow(() -> new ResourceNotFoundException("Categoría no existente: " + offeringRequest.category().name()));
 

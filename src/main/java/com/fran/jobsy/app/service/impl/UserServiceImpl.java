@@ -65,7 +65,6 @@ public class UserServiceImpl implements UserService {
         User user = getById(authenticatedUserProvider.getAuthenticatedUserId());
 
         user.setBio(userReq.bio());
-        user.setHourlyRate(userReq.hourlyRate());
         user.setYearsExperience(userReq.yearsExperience());
         user.setAddressText(userReq.addressText());
         user.setLat(userReq.lat());

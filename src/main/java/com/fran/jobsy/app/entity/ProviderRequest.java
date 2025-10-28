@@ -45,14 +45,12 @@ public class ProviderRequest {
 
     // Detailed provider information
     private String bio;
-    private Double hourlyRate;
     private Integer yearsExperience;
     private String addressText;
     private Double lat;
     private Double lng;
     private Double serviceRadiusKm;
     private String rfcHomoclave;
-    private Boolean verifiedCert;
 
     @PrePersist
     protected void onCreate() {

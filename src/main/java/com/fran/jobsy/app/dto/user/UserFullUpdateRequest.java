@@ -7,11 +7,6 @@ public record UserFullUpdateRequest(
         @Size(max = 500, message = "Bio must not exceed 500 characters")
         String bio,
 
-        @NotNull(message = "Hourly rate is mandatory")
-        @DecimalMin(value = "0.0", inclusive = false, message = "Hourly rate must be greater than 0")
-        @DecimalMax(value = "10000.0", message = "Hourly rate must not exceed 10000")
-        Double hourlyRate,
-
         @NotNull(message = "Years of experience is mandatory")
         @Min(value = 0, message = "Years of experience cannot be negative")
         @Max(value = 50, message = "Years of experience must not exceed 50")

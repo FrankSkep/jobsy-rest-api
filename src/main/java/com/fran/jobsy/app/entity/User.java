@@ -54,8 +54,6 @@ public class User implements UserDetails {
     // --- Provider optional info ---
     private String bio;
 
-    private Double hourlyRate;
-
     private Integer yearsExperience;
 
     private Double avgRatingCache;
@@ -69,8 +67,6 @@ public class User implements UserDetails {
     private Double serviceRadiusKm;
 
     private String rfcHomoclave;
-
-    private Boolean verifiedCert;
 
     // --- Relationships ---
     @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL, orphanRemoval = true)

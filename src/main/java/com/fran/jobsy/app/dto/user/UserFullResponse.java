@@ -12,17 +12,10 @@ public record UserFullResponse(
         String country,
         Role role,
         String bio,
-        Double hourlyRate,
         Integer yearsExperience,
         String addressText,
         Double lat,
         Double lng,
-        Double serviceRadiusKm,
-        Boolean verifiedCert
-) {
-    public UserFullResponse {
-        if (verifiedCert == null) {
-            verifiedCert = false;
-        }
-    }
+        Double serviceRadiusKm
+        ) {
 }

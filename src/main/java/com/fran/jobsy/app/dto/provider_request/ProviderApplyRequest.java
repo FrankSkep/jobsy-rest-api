@@ -7,11 +7,6 @@ public record ProviderApplyRequest(
         @Size(max = 500, message = "Bio must not exceed 500 characters")
         String bio,
 
-        @NotNull(message = "Hourly rate is mandatory")
-        @DecimalMin(value = "0.0", inclusive = false, message = "Hourly rate must be greater than 0")
-        @DecimalMax(value = "10000.0", message = "Hourly rate must not exceed 10000")
-        Double hourlyRate,
-
         @NotNull(message = "Years of experience is mandatory")
         @Min(value = 0, message = "Years of experience cannot be negative")
         @Max(value = 50, message = "Years of experience must not exceed 50")
@@ -38,12 +33,6 @@ public record ProviderApplyRequest(
 
         @NotBlank(message = "RFC homoclave es obligatorio")
         @Pattern(regexp = "^[A-ZÑ&]{3,4}[0-9]{6}[A-Z0-9]{3}$", message = "RFC homoclave inválido")
-        String rfcHomoclave,
-
-        Boolean verifiedCert
+        String rfcHomoclave
 ) {
-    public ProviderApplyRequest {
-        if (verifiedCert == null)
-            verifiedCert = false;
-    }
 }
