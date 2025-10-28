@@ -6,6 +6,7 @@ public record OfferingRequest(
         CategoryResponse category,
         String title,
         String description,
-        Double basePrice
+        Double basePrice,
+        Integer yearsOfExperience
 ) {
 }

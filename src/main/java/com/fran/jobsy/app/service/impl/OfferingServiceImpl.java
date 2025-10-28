@@ -80,6 +80,7 @@ public class OfferingServiceImpl implements OfferingService {
                 .title(offeringRequest.title())
                 .description(offeringRequest.description())
                 .basePrice(offeringRequest.basePrice())
+                .yearsOfExperience(offeringRequest.yearsOfExperience())
                 .build();
 
         return offeringMapper.toDTO(offeringRepository.save(offering));
@@ -103,6 +104,7 @@ public class OfferingServiceImpl implements OfferingService {
         offering.setTitle(offeringRequest.title());
         offering.setDescription(offeringRequest.description());
         offering.setBasePrice(offeringRequest.basePrice());
+        offering.setYearsOfExperience(offeringRequest.yearsOfExperience());
 
         return offeringMapper.toDTO(offeringRepository.save(offering));
     }

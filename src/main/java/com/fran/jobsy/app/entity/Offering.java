@@ -32,6 +32,8 @@ public class Offering {
 
     private Double basePrice;
 
+    private Integer yearsOfExperience;
+
     @OneToMany(mappedBy = "offering", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<OfferingPhoto> photos;
 }
