@@ -1,12 +1,12 @@
 package com.fran.jobsy.app.service.certification;
 
+import com.fran.jobsy.app.common.AuthenticatedUserProvider;
 import com.fran.jobsy.app.dto.CertificationRequest;
 import com.fran.jobsy.app.dto.CertificationResponse;
 import com.fran.jobsy.app.entity.Certification;
 import com.fran.jobsy.app.exception.custom.ResourceNotFoundException;
 import com.fran.jobsy.app.exception.custom.UnauthorizedAccessException;
 import com.fran.jobsy.app.repository.CertificationRepository;
-import com.fran.jobsy.app.common.AuthenticatedUserProvider;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

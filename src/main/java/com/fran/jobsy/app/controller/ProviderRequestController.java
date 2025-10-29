@@ -93,7 +93,7 @@ public class ProviderRequestController {
     @PreAuthorize("hasAnyRole('SUPER_ADMIN', 'ADMIN')")
     @Operation(summary = "Obtener solicitud de proveedor por ID", description = "Solo accesible para ADMIN. Devuelve la solicitud de proveedor indicada por su ID.")
     public ResponseEntity<ProviderRequestResponse> getProviderRequestById(@PathVariable Long id) {
-        ProviderRequestResponse request = providerRequestService.getProviderRequestByUserId(id);
+        ProviderRequestResponse request = providerRequestService.getProviderRequestById(id);
         return ResponseEntity.ok(request);
     }
 }

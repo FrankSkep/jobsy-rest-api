@@ -1,5 +1,6 @@
 package com.fran.jobsy.app.service.userphoto;
 
+import com.fran.jobsy.app.common.AuthenticatedUserProvider;
 import com.fran.jobsy.app.dto.user.UserPhotoResponse;
 import com.fran.jobsy.app.entity.UserPhoto;
 import com.fran.jobsy.app.exception.custom.CloudinaryException;
@@ -8,7 +9,6 @@ import com.fran.jobsy.app.exception.custom.ResourceNotFoundException;
 import com.fran.jobsy.app.mapper.UserPhotoMapper;
 import com.fran.jobsy.app.repository.UserPhotoRepository;
 import com.fran.jobsy.app.service.cloudinary.CloudinaryService;
-import com.fran.jobsy.app.common.AuthenticatedUserProvider;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;

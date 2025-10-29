@@ -14,6 +14,7 @@ public interface ProviderRequestService {
     void applyForProvider(ProviderApplyRequest request, List<MultipartFile> documents);
 
     Page<ProviderRequestResponse> getAllProviderRequests(Pageable pageable);
+
     Page<ProviderRequestMinResponse> getAllProviderRequestsV2(Pageable pageable);
 
     void approve(Long requestId);
@@ -22,5 +23,5 @@ public interface ProviderRequestService {
 
     ProviderRequestResponse getMyProviderRequest();
 
-    ProviderRequestResponse getProviderRequestByUserId(Long requestId);
+    ProviderRequestResponse getProviderRequestById(Long requestId);
 }

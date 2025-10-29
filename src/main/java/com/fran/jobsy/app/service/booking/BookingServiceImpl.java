@@ -1,5 +1,6 @@
 package com.fran.jobsy.app.service.booking;
 
+import com.fran.jobsy.app.common.AuthenticatedUserProvider;
 import com.fran.jobsy.app.dto.booking.*;
 import com.fran.jobsy.app.entity.Booking;
 import com.fran.jobsy.app.entity.Offering;
@@ -15,7 +16,6 @@ import com.fran.jobsy.app.repository.UserRepository;
 import com.fran.jobsy.app.service.conversation.ConversationService;
 import com.fran.jobsy.app.service.notification.NotificationService;
 import com.fran.jobsy.app.service.provideravailability.ProviderAvailabilityService;
-import com.fran.jobsy.app.common.AuthenticatedUserProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;

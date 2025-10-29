@@ -1,5 +1,6 @@
 package com.fran.jobsy.app.service.conversation;
 
+import com.fran.jobsy.app.common.AuthenticatedUserProvider;
 import com.fran.jobsy.app.dto.conversation.ConversationResponse;
 import com.fran.jobsy.app.dto.message.MessageResponse;
 import com.fran.jobsy.app.entity.Booking;
@@ -7,7 +8,6 @@ import com.fran.jobsy.app.entity.Conversation;
 import com.fran.jobsy.app.entity.Message;
 import com.fran.jobsy.app.entity.User;
 import com.fran.jobsy.app.repository.ConversationRepository;
-import com.fran.jobsy.app.common.AuthenticatedUserProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

@@ -1,5 +1,6 @@
 package com.fran.jobsy.app.service.offering;
 
+import com.fran.jobsy.app.common.AuthenticatedUserProvider;
 import com.fran.jobsy.app.dto.offering.OfferingFilterModel;
 import com.fran.jobsy.app.dto.offering.OfferingRequest;
 import com.fran.jobsy.app.dto.offering.OfferingResponse;
@@ -13,7 +14,6 @@ import com.fran.jobsy.app.mapper.OfferingMapper;
 import com.fran.jobsy.app.repository.CategoryRepository;
 import com.fran.jobsy.app.repository.OfferingRepository;
 import com.fran.jobsy.app.repository.UserRepository;
-import com.fran.jobsy.app.common.AuthenticatedUserProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

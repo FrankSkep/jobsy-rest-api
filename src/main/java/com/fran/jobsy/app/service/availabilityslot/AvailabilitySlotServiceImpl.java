@@ -1,5 +1,6 @@
 package com.fran.jobsy.app.service.availabilityslot;
 
+import com.fran.jobsy.app.common.AuthenticatedUserProvider;
 import com.fran.jobsy.app.dto.availabilityslot.AvailabilitySlotRequest;
 import com.fran.jobsy.app.dto.availabilityslot.AvailabilitySlotResponse;
 import com.fran.jobsy.app.entity.AvailabilitySlot;
@@ -11,7 +12,6 @@ import com.fran.jobsy.app.exception.custom.UnauthorizedAccessException;
 import com.fran.jobsy.app.mapper.AvailabilitySlotMapper;
 import com.fran.jobsy.app.repository.AvailabilitySlotRepository;
 import com.fran.jobsy.app.repository.UserRepository;
-import com.fran.jobsy.app.common.AuthenticatedUserProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

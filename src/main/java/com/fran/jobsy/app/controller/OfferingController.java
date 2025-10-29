@@ -1,10 +1,10 @@
 package com.fran.jobsy.app.controller;
 
+import com.fran.jobsy.app.common.UriBuilder;
 import com.fran.jobsy.app.dto.offering.OfferingFilterModel;
 import com.fran.jobsy.app.dto.offering.OfferingRequest;
 import com.fran.jobsy.app.dto.offering.OfferingResponse;
 import com.fran.jobsy.app.service.offering.OfferingService;
-import com.fran.jobsy.app.common.UriBuilder;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;

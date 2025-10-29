@@ -1,9 +1,9 @@
 package com.fran.jobsy.app.controller;
 
+import com.fran.jobsy.app.common.UriBuilder;
 import com.fran.jobsy.app.dto.category.CategoryDTO;
 import com.fran.jobsy.app.dto.category.CategoryRequest;
 import com.fran.jobsy.app.service.category.CategoryService;
-import com.fran.jobsy.app.common.UriBuilder;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;

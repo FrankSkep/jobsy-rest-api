@@ -1,5 +1,6 @@
 package com.fran.jobsy.app.service.userworkphoto;
 
+import com.fran.jobsy.app.common.AuthenticatedUserProvider;
 import com.fran.jobsy.app.dto.user.UserWorkPhotoResponse;
 import com.fran.jobsy.app.entity.UserWorkPhoto;
 import com.fran.jobsy.app.exception.custom.CloudinaryException;
@@ -7,7 +8,6 @@ import com.fran.jobsy.app.exception.custom.FileOperationException;
 import com.fran.jobsy.app.exception.custom.ResourceNotFoundException;
 import com.fran.jobsy.app.repository.UserWorkPhotoRepository;
 import com.fran.jobsy.app.service.cloudinary.CloudinaryService;
-import com.fran.jobsy.app.common.AuthenticatedUserProvider;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

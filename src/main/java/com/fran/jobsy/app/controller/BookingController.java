@@ -1,11 +1,11 @@
 package com.fran.jobsy.app.controller;
 
+import com.fran.jobsy.app.common.UriBuilder;
 import com.fran.jobsy.app.dto.booking.BookingRequest;
 import com.fran.jobsy.app.dto.booking.BookingResponse;
 import com.fran.jobsy.app.dto.booking.BookingStatusUpdateRequest;
 import com.fran.jobsy.app.dto.booking.BookingSummaryResponse;
 import com.fran.jobsy.app.service.booking.BookingService;
-import com.fran.jobsy.app.common.UriBuilder;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

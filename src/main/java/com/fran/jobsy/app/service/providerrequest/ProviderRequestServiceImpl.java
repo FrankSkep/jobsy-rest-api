@@ -197,14 +197,17 @@ public class ProviderRequestServiceImpl implements ProviderRequestService {
     @Override
     public ProviderRequestResponse getMyProviderRequest() {
         Long userId = authenticatedUserProvider.getAuthenticatedUserId();
-        return getProviderRequestByUserId(userId);
+        ProviderRequest request = providerRequestRepository.findByUserId(userId)
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        "No se encontró una solicitud de proveedor para el usuario autenticado"));
+        return toDTO(request);
     }
 
     @Override
-    public ProviderRequestResponse getProviderRequestByUserId(Long userId) {
-        ProviderRequest request = providerRequestRepository.findByUserId(userId)
+    public ProviderRequestResponse getProviderRequestById(Long requestId) {
+        ProviderRequest request = providerRequestRepository.findById(requestId)
                 .orElseThrow(() -> new ResourceNotFoundException(
-                        "No se encontró una solicitud de proveedor para el usuario con ID " + userId));
+                        "Solicitud de proveedor con id " + requestId + " no encontrada"));
         return toDTO(request);
     }
 
