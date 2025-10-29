@@ -19,4 +19,6 @@ public interface ProviderRequestService {
     void reject(Long requestId, String reason);
 
     ProviderRequestResponse getMyProviderRequest();
+
+    ProviderRequestResponse getProviderRequestByUserId(Long requestId);
 }

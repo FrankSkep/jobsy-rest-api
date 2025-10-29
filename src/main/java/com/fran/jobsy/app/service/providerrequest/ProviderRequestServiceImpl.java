@@ -1,7 +1,9 @@
 package com.fran.jobsy.app.service.providerrequest;
 
+import com.fran.jobsy.app.common.AuthenticatedUserProvider;
 import com.fran.jobsy.app.dto.providerrequest.ProviderApplyRequest;
 import com.fran.jobsy.app.dto.providerrequest.ProviderDocumentResponse;
+import com.fran.jobsy.app.dto.providerrequest.ProviderRequestMinResponse;
 import com.fran.jobsy.app.dto.providerrequest.ProviderRequestResponse;
 import com.fran.jobsy.app.dto.user.UserSummaryResponse;
 import com.fran.jobsy.app.entity.ProviderDocument;
@@ -17,7 +19,6 @@ import com.fran.jobsy.app.exception.custom.ResourceNotFoundException;
 import com.fran.jobsy.app.repository.ProviderRequestRepository;
 import com.fran.jobsy.app.service.cloudinary.CloudinaryService;
 import com.fran.jobsy.app.service.notification.NotificationServiceImpl;
-import com.fran.jobsy.app.common.AuthenticatedUserProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -97,6 +98,12 @@ public class ProviderRequestServiceImpl implements ProviderRequestService {
                 .map(this::toDTO);
     }
 
+    @Transactional(readOnly = true)
+    public Page<ProviderRequestMinResponse> getAllProviderRequestsV2(Pageable pageable) {
+        return providerRequestRepository.findAll(pageable)
+                .map(this::toDTOMin);
+    }
+
     private ProviderRequestResponse toDTO(ProviderRequest pr) {
         return new ProviderRequestResponse(
                 pr.getId(),
@@ -115,6 +122,16 @@ public class ProviderRequestServiceImpl implements ProviderRequestService {
                 pr.getDocuments().stream()
                         .map(doc -> new ProviderDocumentResponse(doc.getId(), doc.getPublicId(), doc.getUrl()))
                         .toList()
+        );
+    }
+
+    private ProviderRequestMinResponse toDTOMin(ProviderRequest pr) {
+        return new ProviderRequestMinResponse(
+                pr.getId(),
+                pr.getUser().getFirstname() + " " + pr.getUser().getLastname(),
+                pr.getStatus().name(),
+                pr.getCreatedAt(),
+                pr.getUpdatedAt()
         );
     }
 
@@ -179,14 +196,18 @@ public class ProviderRequestServiceImpl implements ProviderRequestService {
     }
 
     @Override
-    @Transactional
     public ProviderRequestResponse getMyProviderRequest() {
         Long userId = authenticatedUserProvider.getAuthenticatedUserId();
-        ProviderRequest request = providerRequestRepository.findByUserId(userId)
-                .orElseThrow(() -> new ResourceNotFoundException("No se encontró una solicitud de proveedor para el usuario autenticado"));
-        return toDTO(request);
+        return getProviderRequestByUserId(userId);
     }
 
+    @Override
+    public ProviderRequestResponse getProviderRequestByUserId(Long userId) {
+        ProviderRequest request = providerRequestRepository.findByUserId(userId)
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        "No se encontró una solicitud de proveedor para el usuario con ID " + userId));
+        return toDTO(request);
+    }
 
     private Boolean existsPendingRequestForUser(Long userId) {
         return providerRequestRepository.existsByUserIdAndStatus(userId, ProviderRequestStatus.PENDING);
