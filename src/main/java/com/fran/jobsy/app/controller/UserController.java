@@ -73,10 +73,16 @@ public class UserController {
     }
 
     //=== Authenticated User Endpoints ===//
-    @GetMapping("/me")
+    @GetMapping("/me/full")
     @Operation(summary = "Obtener mi información completa", description = "Devuelve la información completa del usuario autenticado.")
-    public ResponseEntity<UserFullResponse> getMyInfo() {
-        return ResponseEntity.ok(userService.getUserInfo());
+    public ResponseEntity<UserFullResponse> getMyFullInfo() {
+        return ResponseEntity.ok(userService.getMyFullInfo());
+    }
+
+    @GetMapping("/me/basic")
+    @Operation(summary = "Obtener mi información básica", description = "Devuelve la información básica del usuario autenticado.")
+    public ResponseEntity<UserResponse> getMyBasicInfo() {
+        return ResponseEntity.ok(userService.getMyBasicInfo());
     }
 
     @DeleteMapping("/me")

@@ -5,10 +5,10 @@ import com.fran.jobsy.app.enums.Role;
 public record UserResponse(
         Long id,
         String email,
-        String lastname,
+        Role role,
         String firstname,
-        String phone,
+        String lastname,
         String country,
-        Role role
+        String phone
 ) {
 }

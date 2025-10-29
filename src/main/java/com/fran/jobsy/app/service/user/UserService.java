@@ -24,7 +24,9 @@ public interface UserService {
 
     UserPublicResponse getUser(Long id);
 
-    UserFullResponse getUserInfo();
+    UserFullResponse getMyFullInfo();
+
+    UserResponse getMyBasicInfo();
 
     void deleteMyAccount();
 }

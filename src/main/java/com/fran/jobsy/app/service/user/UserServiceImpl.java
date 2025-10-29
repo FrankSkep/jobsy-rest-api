@@ -44,7 +44,8 @@ public class UserServiceImpl implements UserService {
     @Override
     @Caching(evict = {
             @CacheEvict(value = "usersFull", key = "#root.target.authenticatedUserProvider.getAuthenticatedUserId()"),
-            @CacheEvict(value = "usersPublic", key = "#root.target.authenticatedUserProvider.getAuthenticatedUserId()")
+            @CacheEvict(value = "usersPublic", key = "#root.target.authenticatedUserProvider.getAuthenticatedUserId()"),
+            @CacheEvict(value = "usersBasic", key = "#root.target.authenticatedUserProvider.getAuthenticatedUserId()")
     })
     public void updateUser(UserUpdateRequest userReq) {
         User user = getById(authenticatedUserProvider.getAuthenticatedUserId());
@@ -58,7 +59,8 @@ public class UserServiceImpl implements UserService {
     @Override
     @Caching(evict = {
             @CacheEvict(value = "usersFull", key = "#root.target.authenticatedUserProvider.getAuthenticatedUserId()"),
-            @CacheEvict(value = "usersPublic", key = "#root.target.authenticatedUserProvider.getAuthenticatedUserId()")
+            @CacheEvict(value = "usersPublic", key = "#root.target.authenticatedUserProvider.getAuthenticatedUserId()"),
+            @CacheEvict(value = "usersBasic", key = "#root.target.authenticatedUserProvider.getAuthenticatedUserId()")
     })
     public void updateUser(UserFullUpdateRequest userReq) {
         User user = getById(authenticatedUserProvider.getAuthenticatedUserId());
@@ -185,9 +187,16 @@ public class UserServiceImpl implements UserService {
     // === Authenticated User Methods ===
     @Override
     @Cacheable(value = "usersFull", key = "#root.target.authenticatedUserProvider.getAuthenticatedUserId()")
-    public UserFullResponse getUserInfo() {
+    public UserFullResponse getMyFullInfo() {
         User user = authenticatedUserProvider.getAuthenticatedUser();
         return userMapper.toFull(user);
+    }
+
+    @Override
+    @Cacheable(value = "usersBasic", key = "#root.target.authenticatedUserProvider.getAuthenticatedUserId()")
+    public UserResponse getMyBasicInfo() {
+        User user = authenticatedUserProvider.getAuthenticatedUser();
+        return userMapper.toDTO(user);
     }
 
     public void deleteMyAccount() {
