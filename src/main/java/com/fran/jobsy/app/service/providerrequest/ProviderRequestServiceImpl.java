@@ -91,15 +91,8 @@ public class ProviderRequestServiceImpl implements ProviderRequestService {
         }
     }
 
-    @Override
     @Transactional(readOnly = true)
-    public Page<ProviderRequestResponse> getAllProviderRequests(Pageable pageable) {
-        return providerRequestRepository.findAll(pageable)
-                .map(this::toDTO);
-    }
-
-    @Transactional(readOnly = true)
-    public Page<ProviderRequestMinResponse> getAllProviderRequestsV2(Pageable pageable) {
+    public Page<ProviderRequestMinResponse> getAllProviderRequests(Pageable pageable) {
         return providerRequestRepository.findAll(pageable)
                 .map(this::toDTOMin);
     }

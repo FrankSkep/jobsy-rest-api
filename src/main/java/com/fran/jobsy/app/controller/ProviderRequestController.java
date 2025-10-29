@@ -21,7 +21,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/v1/provider-requests")
 @RequiredArgsConstructor
 @Tag(name = "ProviderRequests", description = "Operaciones de postulación y gestión de proveedores")
 public class ProviderRequestController {
@@ -29,7 +29,7 @@ public class ProviderRequestController {
     private final ProviderRequestService providerRequestService;
     private final FileValidator fileValidator;
 
-    @PostMapping("/v1/provider-requests")
+    @PostMapping
     @Operation(summary = "Solicitar ser proveedor", description = "Permite a un usuario postularse como proveedor adjuntando documentos requeridos. Recibe en formData un objeto JSON con los datos del perfil y hasta 5 archivos (3 fotos propias y 2 INE (AMBOS LADOS)).")
     public ResponseEntity<Void> applyForProvider(@RequestPart("providerProfile") @Valid ProviderApplyRequest providerApplyRequest,
                                                  @RequestPart("documents") List<MultipartFile> documents) {
@@ -48,23 +48,15 @@ public class ProviderRequestController {
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/v1/provider-requests")
+    @GetMapping
     @PreAuthorize("hasAnyRole('SUPER_ADMIN', 'ADMIN')")
-    @Operation(summary = "Obtener todas las solicitudes de proveedor", description = "Solo accesible para ADMIN. Devuelve todas las solicitudes de proveedor.")
-    public ResponseEntity<Page<ProviderRequestResponse>> getAllProviderRequests(Pageable pageable) {
-        Page<ProviderRequestResponse> requests = providerRequestService.getAllProviderRequests(pageable);
+    @Operation(summary = "Obtener todas las solicitudes de proveedor", description = "Solo accesible para SUPER_ADMIN/ADMIN. Devuelve todas las solicitudes de proveedor.")
+    public ResponseEntity<Page<ProviderRequestMinResponse>> getAllProviderRequests(Pageable pageable) {
+        Page<ProviderRequestMinResponse> requests = providerRequestService.getAllProviderRequests(pageable);
         return ResponseEntity.ok(requests);
     }
 
-    @GetMapping("/v2/provider-requests")
-    @PreAuthorize("hasAnyRole('SUPER_ADMIN', 'ADMIN')")
-    @Operation(summary = "Obtener todas las solicitudes de proveedor", description = "Solo accesible para ADMIN. Devuelve todas las solicitudes de proveedor.")
-    public ResponseEntity<Page<ProviderRequestMinResponse>> getAllProviderRequestsV2(Pageable pageable) {
-        Page<ProviderRequestMinResponse> requests = providerRequestService.getAllProviderRequestsV2(pageable);
-        return ResponseEntity.ok(requests);
-    }
-
-    @PatchMapping("/v1/provider-requests/{id}/approve")
+    @PatchMapping("/{id}/approve")
     @PreAuthorize("hasAnyRole('SUPER_ADMIN', 'ADMIN')")
     @Operation(summary = "Aprobar solicitud de proveedor", description = "Solo accesible para ADMIN. Aprueba la solicitud de proveedor indicada.")
     public ResponseEntity<Void> approve(@PathVariable Long id) {
@@ -72,7 +64,7 @@ public class ProviderRequestController {
         return ResponseEntity.noContent().build();
     }
 
-    @PatchMapping("/v1/provider-requests/{id}/reject")
+    @PatchMapping("/{id}/reject")
     @PreAuthorize("hasAnyRole('SUPER_ADMIN', 'ADMIN')")
     @Operation(summary = "Rechazar solicitud de proveedor", description = "Solo accesible para ADMIN. Rechaza la solicitud de proveedor indicada.")
     public ResponseEntity<Void> reject(@PathVariable Long id,
@@ -81,7 +73,7 @@ public class ProviderRequestController {
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/v1/provider-requests/me")
+    @GetMapping("/me")
     @PreAuthorize("hasAnyRole('USER', 'PROVIDER')")
     @Operation(summary = "Obtener mi solicitud de proveedor", description = "Devuelve la solicitud de proveedor del usuario autenticado.")
     public ResponseEntity<ProviderRequestResponse> getMyProviderRequest() {
@@ -89,7 +81,7 @@ public class ProviderRequestController {
         return ResponseEntity.ok(request);
     }
 
-    @GetMapping("/v1/provider-requests/{id}")
+    @GetMapping("/{id}")
     @PreAuthorize("hasAnyRole('SUPER_ADMIN', 'ADMIN')")
     @Operation(summary = "Obtener solicitud de proveedor por ID", description = "Solo accesible para ADMIN. Devuelve la solicitud de proveedor indicada por su ID.")
     public ResponseEntity<ProviderRequestResponse> getProviderRequestById(@PathVariable Long id) {
