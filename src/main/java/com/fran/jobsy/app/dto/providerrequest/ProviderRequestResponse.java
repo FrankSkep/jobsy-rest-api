@@ -11,6 +11,7 @@ public record ProviderRequestResponse(
         String bio,
         String addressText,
         String rfcHomoclave,
+        String curp,
         String status,
         LocalDateTime createdAt,
         LocalDateTime updatedAt,

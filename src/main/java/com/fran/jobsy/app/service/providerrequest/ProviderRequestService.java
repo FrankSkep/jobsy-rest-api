@@ -1,6 +1,7 @@
 package com.fran.jobsy.app.service.providerrequest;
 
 import com.fran.jobsy.app.dto.providerrequest.ProviderApplyRequest;
+import com.fran.jobsy.app.dto.providerrequest.ProviderRequestMinResponse;
 import com.fran.jobsy.app.dto.providerrequest.ProviderRequestResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -13,6 +14,7 @@ public interface ProviderRequestService {
     void applyForProvider(ProviderApplyRequest request, List<MultipartFile> documents);
 
     Page<ProviderRequestResponse> getAllProviderRequests(Pageable pageable);
+    Page<ProviderRequestMinResponse> getAllProviderRequestsV2(Pageable pageable);
 
     void approve(Long requestId);
 

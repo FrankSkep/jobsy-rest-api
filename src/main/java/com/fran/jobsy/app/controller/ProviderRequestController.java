@@ -3,6 +3,7 @@ package com.fran.jobsy.app.controller;
 import com.fran.jobsy.app.common.FileValidator;
 import com.fran.jobsy.app.dto.providerrequest.ProviderApplyRequest;
 import com.fran.jobsy.app.dto.providerrequest.ProviderRejectionRequest;
+import com.fran.jobsy.app.dto.providerrequest.ProviderRequestMinResponse;
 import com.fran.jobsy.app.dto.providerrequest.ProviderRequestResponse;
 import com.fran.jobsy.app.exception.custom.InvalidFileException;
 import com.fran.jobsy.app.service.providerrequest.ProviderRequestService;
@@ -58,8 +59,8 @@ public class ProviderRequestController {
     @GetMapping("/v2/provider-requests")
     @PreAuthorize("hasAnyRole('SUPER_ADMIN', 'ADMIN')")
     @Operation(summary = "Obtener todas las solicitudes de proveedor", description = "Solo accesible para ADMIN. Devuelve todas las solicitudes de proveedor.")
-    public ResponseEntity<Page<ProviderRequestResponse>> getAllProviderRequestsv2(Pageable pageable) {
-        Page<ProviderRequestResponse> requests = providerRequestService.getAllProviderRequests(pageable);
+    public ResponseEntity<Page<ProviderRequestMinResponse>> getAllProviderRequestsV2(Pageable pageable) {
+        Page<ProviderRequestMinResponse> requests = providerRequestService.getAllProviderRequestsV2(pageable);
         return ResponseEntity.ok(requests);
     }
 
