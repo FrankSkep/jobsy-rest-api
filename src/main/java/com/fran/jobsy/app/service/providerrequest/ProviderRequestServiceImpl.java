@@ -116,6 +116,7 @@ public class ProviderRequestServiceImpl implements ProviderRequestService {
                 pr.getBio(),
                 pr.getAddressText(),
                 pr.getRfcHomoclave(),
+                pr.getCurp(),
                 pr.getStatus().name(),
                 pr.getCreatedAt(),
                 pr.getUpdatedAt(),
@@ -138,32 +139,30 @@ public class ProviderRequestServiceImpl implements ProviderRequestService {
     @Override
     @Transactional
     public void approve(Long requestId) {
-        ProviderRequest request = providerRequestRepository.findById(requestId)
+        ProviderRequest providerRequest = providerRequestRepository.findById(requestId)
                 .orElseThrow(() -> new ResourceNotFoundException("Solicitud no encontrada"));
 
-        if (request.getStatus() != ProviderRequestStatus.PENDING) {
+        if (providerRequest.getStatus() != ProviderRequestStatus.PENDING) {
             throw new ProviderApplicationException("Solo pueden aprobarse solicitudes pendientes");
         }
 
         User admin = authenticatedUserProvider.getAuthenticatedUserReference();
 
         // Update user data
-        User user = request.getUser();
+        User user = providerRequest.getUser();
         user.setRole(Role.PROVIDER);
-        user.setBio(request.getBio());
-        user.setAddressText(request.getAddressText());
-        user.setLat(request.getLat());
-        user.setLng(request.getLng());
-        user.setServiceRadiusKm(request.getServiceRadiusKm());
-        user.setRfcHomoclave(request.getRfcHomoclave());
+        user.setBio(providerRequest.getBio());
+        user.setAddressText(providerRequest.getAddressText());
+        user.setRfcHomoclave(providerRequest.getRfcHomoclave());
+        user.setCurp(providerRequest.getCurp());
 
         // update request data
-        request.setStatus(ProviderRequestStatus.APPROVED);
-        request.setReviewedBy(admin);
-        request.setReviewedAt(LocalDateTime.now());
-        request.setRejectionReason(null);
+        providerRequest.setStatus(ProviderRequestStatus.APPROVED);
+        providerRequest.setReviewedBy(admin);
+        providerRequest.setReviewedAt(LocalDateTime.now());
+        providerRequest.setRejectionReason(null);
 
-        providerRequestRepository.save(request);
+        providerRequestRepository.save(providerRequest);
 
         notificationService.notifyUser(user, "Jobsy - Solicitud de proveedor aprobada",
                 "¡Felicidades! Tu solicitud para ser proveedor ha sido aprobada. Ya puedes ofrecer tus servicios en la plataforma.",

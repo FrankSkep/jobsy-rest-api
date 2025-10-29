@@ -1,5 +1,6 @@
 package com.fran.jobsy.app.service.user;
 
+import com.fran.jobsy.app.common.AuthenticatedUserProvider;
 import com.fran.jobsy.app.dto.auth.PasswordUpdateRequest;
 import com.fran.jobsy.app.dto.user.*;
 import com.fran.jobsy.app.entity.User;
@@ -9,7 +10,6 @@ import com.fran.jobsy.app.exception.custom.ResourceNotFoundException;
 import com.fran.jobsy.app.exception.custom.RoleAssignmentException;
 import com.fran.jobsy.app.mapper.UserMapper;
 import com.fran.jobsy.app.repository.UserRepository;
-import com.fran.jobsy.app.common.AuthenticatedUserProvider;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
@@ -78,32 +78,32 @@ public class UserServiceImpl implements UserService {
         User target = getById(userId);
         User authenticatedUser = authenticatedUserProvider.getAuthenticatedUser();
 
-        // 1. You cannot change your own role
+        // You cannot change your own role
         if (target.getId().equals(authenticatedUser.getId())) {
             throw new AuthenticationException("No puedes cambiar tu propio rol.");
         }
 
-        // 2. Already has the role
+        // Already has the role
         if (target.getRole() == newRole) {
             throw new RoleAssignmentException("El usuario ya tiene este rol asignado.");
         }
 
-        // 3. Cannot change the role of another ADMIN unless you are SUPER_ADMIN
+        // Cannot change the role of another ADMIN unless you are SUPER_ADMIN
         if (target.getRole() == Role.ADMIN && authenticatedUser.getRole() != Role.SUPER_ADMIN) {
             throw new AuthenticationException("Solo un SUPER_ADMIN puede modificar el rol de un ADMIN.");
         }
 
-        // 4. Validate that the new role can be assigned by the authenticated user
+        // Validate that the new role can be assigned by the authenticated user
         if (!canAssign(authenticatedUser.getRole(), newRole)) {
             throw new AuthenticationException("No tienes permisos para asignar este rol.");
         }
 
-        // 5. Only one SUPER_ADMIN can exist
+        // Only one SUPER_ADMIN can exist
         if (newRole == Role.SUPER_ADMIN && userRepository.existsByRole(Role.SUPER_ADMIN)) {
             throw new RoleAssignmentException("Ya existe un SUPER_ADMIN en el sistema.");
         }
 
-        // 6. Apply the change
+        // Apply the change
         target.setRole(newRole);
         userRepository.save(target);
     }

@@ -43,13 +43,11 @@ public class ProviderRequest {
 
     private String rejectionReason;
 
-    // Detailed provider information
+    // provider information
     private String bio;
     private String addressText;
-    private Double lat;
-    private Double lng;
-    private Double serviceRadiusKm;
     private String rfcHomoclave;
+    private String curp;
 
     @PrePersist
     protected void onCreate() {
