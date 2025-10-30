@@ -3,7 +3,6 @@ package com.fran.jobsy.app.entity;
 import com.fran.jobsy.app.enums.ProviderRequestStatus;
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.Fetch;
 
 import java.time.LocalDateTime;
 import java.util.List;

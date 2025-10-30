@@ -72,7 +72,7 @@ public class ProviderRequestController {
 
     @GetMapping("/me")
     @PreAuthorize("hasAnyRole('USER', 'PROVIDER')")
-    @Operation(summary = "Obtener mi solicitud de proveedor", description = "Devuelve la solicitud de proveedor del usuario autenticado.")
+    @Operation(summary = "Obtener mis solicitudes de proveedor", description = "Devuelve lista de solicitudes de proveedor del usuario autenticado.")
     public ResponseEntity<List<MyProviderRequestResponse>> getMyProviderRequests() {
         List<MyProviderRequestResponse> requests = providerRequestService.getMyProviderRequests();
         return ResponseEntity.ok(requests);
