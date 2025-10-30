@@ -15,7 +15,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     boolean existsByUsername(String username);
 
-    @Query("SELECT new com.fran.jobsy.app.dto.user.UserResponse(u.id, u.username, u.firstname, u.lastname, u.phone, u.country, u.role) FROM User u")
+    @Query("SELECT new com.fran.jobsy.app.dto.user.UserResponse(u.id, u.username, u.role, u.firstname, u.lastname, u.country, u.phone) FROM User u")
     List<UserResponse> findAllAsUserDTO();
 
     Boolean existsByRole(Role role);

@@ -3,6 +3,7 @@ package com.fran.jobsy.app.entity;
 import com.fran.jobsy.app.enums.ProviderRequestStatus;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.Fetch;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -19,11 +20,11 @@ public class ProviderRequest {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @OneToMany(mappedBy = "providerRequest", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "providerRequest", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private List<ProviderDocument> documents;
 
     @Enumerated(EnumType.STRING)
@@ -35,7 +36,7 @@ public class ProviderRequest {
 
     private LocalDateTime updatedAt;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "reviewed_by")
     private User reviewedBy;
 

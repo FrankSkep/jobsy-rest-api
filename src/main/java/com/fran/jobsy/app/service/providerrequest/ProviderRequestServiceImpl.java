@@ -102,8 +102,8 @@ public class ProviderRequestServiceImpl implements ProviderRequestService {
                 pr.getId(),
                 new UserSummaryResponse(
                         pr.getUser().getId(),
-                        pr.getUser().getFirstname(),
-                        pr.getUser().getLastname(),
+                        pr.getUser().getFirstname() + " " + pr.getUser().getLastname(),
+                        pr.getUser().getPhoto().getUrl(),
                         pr.getUser().getCountry()
                 ),
                 pr.getBio(),
@@ -123,6 +123,7 @@ public class ProviderRequestServiceImpl implements ProviderRequestService {
         return new ProviderRequestMinResponse(
                 pr.getId(),
                 pr.getUser().getFirstname() + " " + pr.getUser().getLastname(),
+                pr.getUser().getPhoto().getUrl(),
                 pr.getStatus().name(),
                 pr.getCreatedAt(),
                 pr.getUpdatedAt()
