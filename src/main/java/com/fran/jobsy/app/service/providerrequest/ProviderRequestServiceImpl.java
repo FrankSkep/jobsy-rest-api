@@ -1,10 +1,7 @@
 package com.fran.jobsy.app.service.providerrequest;
 
 import com.fran.jobsy.app.common.AuthenticatedUserProvider;
-import com.fran.jobsy.app.dto.providerrequest.ProviderApplyRequest;
-import com.fran.jobsy.app.dto.providerrequest.ProviderDocumentResponse;
-import com.fran.jobsy.app.dto.providerrequest.ProviderRequestMinResponse;
-import com.fran.jobsy.app.dto.providerrequest.ProviderRequestResponse;
+import com.fran.jobsy.app.dto.providerrequest.*;
 import com.fran.jobsy.app.dto.user.UserSummaryResponse;
 import com.fran.jobsy.app.entity.ProviderDocument;
 import com.fran.jobsy.app.entity.ProviderRequest;
@@ -130,6 +127,16 @@ public class ProviderRequestServiceImpl implements ProviderRequestService {
         );
     }
 
+    private MyProviderRequestResponse toDTOMy(ProviderRequest pr) {
+        return new MyProviderRequestResponse(
+                pr.getId(),
+                pr.getStatus().name(),
+                pr.getRejectionReason(),
+                pr.getCreatedAt(),
+                pr.getUpdatedAt()
+        );
+    }
+
     @Override
     @Transactional
     public void approve(Long requestId) {
@@ -189,12 +196,10 @@ public class ProviderRequestServiceImpl implements ProviderRequestService {
     }
 
     @Override
-    public ProviderRequestResponse getMyProviderRequest() {
+    public List<MyProviderRequestResponse> getMyProviderRequests() {
         Long userId = authenticatedUserProvider.getAuthenticatedUserId();
-        ProviderRequest request = providerRequestRepository.findByUserId(userId)
-                .orElseThrow(() -> new ResourceNotFoundException(
-                        "No se encontró una solicitud de proveedor para el usuario autenticado"));
-        return toDTO(request);
+        List<ProviderRequest> requests = providerRequestRepository.findAllByUserId(userId);
+        return requests.stream().map(this::toDTOMy).toList();
     }
 
     @Override

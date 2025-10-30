@@ -1,10 +1,7 @@
 package com.fran.jobsy.app.controller;
 
 import com.fran.jobsy.app.common.FileValidator;
-import com.fran.jobsy.app.dto.providerrequest.ProviderApplyRequest;
-import com.fran.jobsy.app.dto.providerrequest.ProviderRejectionRequest;
-import com.fran.jobsy.app.dto.providerrequest.ProviderRequestMinResponse;
-import com.fran.jobsy.app.dto.providerrequest.ProviderRequestResponse;
+import com.fran.jobsy.app.dto.providerrequest.*;
 import com.fran.jobsy.app.exception.custom.InvalidFileException;
 import com.fran.jobsy.app.service.providerrequest.ProviderRequestService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -76,9 +73,9 @@ public class ProviderRequestController {
     @GetMapping("/me")
     @PreAuthorize("hasAnyRole('USER', 'PROVIDER')")
     @Operation(summary = "Obtener mi solicitud de proveedor", description = "Devuelve la solicitud de proveedor del usuario autenticado.")
-    public ResponseEntity<ProviderRequestResponse> getMyProviderRequest() {
-        ProviderRequestResponse request = providerRequestService.getMyProviderRequest();
-        return ResponseEntity.ok(request);
+    public ResponseEntity<List<MyProviderRequestResponse>> getMyProviderRequests() {
+        List<MyProviderRequestResponse> requests = providerRequestService.getMyProviderRequests();
+        return ResponseEntity.ok(requests);
     }
 
     @GetMapping("/{id}")

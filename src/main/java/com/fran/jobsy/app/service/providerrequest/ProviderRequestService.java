@@ -1,5 +1,6 @@
 package com.fran.jobsy.app.service.providerrequest;
 
+import com.fran.jobsy.app.dto.providerrequest.MyProviderRequestResponse;
 import com.fran.jobsy.app.dto.providerrequest.ProviderApplyRequest;
 import com.fran.jobsy.app.dto.providerrequest.ProviderRequestMinResponse;
 import com.fran.jobsy.app.dto.providerrequest.ProviderRequestResponse;
@@ -19,7 +20,7 @@ public interface ProviderRequestService {
 
     void reject(Long requestId, String reason);
 
-    ProviderRequestResponse getMyProviderRequest();
+    List<MyProviderRequestResponse> getMyProviderRequests();
 
     ProviderRequestResponse getProviderRequestById(Long requestId);
 }
