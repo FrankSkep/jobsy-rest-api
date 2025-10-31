@@ -1,8 +1,10 @@
 package com.fran.jobsy.app.service.providerrequest;
 
 import com.fran.jobsy.app.common.AuthenticatedUserProvider;
-import com.fran.jobsy.app.dto.providerrequest.*;
-import com.fran.jobsy.app.dto.user.UserSummaryResponse;
+import com.fran.jobsy.app.dto.providerrequest.MyProviderRequestResponse;
+import com.fran.jobsy.app.dto.providerrequest.ProviderApplyRequest;
+import com.fran.jobsy.app.dto.providerrequest.ProviderRequestMinResponse;
+import com.fran.jobsy.app.dto.providerrequest.ProviderRequestResponse;
 import com.fran.jobsy.app.entity.ProviderDocument;
 import com.fran.jobsy.app.entity.ProviderRequest;
 import com.fran.jobsy.app.entity.User;
@@ -13,6 +15,7 @@ import com.fran.jobsy.app.exception.custom.CloudinaryException;
 import com.fran.jobsy.app.exception.custom.ConflictException;
 import com.fran.jobsy.app.exception.custom.ProviderApplicationException;
 import com.fran.jobsy.app.exception.custom.ResourceNotFoundException;
+import com.fran.jobsy.app.mapper.ProviderRequestMapper;
 import com.fran.jobsy.app.repository.ProviderRequestRepository;
 import com.fran.jobsy.app.service.cloudinary.CloudinaryService;
 import com.fran.jobsy.app.service.notification.NotificationServiceImpl;
@@ -36,6 +39,7 @@ public class ProviderRequestServiceImpl implements ProviderRequestService {
     private final CloudinaryService cloudinaryService;
     private final AuthenticatedUserProvider authenticatedUserProvider;
     private final NotificationServiceImpl notificationService;
+    private final ProviderRequestMapper providerRequestMapper;
 
     @Override
     @Transactional
@@ -91,50 +95,7 @@ public class ProviderRequestServiceImpl implements ProviderRequestService {
     @Transactional(readOnly = true)
     public Page<ProviderRequestMinResponse> getAllProviderRequests(Pageable pageable) {
         return providerRequestRepository.findAll(pageable)
-                .map(this::toDTOMin);
-    }
-
-    private ProviderRequestResponse toDTO(ProviderRequest pr) {
-        return new ProviderRequestResponse(
-                pr.getId(),
-                new UserSummaryResponse(
-                        pr.getUser().getId(),
-                        pr.getUser().getFirstname() + " " + pr.getUser().getLastname(),
-                        pr.getUser().getPhoto().getUrl(),
-                        pr.getUser().getCountry()
-                ),
-                pr.getBio(),
-                pr.getAddressText(),
-                pr.getRfcHomoclave(),
-                pr.getCurp(),
-                pr.getStatus().name(),
-                pr.getCreatedAt(),
-                pr.getUpdatedAt(),
-                pr.getDocuments().stream()
-                        .map(doc -> new ProviderDocumentResponse(doc.getId(), doc.getPublicId(), doc.getUrl()))
-                        .toList()
-        );
-    }
-
-    private ProviderRequestMinResponse toDTOMin(ProviderRequest pr) {
-        return new ProviderRequestMinResponse(
-                pr.getId(),
-                pr.getUser().getFirstname() + " " + pr.getUser().getLastname(),
-                pr.getUser().getPhoto().getUrl(),
-                pr.getStatus().name(),
-                pr.getCreatedAt(),
-                pr.getUpdatedAt()
-        );
-    }
-
-    private MyProviderRequestResponse toDTOMy(ProviderRequest pr) {
-        return new MyProviderRequestResponse(
-                pr.getId(),
-                pr.getStatus().name(),
-                pr.getRejectionReason(),
-                pr.getCreatedAt(),
-                pr.getUpdatedAt()
-        );
+                .map(providerRequestMapper::toDTOMin);
     }
 
     @Override
@@ -199,7 +160,7 @@ public class ProviderRequestServiceImpl implements ProviderRequestService {
     public List<MyProviderRequestResponse> getMyProviderRequests() {
         Long userId = authenticatedUserProvider.getAuthenticatedUserId();
         List<ProviderRequest> requests = providerRequestRepository.findAllByUserId(userId);
-        return requests.stream().map(this::toDTOMy).toList();
+        return requests.stream().map(providerRequestMapper::toDTOMy).toList();
     }
 
     @Override
@@ -207,7 +168,7 @@ public class ProviderRequestServiceImpl implements ProviderRequestService {
         ProviderRequest request = providerRequestRepository.findById(requestId)
                 .orElseThrow(() -> new ResourceNotFoundException(
                         "Solicitud de proveedor con id " + requestId + " no encontrada"));
-        return toDTO(request);
+        return providerRequestMapper.toDTO(request);
     }
 
     private Boolean existsPendingRequestForUser(Long userId) {
