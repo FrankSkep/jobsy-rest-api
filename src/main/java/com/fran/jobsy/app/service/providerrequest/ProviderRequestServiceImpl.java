@@ -58,6 +58,7 @@ public class ProviderRequestServiceImpl implements ProviderRequestService {
                 .bio(request.bio())
                 .addressText(request.addressText())
                 .rfcHomoclave(request.rfcHomoclave())
+                .curp(request.curp())
                 .build();
 
         List<ProviderDocument> uploadedDocs = new ArrayList<>();
