@@ -1,10 +1,8 @@
 package com.fran.jobsy.app.dto.user;
 
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 
-public record UserUpdateRequest(
-        @NotBlank(message = "First name is mandatory")
+public record UserPatchRequest(
         String firstname,
 
         @Pattern(regexp = "^.{0,}$", message = "Last name must be a string")

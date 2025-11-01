@@ -9,8 +9,8 @@ import com.fran.jobsy.app.exception.custom.AuthenticationException;
 import com.fran.jobsy.app.exception.custom.ResourceNotFoundException;
 import com.fran.jobsy.app.exception.custom.RoleAssignmentException;
 import com.fran.jobsy.app.mapper.UserMapper;
-import com.fran.jobsy.app.repository.UserRepository;
 import com.fran.jobsy.app.repository.ReviewRepository;
+import com.fran.jobsy.app.repository.UserRepository;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
@@ -21,6 +21,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
+import java.util.function.Consumer;
 
 @Service
 @RequiredArgsConstructor
@@ -49,13 +51,19 @@ public class UserServiceImpl implements UserService {
             @CacheEvict(value = "usersPublic", key = "#root.target.authenticatedUserProvider.getAuthenticatedUserId()"),
             @CacheEvict(value = "usersBasic", key = "#root.target.authenticatedUserProvider.getAuthenticatedUserId()")
     })
-    public void updateUser(UserUpdateRequest userReq) {
+    public void updateUser(UserPatchRequest userReq) {
         User user = getById(authenticatedUserProvider.getAuthenticatedUserId());
-        user.setFirstname(userReq.firstname());
-        user.setLastname(userReq.lastname());
-        user.setCountry(userReq.country());
-        user.setPhone(userReq.phone());
-        userRepository.save(user);
+
+        boolean hasChanges = false;
+
+        hasChanges |= updateIfDifferent(userReq.firstname(), user.getFirstname(), user::setFirstname);
+        hasChanges |= updateIfDifferent(userReq.lastname(), user.getLastname(), user::setLastname);
+        hasChanges |= updateIfDifferent(userReq.country(), user.getCountry(), user::setCountry);
+        hasChanges |= updateIfDifferent(userReq.phone(), user.getPhone(), user::setPhone);
+
+        if (hasChanges) {
+            userRepository.save(user);
+        }
     }
 
     @Override
@@ -64,16 +72,28 @@ public class UserServiceImpl implements UserService {
             @CacheEvict(value = "usersPublic", key = "#root.target.authenticatedUserProvider.getAuthenticatedUserId()"),
             @CacheEvict(value = "usersBasic", key = "#root.target.authenticatedUserProvider.getAuthenticatedUserId()")
     })
-    public void updateUser(UserFullUpdateRequest userReq) {
+    public void updateUser(UserFullPatchRequest userReq) {
         User user = getById(authenticatedUserProvider.getAuthenticatedUserId());
 
-        user.setBio(userReq.bio());
-        user.setAddressText(userReq.addressText());
-        user.setLat(userReq.lat());
-        user.setLng(userReq.lng());
-        user.setServiceRadiusKm(userReq.serviceRadiusKm());
+        boolean hasChanges = false;
 
-        userRepository.save(user);
+        hasChanges |= updateIfDifferent(userReq.bio(), user.getBio(), user::setBio);
+        hasChanges |= updateIfDifferent(userReq.addressText(), user.getAddressText(), user::setAddressText);
+        hasChanges |= updateIfDifferent(userReq.lat(), user.getLat(), user::setLat);
+        hasChanges |= updateIfDifferent(userReq.lng(), user.getLng(), user::setLng);
+        hasChanges |= updateIfDifferent(userReq.serviceRadiusKm(), user.getServiceRadiusKm(), user::setServiceRadiusKm);
+
+        if (hasChanges) {
+            userRepository.save(user);
+        }
+    }
+
+    private <T> boolean updateIfDifferent(T newValue, T currentValue, Consumer<T> setter) {
+        if (newValue != null && !Objects.equals(currentValue, newValue)) {
+            setter.accept(newValue);
+            return true;
+        }
+        return false;
     }
 
     @Override

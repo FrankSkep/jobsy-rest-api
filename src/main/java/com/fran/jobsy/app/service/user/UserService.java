@@ -10,9 +10,9 @@ public interface UserService {
 
     List<UserResponse> getAllUsers();
 
-    void updateUser(UserUpdateRequest user);
+    void updateUser(UserPatchRequest user);
 
-    void updateUser(UserFullUpdateRequest user);
+    void updateUser(UserFullPatchRequest user);
 
     void updateRole(Long userId, Role role);
 

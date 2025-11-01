@@ -18,7 +18,7 @@ public record ProviderApplyRequest(
         String rfcHomoclave,
 
         @NotBlank(message = "CURP is mandatory")
-        @Pattern(regexp = "^[A-Z][AEIOUX][A-Z]{2}\d{2}(0[1-9]|1[0-2])(0[1-9]|[12]\d|3[01])[HM](AS|BC|BS|CC|CL|CM|CS|CH|DF|DG|GT|GR|HG|JC|MC|MN|MS|NT|NL|OC|PL|QT|QR|SP|SL|SR|TC|TS|TL|VZ|YN|ZS|NE)[B-DF-HJ-NP-TV-Z]{3}[0-9A-Z]\d$", message = "CURP inválido")
+        @Pattern(regexp = "^[A-Z]{4}[0-9]{6}[A-Z]{6}[0-9A-Z]{2}$", message = "CURP inválido")
         String curp
 ) {
 }
