@@ -33,13 +33,25 @@ public class ReviewServiceImpl implements ReviewService {
 
     @Override
     public ReviewResponse createReview(Long bookingId, ReviewRequest reviewRequest) {
-        Booking booking = findBookingOrThrow(bookingId);
+        Booking booking = bookingRepository.findById(bookingId)
+                .orElseThrow(() -> new ResourceNotFoundException("Reserva no encontrada. ID: " + bookingId));
 
-        validateBookingStatus(booking);
-        validateNoExistingReview(booking);
-        validateReviewAuthorization(booking);
+        // validate rules to create review (status, uniqueness, authorization)
+        validateCreateReview(booking);
 
-        Review savedReview = saveReview(booking, reviewRequest);
+        Review review = Review.builder()
+                .booking(booking)
+                .client(booking.getClient())
+                .provider(booking.getProvider())
+                .rating(reviewRequest.rating())
+                .comment(reviewRequest.comment())
+                .build();
+
+        Review savedReview = reviewRepository.save(review);
+
+        // update provider average rating cache
+        updateProviderAvgRating(booking.getProvider());
+
         return reviewMapper.toReviewDTO(savedReview);
     }
 
@@ -61,41 +73,28 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     // ----- Private Methods -----
-    private Booking findBookingOrThrow(Long bookingId) {
-        return bookingRepository.findById(bookingId)
-                .orElseThrow(() -> new ResourceNotFoundException("Reserva no encontrada. ID: " + bookingId));
-    }
-
-    private void validateBookingStatus(Booking booking) {
+    private void validateCreateReview(Booking booking) {
+        // booking must be completed
         if (!BookingStatus.COMPLETED.equals(booking.getStatus())) {
             throw new ConflictException("No se puede crear una reseña para una reserva que no ha finalizado.");
         }
-    }
 
-    private void validateNoExistingReview(Booking booking) {
+        // only one review per booking
         if (booking.getReview() != null) {
             throw new ConflictException("Ya hiciste una reseña para esta reserva.");
         }
-    }
 
-    private void validateReviewAuthorization(Booking booking) {
+        // only the client who made the booking can create the review
         Long authenticatedUserId = authenticatedUserProvider.getAuthenticatedUserId();
         Long clientId = booking.getClient().getId();
-
         if (!authenticatedUserId.equals(clientId)) {
             throw new UnauthorizedAccessException("No autorizado para crear una reseña en nombre de otro usuario.");
         }
     }
 
-    private Review saveReview(Booking booking, ReviewRequest reviewRequest) {
-        Review review = Review.builder()
-                .booking(booking)
-                .client(booking.getClient())
-                .provider(booking.getProvider())
-                .rating(reviewRequest.rating())
-                .comment(reviewRequest.comment())
-                .build();
-
-        return reviewRepository.save(review);
+    private void updateProviderAvgRating(User provider) {
+        Double avg = reviewRepository.calculateAverageRatingByProvider(provider.getId());
+        provider.setAvgRatingCache(avg != null ? avg : 0.0);
+        userRepository.save(provider);
     }
 }
