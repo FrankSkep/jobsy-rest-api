@@ -6,6 +6,7 @@ import com.fran.jobsy.app.dto.user.UserPublicResponse;
 import com.fran.jobsy.app.dto.user.UserResponse;
 import com.fran.jobsy.app.dto.user.UserSummaryResponse;
 import com.fran.jobsy.app.entity.User;
+import com.fran.jobsy.app.repository.ReviewRepository;
 import org.mapstruct.*;
 
 @Mapper(componentModel = "spring", uses = {UserPhotoMapper.class, UserWorkPhotoMapper.class})
@@ -22,7 +23,9 @@ public interface UserMapper {
     UserFullResponse toFull(User user);
 
     @Mapping(target = "profilePhotoUrl", source = "photo.url")
-    UserPublicResponse toPublic(User user);
+    @Mapping(target = "averageRating", source = "avgRatingCache")
+    @Mapping(target = "totalReviews", expression = "java( Math.toIntExact(reviewRepository.countByProviderId(user.getId())) )")
+    UserPublicResponse toPublic(User user, @Context ReviewRepository reviewRepository);
 
     UserMinimalResponse toMinimal(User user);
 
@@ -33,4 +36,3 @@ public interface UserMapper {
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     void updateFromDto(UserResponse dto, @MappingTarget User entity);
 }
-

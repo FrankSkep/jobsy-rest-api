@@ -10,6 +10,7 @@ import com.fran.jobsy.app.exception.custom.ResourceNotFoundException;
 import com.fran.jobsy.app.exception.custom.RoleAssignmentException;
 import com.fran.jobsy.app.mapper.UserMapper;
 import com.fran.jobsy.app.repository.UserRepository;
+import com.fran.jobsy.app.repository.ReviewRepository;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
@@ -28,6 +29,7 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final UserMapper userMapper;
+    private final ReviewRepository reviewRepository;
     @Getter
     private final AuthenticatedUserProvider authenticatedUserProvider;
 
@@ -181,7 +183,7 @@ public class UserServiceImpl implements UserService {
     @Cacheable(value = "usersPublic", key = "#id")
     public UserPublicResponse getUser(Long id) {
         User user = getById(id);
-        return userMapper.toPublic(user);
+        return userMapper.toPublic(user, reviewRepository);
     }
 
     // === Authenticated User Methods ===

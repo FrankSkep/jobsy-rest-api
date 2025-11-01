@@ -14,6 +14,8 @@ public record UserPublicResponse(
         String country,
         String bio,
         String addressText,
+        Double averageRating,
+        Integer totalReviews,
         Double serviceRadiusKm
 ) {
 }
