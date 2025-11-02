@@ -24,14 +24,6 @@ public class BookingController {
 
     private final BookingService bookingService;
 
-    @PostMapping
-    @PreAuthorize("hasRole('PROVIDER')")
-    public ResponseEntity<BookingResponse> createBooking(@RequestBody @Valid BookingRequest bookingRequest) {
-        BookingResponse bookingResponse = bookingService.createBooking(bookingRequest);
-        URI location = UriBuilder.buildCreatedLocation(bookingResponse.id());
-        return ResponseEntity.created(location).body(bookingResponse);
-    }
-
     @GetMapping("/{id}")
     public ResponseEntity<BookingResponse> getBooking(@PathVariable Long id) {
         return ResponseEntity.ok(bookingService.getBooking(id));
@@ -46,6 +38,14 @@ public class BookingController {
     @PreAuthorize("hasRole('PROVIDER')")
     public ResponseEntity<List<BookingSummaryResponse>> getProviderBookings() {
         return ResponseEntity.ok(bookingService.getProviderBookings());
+    }
+
+    @PostMapping
+    @PreAuthorize("hasRole('PROVIDER')")
+    public ResponseEntity<BookingResponse> createBooking(@RequestBody @Valid BookingRequest bookingRequest) {
+        BookingResponse bookingResponse = bookingService.createBooking(bookingRequest);
+        URI location = UriBuilder.buildCreatedLocation(bookingResponse.id());
+        return ResponseEntity.created(location).body(bookingResponse);
     }
 
     @PatchMapping("/{id}/status")

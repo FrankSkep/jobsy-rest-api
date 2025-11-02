@@ -35,14 +35,71 @@ public class UserServiceImpl implements UserService {
     @Getter
     private final AuthenticatedUserProvider authenticatedUserProvider;
 
+    // --- Private helper methods ---
     private User getById(Long id) {
         return userRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found."));
     }
 
+    private boolean canAssign(Role assignerRole, Role targetRole) {
+        return switch (assignerRole) {
+            case SUPER_ADMIN ->
+                    targetRole == Role.ADMIN || targetRole == Role.PROVIDER || targetRole == Role.USER;
+            case ADMIN ->
+                    targetRole == Role.PROVIDER || targetRole == Role.USER;
+            default ->
+                    false;
+        };
+    }
+
+    private boolean canDelete(Role deleterRole, Role targetRole) {
+        return switch (deleterRole) {
+            case SUPER_ADMIN ->
+                    targetRole != Role.SUPER_ADMIN;
+            case ADMIN ->
+                    targetRole == Role.PROVIDER || targetRole == Role.USER;
+            default ->
+                    false;
+        };
+    }
+
+    private <T> boolean updateIfDifferent(T newValue, T currentValue, Consumer<T> setter) {
+        if (newValue != null && !Objects.equals(currentValue, newValue)) {
+            setter.accept(newValue);
+            return true;
+        }
+        return false;
+    }
+
+    // --- CRUD Operations ---
     @Override
     public List<UserResponse> getAllUsers() {
         return userRepository.findAllAsUserDTO();
+    }
+
+    @Override
+    @Cacheable(value = "usersPublic", key = "#id")
+    public UserPublicResponse getUser(Long id) {
+        User user = getById(id);
+        return userMapper.toPublic(user, reviewRepository);
+    }
+
+    @Override
+    @Cacheable(value = "usersFull", key = "#root.target.authenticatedUserProvider.getAuthenticatedUserId()")
+    public UserFullResponse getMyFullInfo() {
+        User user = authenticatedUserProvider.getAuthenticatedUser();
+        return userMapper.toFull(user);
+    }
+
+    @Override
+    @Cacheable(value = "usersBasic", key = "#root.target.authenticatedUserProvider.getAuthenticatedUserId()")
+    public UserResponse getMyBasicInfo() {
+        User user = authenticatedUserProvider.getAuthenticatedUser();
+        return userMapper.toDTO(user);
+    }
+
+    public void deleteMyAccount() {
+        userRepository.deleteById(authenticatedUserProvider.getAuthenticatedUserId());
     }
 
     @Override
@@ -88,14 +145,7 @@ public class UserServiceImpl implements UserService {
         }
     }
 
-    private <T> boolean updateIfDifferent(T newValue, T currentValue, Consumer<T> setter) {
-        if (newValue != null && !Objects.equals(currentValue, newValue)) {
-            setter.accept(newValue);
-            return true;
-        }
-        return false;
-    }
-
+    // --- Admin Operations ---
     @Override
     @CachePut(value = "users", key = "#userId")
     public void updateRole(Long userId, Role newRole) {
@@ -132,15 +182,18 @@ public class UserServiceImpl implements UserService {
         userRepository.save(target);
     }
 
-    private boolean canAssign(Role assignerRole, Role targetRole) {
-        return switch (assignerRole) {
-            case SUPER_ADMIN ->
-                    targetRole == Role.ADMIN || targetRole == Role.PROVIDER || targetRole == Role.USER;
-            case ADMIN ->
-                    targetRole == Role.PROVIDER || targetRole == Role.USER;
-            default ->
-                    false;
-        };
+    @Override
+    public void updatePassword(PasswordUpdateRequest password) {
+        Long authenticatedUserId = authenticatedUserProvider.getAuthenticatedUserId();
+
+        User user = getById(authenticatedUserId);
+
+        if (passwordEncoder.matches(password.getOldPassword(), user.getPassword())) {
+            user.setPassword(passwordEncoder.encode(password.getNewPassword()));
+        } else {
+            throw new AuthenticationException("Contraseña antigua incorrecta.");
+        }
+        userRepository.save(user);
     }
 
     @Override
@@ -167,61 +220,10 @@ public class UserServiceImpl implements UserService {
         userRepository.delete(target);
     }
 
-    private boolean canDelete(Role deleterRole, Role targetRole) {
-        return switch (deleterRole) {
-            case SUPER_ADMIN ->
-                    targetRole != Role.SUPER_ADMIN;
-            case ADMIN ->
-                    targetRole == Role.PROVIDER || targetRole == Role.USER;
-            default ->
-                    false;
-        };
-    }
-
-    @Override
-    public void updatePassword(PasswordUpdateRequest password) {
-        Long authenticatedUserId = authenticatedUserProvider.getAuthenticatedUserId();
-
-        User user = getById(authenticatedUserId);
-
-        if (passwordEncoder.matches(password.getOldPassword(), user.getPassword())) {
-            user.setPassword(passwordEncoder.encode(password.getNewPassword()));
-        } else {
-            throw new AuthenticationException("Contraseña antigua incorrecta.");
-        }
-        userRepository.save(user);
-    }
-
     @Override
     public void setPasswordByAdmin(Long userId, String newPassword) {
         User user = getById(userId);
         user.setPassword(passwordEncoder.encode(newPassword));
         userRepository.save(user);
-    }
-
-    @Override
-    @Cacheable(value = "usersPublic", key = "#id")
-    public UserPublicResponse getUser(Long id) {
-        User user = getById(id);
-        return userMapper.toPublic(user, reviewRepository);
-    }
-
-    // === Authenticated User Methods ===
-    @Override
-    @Cacheable(value = "usersFull", key = "#root.target.authenticatedUserProvider.getAuthenticatedUserId()")
-    public UserFullResponse getMyFullInfo() {
-        User user = authenticatedUserProvider.getAuthenticatedUser();
-        return userMapper.toFull(user);
-    }
-
-    @Override
-    @Cacheable(value = "usersBasic", key = "#root.target.authenticatedUserProvider.getAuthenticatedUserId()")
-    public UserResponse getMyBasicInfo() {
-        User user = authenticatedUserProvider.getAuthenticatedUser();
-        return userMapper.toDTO(user);
-    }
-
-    public void deleteMyAccount() {
-        userRepository.deleteById(authenticatedUserProvider.getAuthenticatedUserId());
     }
 }

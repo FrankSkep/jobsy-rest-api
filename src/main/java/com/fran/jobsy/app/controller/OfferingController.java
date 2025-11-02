@@ -27,15 +27,6 @@ public class OfferingController {
 
     private final OfferingService offeringService;
 
-    @PostMapping
-    @PreAuthorize("hasRole('PROVIDER')")
-    @Operation(summary = "Crear servicio", description = "Crea un nuevo servicio ofrecido por un proveedor.")
-    public ResponseEntity<OfferingResponse> createOffering(@RequestBody @Valid OfferingRequest offeringRequest) {
-        OfferingResponse offering = offeringService.createOffering(offeringRequest);
-        URI location = UriBuilder.buildCreatedLocation(offering.id());
-        return ResponseEntity.created(location).body(offering);
-    }
-
     @GetMapping
     @Operation(summary = "Listar servicios", description = "Devuelve una lista paginada de servicios, con posibilidad de filtrar por categoría, precio, calificación y ubicación.")
     public ResponseEntity<Page<OfferingResponse>> getOfferings(
@@ -76,6 +67,16 @@ public class OfferingController {
         OfferingResponse offering = offeringService.getOffering(id);
         return ResponseEntity.ok(offering);
     }
+
+    @PostMapping
+    @PreAuthorize("hasRole('PROVIDER')")
+    @Operation(summary = "Crear servicio", description = "Crea un nuevo servicio ofrecido por un proveedor.")
+    public ResponseEntity<OfferingResponse> createOffering(@RequestBody @Valid OfferingRequest offeringRequest) {
+        OfferingResponse offering = offeringService.createOffering(offeringRequest);
+        URI location = UriBuilder.buildCreatedLocation(offering.id());
+        return ResponseEntity.created(location).body(offering);
+    }
+
 
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('PROVIDER')")

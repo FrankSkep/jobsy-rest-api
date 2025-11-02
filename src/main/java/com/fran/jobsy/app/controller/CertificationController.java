@@ -40,19 +40,19 @@ public class CertificationController {
         return ResponseEntity.created(location).body(certification);
     }
 
-    @DeleteMapping("/me/certifications/{certId}")
-    @PreAuthorize("hasRole('PROVIDER')")
-    @Operation(summary = "Eliminar certificación", description = "Permite a un usuario con rol PROVIDER eliminar una certificación. Requiere autenticación y rol PROVIDER.")
-    public ResponseEntity<Void> deleteCertification(@PathVariable Long certId) {
-        certificationService.deleteCertification(certId);
-        return ResponseEntity.noContent().build();
-    }
-
     @PutMapping("/me/certifications/{certId}")
     @PreAuthorize("hasRole('PROVIDER')")
     @Operation(summary = "Actualizar certificación", description = "Permite a un usuario con rol PROVIDER actualizar una certificación. Requiere autenticación y rol PROVIDER.")
     public ResponseEntity<CertificationResponse> updateCertification(@PathVariable Long certId, @RequestBody @Valid CertificationRequest certificationRequest) {
         CertificationResponse updatedCert = certificationService.updateCertification(certId, certificationRequest);
         return ResponseEntity.ok(updatedCert);
+    }
+
+    @DeleteMapping("/me/certifications/{certId}")
+    @PreAuthorize("hasRole('PROVIDER')")
+    @Operation(summary = "Eliminar certificación", description = "Permite a un usuario con rol PROVIDER eliminar una certificación. Requiere autenticación y rol PROVIDER.")
+    public ResponseEntity<Void> deleteCertification(@PathVariable Long certId) {
+        certificationService.deleteCertification(certId);
+        return ResponseEntity.noContent().build();
     }
 }

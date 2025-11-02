@@ -23,7 +23,6 @@ public class UserController {
 
     private final UserService userService;
 
-    // General User Endpoints
     @GetMapping
     @PreAuthorize("hasAnyRole('SUPER_ADMIN', 'ADMIN')")
     @Operation(summary = "Obtener todos los usuarios", description = "Solo accesible para ADMIN. Devuelve la lista de todos los usuarios registrados.")
@@ -65,14 +64,7 @@ public class UserController {
         return ResponseEntity.noContent().build();
     }
 
-    @PatchMapping("/me/password-update")
-    @Operation
-    public ResponseEntity<Void> updateMyPassword(@RequestBody @Valid PasswordUpdateRequest passwordUpdateRequest) {
-        userService.updatePassword(passwordUpdateRequest);
-        return ResponseEntity.noContent().build();
-    }
-
-    //=== Authenticated User Endpoints ===//
+    // --- Authenticated User Endpoints ---
     @GetMapping("/me/full")
     @Operation(summary = "Obtener mi información completa", description = "Devuelve la información completa del usuario autenticado.")
     public ResponseEntity<UserFullResponse> getMyFullInfo() {
@@ -85,10 +77,10 @@ public class UserController {
         return ResponseEntity.ok(userService.getMyBasicInfo());
     }
 
-    @DeleteMapping("/me")
-    @Operation(summary = "Eliminar mi cuenta", description = "Permite al usuario autenticado eliminar su propia cuenta.")
-    public ResponseEntity<Void> deleteMyAccount() {
-        userService.deleteMyAccount();
+    @PatchMapping("/me/password-update")
+    @Operation
+    public ResponseEntity<Void> updateMyPassword(@RequestBody @Valid PasswordUpdateRequest passwordUpdateRequest) {
+        userService.updatePassword(passwordUpdateRequest);
         return ResponseEntity.noContent().build();
     }
 
@@ -106,6 +98,13 @@ public class UserController {
     public ResponseEntity<Void> updateMyFullInfo(
             @RequestBody @Valid UserFullPatchRequest userFullDTO) {
         userService.updateUser(userFullDTO);
+        return ResponseEntity.noContent().build();
+    }
+
+    @DeleteMapping("/me")
+    @Operation(summary = "Eliminar mi cuenta", description = "Permite al usuario autenticado eliminar su propia cuenta.")
+    public ResponseEntity<Void> deleteMyAccount() {
+        userService.deleteMyAccount();
         return ResponseEntity.noContent().build();
     }
 }

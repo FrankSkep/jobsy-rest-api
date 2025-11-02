@@ -22,13 +22,6 @@ public class ReviewController {
 
     private final ReviewService reviewService;
 
-    @PostMapping("/bookings/{id}/reviews")
-    public ResponseEntity<ReviewResponse> createReview(@PathVariable Long id, @RequestBody @Valid ReviewRequest reviewRequest) {
-        ReviewResponse review = reviewService.createReview(id, reviewRequest);
-        URI location = UriBuilder.buildCreatedLocation(review.id());
-        return ResponseEntity.created(location).body(review);
-    }
-
     @GetMapping("/offerings/{id}/reviews")
     public ResponseEntity<List<ReviewSummaryResponse>> getOfferingReviews(@PathVariable Long id) {
         List<ReviewSummaryResponse> reviews = reviewService.getOfferingReviews(id);
@@ -39,5 +32,12 @@ public class ReviewController {
     public ResponseEntity<List<ReviewSummaryResponse>> getProviderReviews(@PathVariable Long id) {
         List<ReviewSummaryResponse> reviews = reviewService.getProviderReviews(id);
         return ResponseEntity.ok(reviews);
+    }
+
+    @PostMapping("/bookings/{id}/reviews")
+    public ResponseEntity<ReviewResponse> createReview(@PathVariable Long id, @RequestBody @Valid ReviewRequest reviewRequest) {
+        ReviewResponse review = reviewService.createReview(id, reviewRequest);
+        URI location = UriBuilder.buildCreatedLocation(review.id());
+        return ResponseEntity.created(location).body(review);
     }
 }

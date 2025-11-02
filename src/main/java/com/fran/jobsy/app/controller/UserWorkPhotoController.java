@@ -23,6 +23,12 @@ public class UserWorkPhotoController {
     private final UserWorkPhotoService userWorkPhotoService;
     private final FileValidator fileValidator;
 
+    @GetMapping("/{id}/portfolio")
+    @Operation(summary = "Obtener portafolio de usuario", description = "Devuelve la lista de fotos de trabajos de un usuario público.")
+    public ResponseEntity<List<UserWorkPhotoResponse>> getWorkPhotos(@PathVariable Long id) {
+        return ResponseEntity.ok(userWorkPhotoService.getUserWorkPhotos(id));
+    }
+
     @PostMapping("/me/portfolio")
     @PreAuthorize("hasRole('PROVIDER')")
     @Operation(summary = "Subir fotos de trabajos", description = "Permite a un usuario con rol PROVIDER subir fotos a su portafolio. Requiere autenticación y rol PROVIDER.")
@@ -33,12 +39,6 @@ public class UserWorkPhotoController {
         files.forEach(fileValidator::validate);
         userWorkPhotoService.uploadWorkPhotos(files);
         return ResponseEntity.ok().build();
-    }
-
-    @GetMapping("/{id}/portfolio")
-    @Operation(summary = "Obtener portafolio de usuario", description = "Devuelve la lista de fotos de trabajos de un usuario público.")
-    public ResponseEntity<List<UserWorkPhotoResponse>> getWorkPhotos(@PathVariable Long id) {
-        return ResponseEntity.ok(userWorkPhotoService.getUserWorkPhotos(id));
     }
 
     @DeleteMapping("me/portfolio/{photoId}")
