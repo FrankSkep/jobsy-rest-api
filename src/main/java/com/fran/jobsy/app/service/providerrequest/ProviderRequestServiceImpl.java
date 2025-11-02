@@ -20,6 +20,8 @@ import com.fran.jobsy.app.repository.ProviderRequestRepository;
 import com.fran.jobsy.app.service.cloudinary.CloudinaryService;
 import com.fran.jobsy.app.service.notification.NotificationServiceImpl;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -101,6 +103,11 @@ public class ProviderRequestServiceImpl implements ProviderRequestService {
 
     @Override
     @Transactional
+    @Caching(evict = {
+            @CacheEvict(value = "usersFull", key = "#root.target.authenticatedUserProvider.getAuthenticatedUserId()"),
+            @CacheEvict(value = "usersPublic", key = "#root.target.authenticatedUserProvider.getAuthenticatedUserId()"),
+            @CacheEvict(value = "usersBasic", key = "#root.target.authenticatedUserProvider.getAuthenticatedUserId()")
+    })
     public void approve(Long requestId) {
         ProviderRequest providerRequest = providerRequestRepository.findById(requestId)
                 .orElseThrow(() -> new ResourceNotFoundException("Solicitud no encontrada"));
