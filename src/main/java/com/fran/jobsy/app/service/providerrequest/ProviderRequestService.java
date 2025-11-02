@@ -16,7 +16,7 @@ public interface ProviderRequestService {
 
     Page<ProviderRequestMinResponse> getAllProviderRequests(Pageable pageable);
 
-    void approve(Long requestId);
+    ProviderRequestResponse approve(Long requestId);
 
     void reject(Long requestId, String reason);
 

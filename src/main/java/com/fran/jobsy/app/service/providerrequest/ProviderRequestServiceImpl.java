@@ -48,7 +48,7 @@ public class ProviderRequestServiceImpl implements ProviderRequestService {
     public void applyForProvider(ProviderApplyRequest request, List<MultipartFile> documents) {
         Long userId = authenticatedUserProvider.getAuthenticatedUserId();
 
-        if (existsPendingRequestForUser(userId)) {
+        if (providerRequestRepository.existsByUserIdAndStatus(userId, ProviderRequestStatus.PENDING)) {
             throw new ConflictException("Ya existe una solicitud pendiente para este usuario.");
         }
 
@@ -102,13 +102,13 @@ public class ProviderRequestServiceImpl implements ProviderRequestService {
     }
 
     @Override
-    @Transactional
     @Caching(evict = {
-            @CacheEvict(value = "usersFull", key = "#root.target.authenticatedUserProvider.getAuthenticatedUserId()"),
-            @CacheEvict(value = "usersPublic", key = "#root.target.authenticatedUserProvider.getAuthenticatedUserId()"),
-            @CacheEvict(value = "usersBasic", key = "#root.target.authenticatedUserProvider.getAuthenticatedUserId()")
+            @CacheEvict(value = "usersFull", key = "#result.user.id"),
+            @CacheEvict(value = "usersPublic", key = "#result.user.id"),
+            @CacheEvict(value = "usersBasic", key = "#result.user.id")
     })
-    public void approve(Long requestId) {
+    @Transactional
+    public ProviderRequestResponse approve(Long requestId) {
         ProviderRequest providerRequest = providerRequestRepository.findById(requestId)
                 .orElseThrow(() -> new ResourceNotFoundException("Solicitud no encontrada"));
 
@@ -132,11 +132,13 @@ public class ProviderRequestServiceImpl implements ProviderRequestService {
         providerRequest.setReviewedAt(LocalDateTime.now());
         providerRequest.setRejectionReason(null);
 
-        providerRequestRepository.save(providerRequest);
+        providerRequest = providerRequestRepository.save(providerRequest);
 
         notificationService.notifyUser(user, "Jobsy - Solicitud de proveedor aprobada",
                 "¡Felicidades! Tu solicitud para ser proveedor ha sido aprobada. Ya puedes ofrecer tus servicios en la plataforma.",
                 NotificationType.SYSTEM, true);
+
+        return providerRequestMapper.toDTO(providerRequest);
     }
 
 
@@ -177,10 +179,6 @@ public class ProviderRequestServiceImpl implements ProviderRequestService {
                 .orElseThrow(() -> new ResourceNotFoundException(
                         "Solicitud de proveedor con id " + requestId + " no encontrada"));
         return providerRequestMapper.toDTO(request);
-    }
-
-    private Boolean existsPendingRequestForUser(Long userId) {
-        return providerRequestRepository.existsByUserIdAndStatus(userId, ProviderRequestStatus.PENDING);
     }
 
     private void rollbackUploads(List<String> uploadedIds) {

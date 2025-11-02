@@ -1,5 +1,6 @@
 package com.fran.jobsy.app.service.user;
 
+import com.fran.jobsy.app.annotation.EvictAuthenticatedUserCaches;
 import com.fran.jobsy.app.common.AuthenticatedUserProvider;
 import com.fran.jobsy.app.dto.auth.PasswordUpdateRequest;
 import com.fran.jobsy.app.dto.user.*;
@@ -101,11 +102,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    @Caching(evict = {
-            @CacheEvict(value = "usersFull", key = "#root.target.authenticatedUserProvider.getAuthenticatedUserId()"),
-            @CacheEvict(value = "usersPublic", key = "#root.target.authenticatedUserProvider.getAuthenticatedUserId()"),
-            @CacheEvict(value = "usersBasic", key = "#root.target.authenticatedUserProvider.getAuthenticatedUserId()")
-    })
+    @EvictAuthenticatedUserCaches
     @Transactional
     public void updateUser(UserPatchRequest userReq) {
         User user = getById(authenticatedUserProvider.getAuthenticatedUserId());
@@ -117,11 +114,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    @Caching(evict = {
-            @CacheEvict(value = "usersFull", key = "#root.target.authenticatedUserProvider.getAuthenticatedUserId()"),
-            @CacheEvict(value = "usersPublic", key = "#root.target.authenticatedUserProvider.getAuthenticatedUserId()"),
-            @CacheEvict(value = "usersBasic", key = "#root.target.authenticatedUserProvider.getAuthenticatedUserId()")
-    })
+    @EvictAuthenticatedUserCaches
     @Transactional
     public void updateUser(UserFullPatchRequest userReq) {
         User user = getById(authenticatedUserProvider.getAuthenticatedUserId());
@@ -136,7 +129,6 @@ public class UserServiceImpl implements UserService {
     // --- Admin Operations ---
     @Override
     @Caching(evict = {
-            @CacheEvict(value = "users", key = "#userId"),
             @CacheEvict(value = "usersPublic", key = "#userId"),
             @CacheEvict(value = "usersBasic", key = "#userId"),
             @CacheEvict(value = "usersFull", key = "#userId")
@@ -190,7 +182,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    @CacheEvict(value = "users", key = "#id")
+    @Caching(evict = {
+            @CacheEvict(value = "usersPublic", key = "#id"),
+            @CacheEvict(value = "usersBasic", key = "#id"),
+            @CacheEvict(value = "usersFull", key = "#id")
+    })
     public void deleteUser(Long id) {
         User authenticatedUser = authenticatedUserProvider.getAuthenticatedUser();
         User target = getById(id);

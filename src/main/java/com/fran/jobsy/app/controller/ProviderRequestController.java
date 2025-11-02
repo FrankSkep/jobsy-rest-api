@@ -72,9 +72,8 @@ public class ProviderRequestController {
     @PatchMapping("/{id}/approve")
     @PreAuthorize("hasAnyRole('SUPER_ADMIN', 'ADMIN')")
     @Operation(summary = "Aprobar solicitud de proveedor", description = "Solo accesible para ADMIN. Aprueba la solicitud de proveedor indicada.")
-    public ResponseEntity<Void> approve(@PathVariable Long id) {
-        providerRequestService.approve(id);
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<ProviderRequestResponse> approve(@PathVariable Long id) {
+        return ResponseEntity.ok(providerRequestService.approve(id));
     }
 
     @PatchMapping("/{id}/reject")
