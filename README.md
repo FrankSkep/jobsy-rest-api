@@ -40,9 +40,11 @@ To provide a scalable and secure platform that efficiently connects clients and 
 ### User and Provider Verification
 
 * Users can submit a **Provider Request** including:
-    - Personal information and location
-    - Photos of identification (INE) and selfies
-    - Professional details (experience, bio, hourly rate)
+    - Bio
+    - Address
+    - RFC Homoclave
+    - CURP
+    - Identification documents (INE photos and selfies)
 * Admins manually review and approve/reject requests.
 * Upon approval, the user’s role changes from **USER** → **PROVIDER**.
 

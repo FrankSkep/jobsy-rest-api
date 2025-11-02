@@ -39,9 +39,11 @@ Proveer una plataforma **escalable y segura** que conecte de forma eficiente a c
 
 * Los usuarios pueden enviar una **solicitud de proveedor** que incluye:
 
-    * Información personal y ubicación
-    * Fotos de identificación (INE, ambos lados) y selfies
-    * Datos profesionales (experiencia, biografía, tarifa por hora)
+    * Biografía
+    * Dirección
+    * RFC Homoclave
+    * CURP
+    * Documentos de identificación (fotos de INE y selfies)
 * Los administradores revisan manualmente las solicitudes para aprobarlas o rechazarlas.
 * Una vez aprobada, el rol del usuario cambia de **USER** → **PROVIDER**.
 
