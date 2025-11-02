@@ -147,7 +147,12 @@ public class UserServiceImpl implements UserService {
 
     // --- Admin Operations ---
     @Override
-    @CachePut(value = "users", key = "#userId")
+    @Caching(evict = {
+            @CacheEvict(value = "users", key = "#userId"),
+            @CacheEvict(value = "usersPublic", key = "#userId"),
+            @CacheEvict(value = "usersBasic", key = "#userId"),
+            @CacheEvict(value = "usersFull", key = "#userId")
+    })
     public void updateRole(Long userId, Role newRole) {
         User target = getById(userId);
         User authenticatedUser = authenticatedUserProvider.getAuthenticatedUser();
