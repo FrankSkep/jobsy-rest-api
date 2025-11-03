@@ -17,7 +17,9 @@ public interface OfferingService {
 
     OfferingResponse getOffering(Long offeringId);
 
-    List<OfferingResponse> getOfferingsByUserId(Long userId);
-
     OfferingResponse updateOffering(Long offeringId, OfferingRequest offeringRequest);
+
+    void deleteOffering(Long offeringId);
+
+    List<OfferingResponse> getOfferingsByUserId(Long userId);
 }

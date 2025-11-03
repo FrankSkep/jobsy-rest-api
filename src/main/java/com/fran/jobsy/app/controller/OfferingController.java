@@ -88,6 +88,14 @@ public class OfferingController {
         return ResponseEntity.ok(updatedOffering);
     }
 
+    @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('PROVIDER')")
+    @Operation(summary = "Eliminar servicio", description = "Elimina un servicio ofrecido por un proveedor.")
+    public ResponseEntity<Void> deleteOffering(@PathVariable Long id) {
+        offeringService.deleteOffering(id);
+        return ResponseEntity.noContent().build();
+    }
+
 //    @GetMapping("/api/v1/users/{id}/services")
 //    @Operation(summary = "Obtener servicios de usuario", description = "Devuelve la lista de servicios ofrecidos por un usuario público.")
 //    public ResponseEntity<List<OfferingDTO>> getUserServices(@PathVariable Long id) {
