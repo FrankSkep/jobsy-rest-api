@@ -8,6 +8,8 @@ import com.fran.jobsy.app.exception.custom.ResourceNotFoundException;
 import com.fran.jobsy.app.mapper.CategoryMapper;
 import com.fran.jobsy.app.repository.CategoryRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -20,11 +22,13 @@ public class CategoryServiceImpl implements CategoryService {
     private final CategoryMapper categoryMapper;
 
     @Override
+    @Cacheable(value = "categories")
     public List<CategoryDTO> getAll() {
         return categoryRepository.findAllAsDTO();
     }
 
     @Override
+    @CacheEvict(value = "categories", allEntries = true)
     public CategoryDTO create(CategoryRequest categoryReq) {
         String newCategory = categoryReq.name().toUpperCase();
 
@@ -40,6 +44,7 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
+    @CacheEvict(value = "categories", allEntries = true)
     public CategoryDTO update(Long id, CategoryRequest categoryReq) {
         String newCategory = categoryReq.name().toUpperCase();
 
@@ -55,6 +60,7 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
+    @CacheEvict(value = "categories", allEntries = true)
     public void delete(Long id) {
         categoryRepository.deleteById(id);
     }

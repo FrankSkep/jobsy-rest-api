@@ -11,13 +11,13 @@ import com.fran.jobsy.app.entity.User;
 import com.fran.jobsy.app.enums.NotificationType;
 import com.fran.jobsy.app.enums.ProviderRequestStatus;
 import com.fran.jobsy.app.enums.Role;
-import com.fran.jobsy.app.exception.custom.CloudinaryException;
 import com.fran.jobsy.app.exception.custom.ConflictException;
 import com.fran.jobsy.app.exception.custom.ProviderApplicationException;
 import com.fran.jobsy.app.exception.custom.ResourceNotFoundException;
 import com.fran.jobsy.app.mapper.ProviderRequestMapper;
 import com.fran.jobsy.app.repository.ProviderRequestRepository;
-import com.fran.jobsy.app.service.cloudinary.CloudinaryService;
+import com.fran.jobsy.app.service.imagestorage.ImageStorageService;
+import com.fran.jobsy.app.service.imagestorage.ImageUploadResult;
 import com.fran.jobsy.app.service.notification.NotificationServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
@@ -31,17 +31,16 @@ import org.springframework.web.multipart.MultipartFile;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
 public class ProviderRequestServiceImpl implements ProviderRequestService {
 
     private final ProviderRequestRepository providerRequestRepository;
-    private final CloudinaryService cloudinaryService;
     private final AuthenticatedUserProvider authenticatedUserProvider;
     private final NotificationServiceImpl notificationService;
     private final ProviderRequestMapper providerRequestMapper;
+    private final ImageStorageService imageStorageService;
 
     @Override
     @Transactional
@@ -63,26 +62,21 @@ public class ProviderRequestServiceImpl implements ProviderRequestService {
                 .curp(request.curp())
                 .build();
 
-        List<ProviderDocument> uploadedDocs = new ArrayList<>();
-        List<String> uploadedIds = new ArrayList<>();
+        List<ImageUploadResult> uploadResults = new ArrayList<>();
 
         try {
-            for (MultipartFile file : documents) {
-                Map<String, Object> uploadResult = cloudinaryService.upload(file);
-                String documentId = (String) uploadResult.get("public_id");
-                String documentUrl = (String) uploadResult.get("url");
-                uploadedIds.add(documentId);
+            uploadResults = imageStorageService.uploadAll(documents);
 
-                ProviderDocument doc = ProviderDocument.builder()
-                        .publicId(documentId)
-                        .url(documentUrl)
-                        .providerRequest(providerRequest)
-                        .build();
+            // build ProviderDocument entities
+            List<ProviderDocument> providerDocuments = uploadResults.stream()
+                    .map(result -> ProviderDocument.builder()
+                            .publicId(result.publicId())
+                            .url(result.url())
+                            .providerRequest(providerRequest)
+                            .build())
+                    .toList();
 
-                uploadedDocs.add(doc);
-            }
-
-            providerRequest.setDocuments(uploadedDocs);
+            providerRequest.setDocuments(providerDocuments);
             providerRequestRepository.save(providerRequest);
 
             notificationService.notifyUser(userRef, "Jobsy | Solicitud de proveedor recibida",
@@ -90,8 +84,13 @@ public class ProviderRequestServiceImpl implements ProviderRequestService {
                     NotificationType.SYSTEM, true);
 
         } catch (
-                Exception e) {
-            rollbackUploads(uploadedIds);
+                Exception e) { // Rollback
+            List<String> publicIds = uploadResults.stream()
+                    .map(ImageUploadResult::publicId)
+                    .toList();
+            imageStorageService.deleteAllSafely(publicIds);
+
+            throw new ProviderApplicationException("Error al procesar la solicitud: " + e.getMessage());
         }
     }
 
@@ -179,16 +178,5 @@ public class ProviderRequestServiceImpl implements ProviderRequestService {
                 .orElseThrow(() -> new ResourceNotFoundException(
                         "Solicitud de proveedor con id " + requestId + " no encontrada"));
         return providerRequestMapper.toDTO(request);
-    }
-
-    private void rollbackUploads(List<String> uploadedIds) {
-        try {
-            for (String publicId : uploadedIds) {
-                cloudinaryService.delete(publicId);
-            }
-        } catch (
-                Exception ex) {
-            throw new CloudinaryException("Failed to rollback uploads: " + ex.getMessage());
-        }
     }
 }

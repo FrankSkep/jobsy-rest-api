@@ -14,14 +14,12 @@ import com.fran.jobsy.app.mapper.OfferingMapper;
 import com.fran.jobsy.app.repository.CategoryRepository;
 import com.fran.jobsy.app.repository.OfferingRepository;
 import com.fran.jobsy.app.repository.UserRepository;
-import com.fran.jobsy.app.service.cloudinary.CloudinaryService;
+import com.fran.jobsy.app.service.imagestorage.ImageStorageService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-import java.io.IOException;
 import java.util.List;
 
 @Service
@@ -32,7 +30,7 @@ public class OfferingServiceImpl implements OfferingService {
     private final CategoryRepository categoryRepository;
     private final AuthenticatedUserProvider authenticatedUserProvider;
     private final OfferingMapper offeringMapper;
-    private final CloudinaryService cloudinaryService;
+    private final ImageStorageService imageStorageService;
 
     @Override
     public Page<OfferingResponse> getOfferingsWithFiltersPaged(OfferingFilterModel filters, Pageable pageable) {
@@ -123,15 +121,8 @@ public class OfferingServiceImpl implements OfferingService {
             throw new UnauthorizedAccessException("El usuario autenticado no es el propietario del servicio");
         }
 
-        if (offering.getPhotos() != null) {
-            offering.getPhotos().forEach(photo -> {
-                try {
-                    cloudinaryService.delete(photo.getImageId());
-                } catch (
-                        IOException e) {
-                    throw new RuntimeException(e);
-                }
-            });
+        if (offering.getPhotos() != null && !offering.getPhotos().isEmpty()) {
+            offering.getPhotos().forEach(photo -> imageStorageService.deleteSafely(photo.getImageId()));
         }
 
         offeringRepository.delete(offering);

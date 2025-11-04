@@ -33,7 +33,7 @@ public class UserController {
     @GetMapping("/{id}")
     @Operation(summary = "Obtener usuario por ID", description = "Devuelve la información pública de un usuario por su ID.")
     public ResponseEntity<UserPublicResponse> getUserById(@PathVariable Long id) {
-        return ResponseEntity.ok(userService.getUser(id));
+        return ResponseEntity.ok(userService.getPublicInfo(id));
     }
 
     @PatchMapping("/{id}/role")

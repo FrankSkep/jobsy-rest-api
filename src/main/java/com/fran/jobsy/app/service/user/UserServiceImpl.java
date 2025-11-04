@@ -12,6 +12,7 @@ import com.fran.jobsy.app.exception.custom.RoleAssignmentException;
 import com.fran.jobsy.app.mapper.UserMapper;
 import com.fran.jobsy.app.repository.ReviewRepository;
 import com.fran.jobsy.app.repository.UserRepository;
+import com.fran.jobsy.app.service.imagestorage.ImageStorageService;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
@@ -35,40 +36,7 @@ public class UserServiceImpl implements UserService {
     private final ReviewRepository reviewRepository;
     @Getter
     private final AuthenticatedUserProvider authenticatedUserProvider;
-
-    // --- Private helper methods ---
-    private User getById(Long id) {
-        return userRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("User not found."));
-    }
-
-    private boolean canAssign(Role assignerRole, Role targetRole) {
-        return switch (assignerRole) {
-            case SUPER_ADMIN ->
-                    targetRole == Role.ADMIN || targetRole == Role.PROVIDER || targetRole == Role.USER;
-            case ADMIN ->
-                    targetRole == Role.PROVIDER || targetRole == Role.USER;
-            default ->
-                    false;
-        };
-    }
-
-    private boolean canDelete(Role deleterRole, Role targetRole) {
-        return switch (deleterRole) {
-            case SUPER_ADMIN ->
-                    targetRole != Role.SUPER_ADMIN;
-            case ADMIN ->
-                    targetRole == Role.PROVIDER || targetRole == Role.USER;
-            default ->
-                    false;
-        };
-    }
-
-    private <T> void updateIfDifferent(T newValue, T currentValue, Consumer<T> setter) {
-        if (newValue != null && !Objects.equals(currentValue, newValue)) {
-            setter.accept(newValue);
-        }
-    }
+    private final ImageStorageService imageStorageService;
 
     // --- CRUD Operations ---
     @Override
@@ -78,7 +46,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Cacheable(value = "usersPublic", key = "#id")
-    public UserPublicResponse getUser(Long id) {
+    public UserPublicResponse getPublicInfo(Long id) {
         User user = getById(id);
         return userMapper.toPublic(user, reviewRepository);
     }
@@ -97,8 +65,13 @@ public class UserServiceImpl implements UserService {
         return userMapper.toDTO(user);
     }
 
+    @Override
+    @EvictAuthenticatedUserCaches
+    @Transactional
     public void deleteMyAccount() {
-        userRepository.deleteById(authenticatedUserProvider.getAuthenticatedUserId());
+        User user = getById(authenticatedUserProvider.getAuthenticatedUserId());
+        deleteUserAssets(user);
+        userRepository.delete(user);
     }
 
     @Override
@@ -206,6 +179,7 @@ public class UserServiceImpl implements UserService {
             throw new AuthenticationException("No tienes permisos para eliminar a este usuario.");
         }
 
+        deleteUserAssets(target);
         userRepository.delete(target);
     }
 
@@ -214,5 +188,48 @@ public class UserServiceImpl implements UserService {
         User user = getById(userId);
         user.setPassword(passwordEncoder.encode(newPassword));
         userRepository.save(user);
+    }
+
+    // --- Private helper methods ---
+    private User getById(Long id) {
+        return userRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado con ID: " + id));
+    }
+
+    private boolean canAssign(Role assignerRole, Role targetRole) {
+        return switch (assignerRole) {
+            case SUPER_ADMIN ->
+                    targetRole == Role.ADMIN || targetRole == Role.PROVIDER || targetRole == Role.USER;
+            case ADMIN ->
+                    targetRole == Role.PROVIDER || targetRole == Role.USER;
+            default ->
+                    false;
+        };
+    }
+
+    private boolean canDelete(Role deleterRole, Role targetRole) {
+        return switch (deleterRole) {
+            case SUPER_ADMIN ->
+                    targetRole != Role.SUPER_ADMIN;
+            case ADMIN ->
+                    targetRole == Role.PROVIDER || targetRole == Role.USER;
+            default ->
+                    false;
+        };
+    }
+
+    private <T> void updateIfDifferent(T newValue, T currentValue, Consumer<T> setter) {
+        if (newValue != null && !Objects.equals(currentValue, newValue)) {
+            setter.accept(newValue);
+        }
+    }
+
+    private void deleteUserAssets(User user) {
+        if (user.getPhoto() != null) {
+            imageStorageService.deleteSafely(user.getPhoto().getImageId());
+        }
+        if (user.getWorkPhotos() != null && !user.getWorkPhotos().isEmpty()) {
+            user.getWorkPhotos().forEach(photo -> imageStorageService.deleteSafely(photo.getImageId()));
+        }
     }
 }
