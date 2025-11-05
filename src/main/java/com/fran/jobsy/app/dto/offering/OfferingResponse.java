@@ -7,6 +7,7 @@ public record OfferingResponse(
         String title,
         String description,
         Double basePrice,
-        Integer yearsOfExperience
+        Integer yearsOfExperience,
+        boolean isActive
 ) {
 }

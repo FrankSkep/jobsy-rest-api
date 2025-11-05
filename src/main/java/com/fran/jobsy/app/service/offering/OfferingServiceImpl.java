@@ -135,4 +135,19 @@ public class OfferingServiceImpl implements OfferingService {
 
         return offeringMapper.toDTO(offering);
     }
+
+    @Override
+    public OfferingResponse toggleOfferingStatus(Long offeringId) {
+        Offering offering = offeringRepository.findById(offeringId)
+                .orElseThrow(() -> new ResourceNotFoundException("Servicio no encontrado con ID: " + offeringId));
+
+        Long ownerId = authenticatedUserProvider.getAuthenticatedUserId();
+
+        if (!offering.getOwner().getId().equals(ownerId)) {
+            throw new UnauthorizedAccessException("El usuario autenticado no es el propietario del servicio");
+        }
+
+        offering.setActive(!offering.isActive());
+        return offeringMapper.toDTO(offeringRepository.save(offering));
+    }
 }

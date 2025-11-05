@@ -34,6 +34,9 @@ public class Offering {
 
     private Integer yearsOfExperience;
 
+    @Column(nullable = false)
+    private boolean isActive = true;
+
     @OneToMany(mappedBy = "offering", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<OfferingPhoto> photos;
 }

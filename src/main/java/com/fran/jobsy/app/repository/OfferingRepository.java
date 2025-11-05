@@ -16,13 +16,15 @@ public interface OfferingRepository extends JpaRepository<Offering, Long> {
 
     @Query("SELECT new com.fran.jobsy.app.dto.offering.OfferingResponse(s.id, " +
             "new com.fran.jobsy.app.dto.offering.UserMinimalResponse(s.owner.id, s.owner.lastname, s.owner.firstname), " +
-            "s.category.name, s.title, s.description, s.basePrice) FROM Offering s")
+            "s.category.name, s.title, s.description, s.basePrice, s.yearsOfExperience, s.isActive) FROM Offering s " +
+            "WHERE s.isActive = true")
     Page<OfferingResponse> findAllServicesPaged(Pageable pageable);
 
     @Query("SELECT new com.fran.jobsy.app.dto.offering.OfferingResponse(s.id, " +
             "new com.fran.jobsy.app.dto.offering.UserMinimalResponse(s.owner.id, s.owner.lastname, s.owner.firstname), " +
-            "s.category.name, s.title, s.description, s.basePrice) FROM Offering s " +
-            "WHERE (:categoryId IS NULL OR s.category.id = :categoryId) " +
+            "s.category.name, s.title, s.description, s.basePrice, s.yearsOfExperience, s.isActive) FROM Offering s " +
+            "WHERE s.isActive = true " +
+            "AND (:categoryId IS NULL OR s.category.id = :categoryId) " +
             "AND (:minPrice IS NULL OR s.basePrice >= :minPrice) " +
             "AND (:maxPrice IS NULL OR s.basePrice <= :maxPrice) " +
             "AND (:minRating IS NULL OR s.owner.avgRatingCache >= :minRating) " +
@@ -38,7 +40,7 @@ public interface OfferingRepository extends JpaRepository<Offering, Long> {
 
     @Query("SELECT new com.fran.jobsy.app.dto.offering.OfferingResponse(s.id, " +
             "new com.fran.jobsy.app.dto.offering.UserMinimalResponse(s.owner.id, s.owner.lastname, s.owner.firstname), " +
-            "s.category.name, s.title, s.description, s.basePrice) FROM Offering s " +
+            "s.category.name, s.title, s.description, s.basePrice, s.yearsOfExperience, s.isActive) FROM Offering s " +
             "WHERE s.owner.id = :ownerId")
     List<OfferingResponse> findByOwnerId(@Param("ownerId") Long ownerId);
 }

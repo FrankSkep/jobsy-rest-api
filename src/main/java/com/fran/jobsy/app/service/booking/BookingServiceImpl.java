@@ -41,6 +41,15 @@ public class BookingServiceImpl implements BookingService {
     public BookingResponse createBooking(BookingRequest bookingReq) {
         User provider = findUserById(bookingReq.providerId());
         Offering offering = findOfferingById(bookingReq.offeringId());
+
+        if (!offering.getOwner().getId().equals(provider.getId())) {
+            throw new ConflictException("La oferta no pertenece al proveedor especificado.");
+        }
+
+        if (!offering.isActive()) {
+            throw new ConflictException("No se puede reservar una oferta inactiva.");
+        }
+
         User client = authenticatedUserProvider.getAuthenticatedUser();
 
         if (provider.getId().equals(client.getId())) {

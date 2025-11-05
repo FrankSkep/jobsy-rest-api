@@ -22,4 +22,6 @@ public interface OfferingService {
     void deleteOffering(Long offeringId);
 
     List<OfferingResponse> getOfferingsByUserId(Long userId);
+
+    OfferingResponse toggleOfferingStatus(Long offeringId);
 }
