@@ -70,7 +70,7 @@ public class BookingServiceImpl implements BookingService {
                 .startsAt(bookingReq.startsAt())
                 .endsAt(bookingReq.endsAt())
                 .status(BookingStatus.PENDING)
-                .priceAtBooking(bookingReq.priceAtBooking())
+                .priceAtBooking(offering.getBasePrice())
                 .addressText(bookingReq.addressText())
                 .lat(bookingReq.lat())
                 .lng(bookingReq.lng())

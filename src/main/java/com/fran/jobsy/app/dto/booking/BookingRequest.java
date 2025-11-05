@@ -22,10 +22,6 @@ public record BookingRequest(
         @Future(message = "La fecha de fin no puede ser en el pasado")
         LocalDateTime endsAt,
 
-        @NotNull
-        @PositiveOrZero
-        Double priceAtBooking,
-
         @NotBlank
         String addressText,
 
