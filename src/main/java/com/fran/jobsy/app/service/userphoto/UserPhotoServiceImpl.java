@@ -1,6 +1,5 @@
 package com.fran.jobsy.app.service.userphoto;
 
-import com.fran.jobsy.app.annotation.EvictAuthenticatedUserCaches;
 import com.fran.jobsy.app.common.AuthenticatedUserProvider;
 import com.fran.jobsy.app.dto.user.UserPhotoResponse;
 import com.fran.jobsy.app.entity.UserPhoto;
@@ -35,7 +34,11 @@ public class UserPhotoServiceImpl implements UserPhotoService {
 
     @Override
     @Transactional
-    @EvictAuthenticatedUserCaches
+    @Caching(evict = {
+            @CacheEvict(value = "usersFull", key = "#root.target.authenticatedUserProvider.getAuthenticatedUserId()"),
+            @CacheEvict(value = "usersPublic", key = "#root.target.authenticatedUserProvider.getAuthenticatedUserId()"),
+            @CacheEvict(value = "userPhotos", key = "#root.target.authenticatedUserProvider.getAuthenticatedUserId()")
+    })
     public UserPhotoResponse updateUserPhoto(MultipartFile file) {
         final Long userId = authenticatedUserProvider.getAuthenticatedUserId();
         String newImageId = null;
