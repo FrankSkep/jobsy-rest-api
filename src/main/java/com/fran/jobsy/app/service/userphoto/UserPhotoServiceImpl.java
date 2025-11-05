@@ -1,5 +1,6 @@
 package com.fran.jobsy.app.service.userphoto;
 
+import com.fran.jobsy.app.annotation.EvictAuthenticatedUserCaches;
 import com.fran.jobsy.app.common.AuthenticatedUserProvider;
 import com.fran.jobsy.app.dto.user.UserPhotoResponse;
 import com.fran.jobsy.app.entity.UserPhoto;
@@ -16,7 +17,11 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cache.annotation.Caching;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.support.TransactionSynchronization;
+import org.springframework.transaction.support.TransactionSynchronizationManager;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -30,54 +35,55 @@ public class UserPhotoServiceImpl implements UserPhotoService {
 
     @Override
     @Transactional
-    @Caching(evict = {
-            @CacheEvict(value = "usersFull", key = "#root.target.authenticatedUserProvider.getAuthenticatedUserId()"),
-            @CacheEvict(value = "usersPublic", key = "#root.target.authenticatedUserProvider.getAuthenticatedUserId()"),
-            @CacheEvict(value = "userPhotos", key = "#root.target.authenticatedUserProvider.getAuthenticatedUserId()")
-    })
+    @EvictAuthenticatedUserCaches
     public UserPhotoResponse updateUserPhoto(MultipartFile file) {
-        Long userId = authenticatedUserProvider.getAuthenticatedUserId();
+        final Long userId = authenticatedUserProvider.getAuthenticatedUserId();
         String newImageId = null;
         String oldImageId = null;
 
         try {
-            // Save reference to old photo (if exists)
-            UserPhoto oldPhoto = userPhotoRepository.findByUserId(userId).orElse(null);
-            if (oldPhoto != null) {
-                oldImageId = oldPhoto.getImageId();
+            // Load existing photo (if any)
+            Optional<UserPhoto> existingPhotoOpt = userPhotoRepository.findByUserId(userId);
+            if (existingPhotoOpt.isPresent()) {
+                oldImageId = existingPhotoOpt.get().getImageId();
             }
 
-            // Upload new photo
-            ImageUploadResult uploadResult = imageStorageService.upload(file);
-            String imageUrl = (String) uploadResult.url();
-            newImageId = (String) uploadResult.publicId();
+            // Upload new image
+            final ImageUploadResult uploadResult = imageStorageService.upload(file);
+            final String imageUrl = uploadResult.url();
+            final String publicId = uploadResult.publicId();
+            newImageId = publicId; // keep for cleanup on failure
 
-            // Save to database
-            UserPhoto userPhoto;
-            if (oldPhoto != null) {
-                // Update existing photo
-                oldPhoto.setImageId(newImageId);
-                oldPhoto.setUrl(imageUrl);
-                userPhoto = userPhotoRepository.save(oldPhoto);
-            } else {
-                // Create new photo
-                userPhoto = UserPhoto.builder()
-                        .imageId(newImageId)
-                        .url(imageUrl)
-                        .user(authenticatedUserProvider.getUserReference(userId))
-                        .build();
-                userPhoto = userPhotoRepository.save(userPhoto);
+            // Upsert user photo
+            UserPhoto toPersist = existingPhotoOpt.map(photo -> {
+                photo.setImageId(publicId);
+                photo.setUrl(imageUrl);
+                return photo;
+            }).orElseGet(() -> UserPhoto.builder()
+                    .imageId(publicId)
+                    .url(imageUrl)
+                    .user(authenticatedUserProvider.getUserReference(userId))
+                    .build());
+
+            // Persist changes
+            UserPhoto saved = userPhotoRepository.save(toPersist);
+
+            // After successful save, delete old image if it changed
+            if (oldImageId != null && !oldImageId.equals(publicId)) {
+                final String oldImageIdFinal = oldImageId;
+                TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
+                    @Override
+                    public void afterCommit() {
+                        imageStorageService.deleteSafelyAsync(oldImageIdFinal);
+                    }
+                });
             }
 
-            // Delete old photo from Cloudinary AFTER successful save
-            if (oldImageId != null && !oldImageId.equals(newImageId)) {
-                imageStorageService.deleteSafely(oldImageId);
-            }
-
-            return userPhotoMapper.toDTO(userPhoto);
+            return userPhotoMapper.toDTO(saved);
 
         } catch (
-                Exception e) { // Rollback
+                Exception e) {
+            // On failure, clean up the newly uploaded image
             if (newImageId != null) {
                 imageStorageService.deleteSafely(newImageId);
             }

@@ -13,5 +13,7 @@ public interface ImageStorageService {
 
     void deleteSafely(String publicId);
 
+    void deleteSafelyAsync(String publicId);
+
     void deleteAllSafely(Collection<String> publicIds);
 }

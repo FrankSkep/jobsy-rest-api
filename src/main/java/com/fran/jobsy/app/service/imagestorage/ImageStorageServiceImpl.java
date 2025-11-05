@@ -5,6 +5,7 @@ package com.fran.jobsy.app.service.imagestorage;
 import com.fran.jobsy.app.exception.custom.CloudinaryException;
 import com.fran.jobsy.app.service.cloudinary.CloudinaryService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -47,6 +48,19 @@ public class ImageStorageServiceImpl implements ImageStorageService {
 
     @Override
     public void deleteSafely(String publicId) {
+        if (publicId == null || publicId.isBlank())
+            return;
+        try {
+            cloudinaryService.delete(publicId);
+        } catch (
+                IOException e) {
+            throw new CloudinaryException("Error al eliminar imagen: " + e.getMessage());
+        }
+    }
+
+    @Override
+    @Async
+    public void deleteSafelyAsync(String publicId) {
         if (publicId == null || publicId.isBlank())
             return;
         try {
