@@ -2,6 +2,8 @@ package com.fran.jobsy.app.dto.user;
 
 import com.fran.jobsy.app.enums.Role;
 
+import java.time.LocalDateTime;
+
 public record UserFullResponse(
         Long id,
         String email,
@@ -18,6 +20,7 @@ public record UserFullResponse(
         Double lng,
         Double serviceRadiusKm,
         String rfcHomoclave,
-        String curp
+        String curp,
+        LocalDateTime createdAt
 ) {
 }

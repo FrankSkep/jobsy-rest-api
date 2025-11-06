@@ -2,6 +2,7 @@ package com.fran.jobsy.app.dto.user;
 
 import lombok.Builder;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Builder
@@ -16,6 +17,7 @@ public record UserPublicResponse(
         String addressText,
         Double averageRating,
         Integer totalReviews,
-        Double serviceRadiusKm
+        Double serviceRadiusKm,
+        LocalDateTime createdAt
 ) {
 }

@@ -2,6 +2,8 @@ package com.fran.jobsy.app.dto.user;
 
 import com.fran.jobsy.app.enums.Role;
 
+import java.time.LocalDateTime;
+
 public record UserResponse(
         Long id,
         String email,
@@ -9,6 +11,7 @@ public record UserResponse(
         String firstname,
         String lastname,
         String country,
-        String phone
+        String phone,
+        LocalDateTime createdAt
 ) {
 }

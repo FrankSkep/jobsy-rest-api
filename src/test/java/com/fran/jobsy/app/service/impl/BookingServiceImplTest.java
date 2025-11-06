@@ -88,7 +88,7 @@ class BookingServiceImplTest {
                 .offering(offering)
                 .status(BookingStatus.PENDING)
                 .build();
-        bookingRequest = new BookingRequest(2L, 1L, LocalDateTime.now(), LocalDateTime.now().plusHours(1), 100.0, "Address", 0.0, 0.0);
+        bookingRequest = new BookingRequest(2L, 1L, LocalDateTime.now(), LocalDateTime.now().plusHours(1), "Address", 0.0, 0.0);
         clientSummary = new UserSummaryResponse(1L, "Client Name", "client.jpg", "Country");
         providerSummary = new UserSummaryResponse(2L, "Provider Name", "provider.jpg", "Country");
         offeringSummary = new OfferingSummaryResponse(1L, "Category", "Offering Title", 100.0);
