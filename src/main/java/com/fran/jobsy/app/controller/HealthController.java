@@ -22,7 +22,7 @@ public class HealthController {
         response.put("service", "Jobsy API");
         response.put("timestamp", LocalDateTime.now());
         response.put("message", "API running successfully");
-        response.put("version", "1.0.0");
+        response.put("version", "0.0.2");
 
         return ResponseEntity.ok(response);
     }
