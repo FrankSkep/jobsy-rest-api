@@ -1,7 +1,5 @@
 package com.fran.jobsy.app.repository;
 
-import com.fran.jobsy.app.dto.offering.OfferingResponse;
-import com.fran.jobsy.app.dto.offering.UserMinimalResponse;
 import com.fran.jobsy.app.entity.Offering;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -35,9 +33,7 @@ public interface OfferingRepository extends JpaRepository<Offering, Long> {
             Pageable pageable
     );
 
-    @Query("SELECT DISTINCT s FROM Offering s " +
-            "WHERE s.owner.id = :ownerId")
-    List<Offering> findByOwnerId(@Param("ownerId") Long ownerId);
+    List<Offering> findByOwnerId(Long ownerId);
 
     @Query("SELECT AVG(r.rating) FROM Review r JOIN r.booking b WHERE b.offering.id = :offeringId")
     Double getAverageRatingByOfferingId(@Param("offeringId") Long offeringId);

@@ -5,8 +5,8 @@ import com.fran.jobsy.app.dto.offeringphoto.OfferingPhotoResponse;
 import com.fran.jobsy.app.entity.Offering;
 import com.fran.jobsy.app.entity.OfferingPhoto;
 import com.fran.jobsy.app.exception.custom.FileOperationException;
-import com.fran.jobsy.app.exception.custom.UnauthorizedAccessException;
 import com.fran.jobsy.app.exception.custom.ResourceNotFoundException;
+import com.fran.jobsy.app.exception.custom.UnauthorizedAccessException;
 import com.fran.jobsy.app.mapper.OfferingPhotoMapper;
 import com.fran.jobsy.app.repository.OfferingPhotoRepository;
 import com.fran.jobsy.app.repository.OfferingRepository;
@@ -37,7 +37,6 @@ public class OfferingPhotoServiceImpl implements OfferingPhotoService {
     public OfferingPhotoResponse addPhotoToOffering(Long offeringId, MultipartFile file) {
         Long userId = authenticatedUserProvider.getAuthenticatedUserId();
 
-        // Verificar que el offering existe y pertenece al usuario autenticado
         Offering offering = offeringRepository.findById(offeringId)
                 .orElseThrow(() -> new ResourceNotFoundException("No se encontró el offering con id: " + offeringId));
 
@@ -48,13 +47,11 @@ public class OfferingPhotoServiceImpl implements OfferingPhotoService {
         String newImageId = null;
 
         try {
-            // Subir imagen
             ImageUploadResult uploadResult = imageStorageService.upload(file);
             String imageUrl = uploadResult.url();
             String publicId = uploadResult.publicId();
             newImageId = publicId;
 
-            // Crear y persistir la foto
             OfferingPhoto offeringPhoto = OfferingPhoto.builder()
                     .imageId(publicId)
                     .url(imageUrl)
@@ -65,8 +62,8 @@ public class OfferingPhotoServiceImpl implements OfferingPhotoService {
 
             return offeringPhotoMapper.toDTO(saved);
 
-        } catch (Exception e) {
-            // En caso de fallo, limpiar la imagen subida
+        } catch (
+                Exception e) {
             if (newImageId != null) {
                 imageStorageService.deleteSafely(newImageId);
             }
@@ -79,7 +76,6 @@ public class OfferingPhotoServiceImpl implements OfferingPhotoService {
     public List<OfferingPhotoResponse> addPhotosToOffering(Long offeringId, List<MultipartFile> files) {
         Long userId = authenticatedUserProvider.getAuthenticatedUserId();
 
-        // Verificar que el offering existe y pertenece al usuario autenticado
         Offering offering = offeringRepository.findById(offeringId)
                 .orElseThrow(() -> new ResourceNotFoundException("No se encontró el offering con id: " + offeringId));
 
@@ -91,7 +87,6 @@ public class OfferingPhotoServiceImpl implements OfferingPhotoService {
         List<OfferingPhoto> photosToSave = new ArrayList<>();
 
         try {
-            // Subir todas las imágenes
             List<ImageUploadResult> uploadResults = imageStorageService.uploadAll(files);
 
             for (ImageUploadResult result : uploadResults) {
@@ -106,13 +101,12 @@ public class OfferingPhotoServiceImpl implements OfferingPhotoService {
                 photosToSave.add(offeringPhoto);
             }
 
-            // Guardar todas las fotos
             List<OfferingPhoto> saved = offeringPhotoRepository.saveAll(photosToSave);
 
             return offeringPhotoMapper.toDTOList(saved);
 
-        } catch (Exception e) {
-            // En caso de fallo, limpiar todas las imágenes subidas
+        } catch (
+                Exception e) {
             if (!uploadedImageIds.isEmpty()) {
                 imageStorageService.deleteAllSafely(uploadedImageIds);
             }
@@ -123,7 +117,6 @@ public class OfferingPhotoServiceImpl implements OfferingPhotoService {
     @Override
     @Transactional(readOnly = true)
     public List<OfferingPhotoResponse> getOfferingPhotos(Long offeringId) {
-        // Verificar que el offering existe
         if (!offeringRepository.existsById(offeringId)) {
             throw new ResourceNotFoundException("No se encontró el offering con id: " + offeringId);
         }
@@ -137,7 +130,6 @@ public class OfferingPhotoServiceImpl implements OfferingPhotoService {
     public void deleteOfferingPhoto(Long offeringId, Long photoId) {
         Long userId = authenticatedUserProvider.getAuthenticatedUserId();
 
-        // Verificar que el offering existe y pertenece al usuario autenticado
         Offering offering = offeringRepository.findById(offeringId)
                 .orElseThrow(() -> new ResourceNotFoundException("No se encontró el offering con id: " + offeringId));
 
@@ -145,16 +137,13 @@ public class OfferingPhotoServiceImpl implements OfferingPhotoService {
             throw new UnauthorizedAccessException("No tienes permiso para eliminar fotos de este offering");
         }
 
-        // Verificar que la foto existe y pertenece al offering
         OfferingPhoto photo = offeringPhotoRepository.findByIdAndOfferingId(photoId, offeringId)
                 .orElseThrow(() -> new ResourceNotFoundException("No se encontró la foto con id: " + photoId + " para el offering con id: " + offeringId));
 
         String imageId = photo.getImageId();
 
-        // Eliminar la foto de la base de datos
         offeringPhotoRepository.deleteByIdAndOfferingId(photoId, offeringId);
 
-        // Después de confirmar la transacción, eliminar la imagen del almacenamiento
         TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
             @Override
             public void afterCommit() {

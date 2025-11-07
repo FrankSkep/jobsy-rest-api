@@ -66,6 +66,15 @@ public class OfferingServiceImpl implements OfferingService {
                 .toList();
     }
 
+    public List<OfferingResponse> getMyOfferings() {
+        Long ownerId = authenticatedUserProvider.getAuthenticatedUserId();
+
+        List<Offering> offerings = offeringRepository.findByOwnerId(ownerId);
+        return offerings.stream()
+                .map(offeringMapper::toDTO)
+                .toList();
+    }
+
     @Override
     public OfferingResponse createOffering(OfferingRequest offeringRequest) {
         User owner = authenticatedUserProvider.getAuthenticatedUser();

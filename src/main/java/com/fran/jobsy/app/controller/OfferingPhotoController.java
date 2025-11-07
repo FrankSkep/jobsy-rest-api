@@ -1,6 +1,7 @@
 package com.fran.jobsy.app.controller;
 
 import com.fran.jobsy.app.common.FileValidator;
+import com.fran.jobsy.app.common.UriBuilder;
 import com.fran.jobsy.app.dto.offeringphoto.OfferingPhotoResponse;
 import com.fran.jobsy.app.service.offeringphoto.OfferingPhotoService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -11,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -29,7 +31,8 @@ public class OfferingPhotoController {
             @RequestParam("file") MultipartFile photo) {
         fileValidator.validate(photo);
         OfferingPhotoResponse response = offeringPhotoService.addPhotoToOffering(offeringId, photo);
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+        URI location = UriBuilder.buildCreatedLocation(response.id());
+        return ResponseEntity.created(location).body(response);
     }
 
     @PostMapping("/{offeringId}/photos/batch")
