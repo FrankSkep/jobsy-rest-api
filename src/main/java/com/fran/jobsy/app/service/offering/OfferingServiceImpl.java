@@ -34,7 +34,7 @@ public class OfferingServiceImpl implements OfferingService {
 
     @Override
     public Page<OfferingResponse> getOfferingsWithFiltersPaged(OfferingFilterModel filters, Pageable pageable) {
-        return offeringRepository.findServicesWithFiltersPaged(
+        Page<Offering> offerings = offeringRepository.findServicesWithFiltersPaged(
                 filters.categoryId(),
                 filters.minPrice(),
                 filters.maxPrice(),
@@ -42,11 +42,13 @@ public class OfferingServiceImpl implements OfferingService {
                 filters.location(),
                 pageable
         );
+        return offerings.map(offeringMapper::toDTO);
     }
 
     @Override
     public Page<OfferingResponse> getOfferingsPage(Pageable pageable) {
-        return offeringRepository.findAllServicesPaged(pageable);
+        Page<Offering> offerings = offeringRepository.findAllServicesPaged(pageable);
+        return offerings.map(offeringMapper::toDTO);
     }
 
     @Override
@@ -57,7 +59,11 @@ public class OfferingServiceImpl implements OfferingService {
         if (user.getRole() != Role.PROVIDER) {
             throw new UnauthorizedAccessException("El usuario con ID: " + userId + " no es un proveedor");
         }
-        return offeringRepository.findByOwnerId(userId);
+
+        List<Offering> offerings = offeringRepository.findByOwnerId(userId);
+        return offerings.stream()
+                .map(offeringMapper::toDTO)
+                .toList();
     }
 
     @Override
@@ -82,6 +88,7 @@ public class OfferingServiceImpl implements OfferingService {
                 .description(offeringRequest.description())
                 .basePrice(offeringRequest.basePrice())
                 .yearsOfExperience(offeringRequest.yearsOfExperience())
+                .isActive(true)
                 .build();
 
         return offeringMapper.toDTO(offeringRepository.save(offering));

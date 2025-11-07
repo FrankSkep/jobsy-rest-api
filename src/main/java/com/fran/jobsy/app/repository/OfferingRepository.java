@@ -1,6 +1,7 @@
 package com.fran.jobsy.app.repository;
 
 import com.fran.jobsy.app.dto.offering.OfferingResponse;
+import com.fran.jobsy.app.dto.offering.UserMinimalResponse;
 import com.fran.jobsy.app.entity.Offering;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -14,22 +15,18 @@ import java.util.List;
 @Repository
 public interface OfferingRepository extends JpaRepository<Offering, Long> {
 
-    @Query("SELECT new com.fran.jobsy.app.dto.offering.OfferingResponse(s.id, " +
-            "new com.fran.jobsy.app.dto.offering.UserMinimalResponse(s.owner.id, s.owner.lastname, s.owner.firstname), " +
-            "s.category.name, s.title, s.description, s.basePrice, s.yearsOfExperience, s.isActive) FROM Offering s " +
+    @Query("SELECT DISTINCT s FROM Offering s " +
             "WHERE s.isActive = true")
-    Page<OfferingResponse> findAllServicesPaged(Pageable pageable);
+    Page<Offering> findAllServicesPaged(Pageable pageable);
 
-    @Query("SELECT new com.fran.jobsy.app.dto.offering.OfferingResponse(s.id, " +
-            "new com.fran.jobsy.app.dto.offering.UserMinimalResponse(s.owner.id, s.owner.lastname, s.owner.firstname), " +
-            "s.category.name, s.title, s.description, s.basePrice, s.yearsOfExperience, s.isActive) FROM Offering s " +
+    @Query("SELECT DISTINCT s FROM Offering s " +
             "WHERE s.isActive = true " +
             "AND (:categoryId IS NULL OR s.category.id = :categoryId) " +
             "AND (:minPrice IS NULL OR s.basePrice >= :minPrice) " +
             "AND (:maxPrice IS NULL OR s.basePrice <= :maxPrice) " +
             "AND (:minRating IS NULL OR s.owner.avgRatingCache >= :minRating) " +
             "AND (:location IS NULL OR LOWER(s.owner.addressText) LIKE LOWER(CONCAT('%', :location, '%')))")
-    Page<OfferingResponse> findServicesWithFiltersPaged(
+    Page<Offering> findServicesWithFiltersPaged(
             @Param("categoryId") Long categoryId,
             @Param("minPrice") Double minPrice,
             @Param("maxPrice") Double maxPrice,
@@ -38,9 +35,13 @@ public interface OfferingRepository extends JpaRepository<Offering, Long> {
             Pageable pageable
     );
 
-    @Query("SELECT new com.fran.jobsy.app.dto.offering.OfferingResponse(s.id, " +
-            "new com.fran.jobsy.app.dto.offering.UserMinimalResponse(s.owner.id, s.owner.lastname, s.owner.firstname), " +
-            "s.category.name, s.title, s.description, s.basePrice, s.yearsOfExperience, s.isActive) FROM Offering s " +
+    @Query("SELECT DISTINCT s FROM Offering s " +
             "WHERE s.owner.id = :ownerId")
-    List<OfferingResponse> findByOwnerId(@Param("ownerId") Long ownerId);
+    List<Offering> findByOwnerId(@Param("ownerId") Long ownerId);
+
+    @Query("SELECT AVG(r.rating) FROM Review r JOIN r.booking b WHERE b.offering.id = :offeringId")
+    Double getAverageRatingByOfferingId(@Param("offeringId") Long offeringId);
+
+    @Query("SELECT COUNT(r) FROM Review r JOIN r.booking b WHERE b.offering.id = :offeringId")
+    Long getReviewCountByOfferingId(@Param("offeringId") Long offeringId);
 }

@@ -37,6 +37,6 @@ public class Offering {
     @Column(nullable = false)
     private boolean isActive = true;
 
-    @OneToMany(mappedBy = "offering", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "offering", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private List<OfferingPhoto> photos;
 }

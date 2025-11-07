@@ -18,6 +18,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/offerings")
@@ -104,9 +105,9 @@ public class OfferingController {
         return ResponseEntity.ok(offering);
     }
 
-//    @GetMapping("/api/v1/users/{id}/services")
-//    @Operation(summary = "Obtener servicios de usuario", description = "Devuelve la lista de servicios ofrecidos por un usuario público.")
-//    public ResponseEntity<List<OfferingDTO>> getUserServices(@PathVariable Long id) {
-//        return ResponseEntity.ok(offeringService.getServicesByUserId(id));
-//    }
+    @GetMapping("/by-user/{id}")
+    @Operation(summary = "Obtener servicios de usuario", description = "Devuelve la lista de servicios ofrecidos por un usuario público.")
+    public ResponseEntity<List<OfferingResponse>> getUserServices(@PathVariable Long id) {
+        return ResponseEntity.ok(offeringService.getOfferingsByUserId(id));
+    }
 }
