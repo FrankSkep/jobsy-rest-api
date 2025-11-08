@@ -15,21 +15,28 @@ public interface OfferingMapper {
 
     @Mapping(target = "user", source = "owner")
     @Mapping(target = "category", source = "category.name")
-    @Mapping(target = "averageRating", expression = "java(calculateAverageRating(offering))")
-    @Mapping(target = "totalReviews", expression = "java(calculateTotalReviews(offering))")
     @Mapping(target = "photoUrls", expression = "java(mapPhotoUrls(offering))")
     @Mapping(target = "isActive", source = "active")
     OfferingResponse toDTO(Offering offering);
 
     OfferingSummaryResponse toSummaryDTO(Offering offering);
 
-    default Double calculateAverageRating(Offering offering) {
-        return offering.getOwner().getAvgRatingCache();
-    }
+    default OfferingResponse toDTOWithStats(Offering offering, Double avgRating, Integer totalReviews) {
+        OfferingResponse baseResponse = toDTO(offering);
 
-    default Integer calculateTotalReviews(Offering offering) {
-        // Retorna 0 por defecto, se calculará en el servicio
-        return 0;
+        return new OfferingResponse(
+                baseResponse.id(),
+                baseResponse.user(),
+                baseResponse.category(),
+                baseResponse.title(),
+                baseResponse.description(),
+                baseResponse.basePrice(),
+                baseResponse.yearsOfExperience(),
+                baseResponse.isActive(),
+                avgRating,
+                totalReviews,
+                baseResponse.photoUrls()
+        );
     }
 
     default List<String> mapPhotoUrls(Offering offering) {

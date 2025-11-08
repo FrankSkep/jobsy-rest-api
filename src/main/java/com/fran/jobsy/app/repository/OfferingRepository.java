@@ -35,9 +35,20 @@ public interface OfferingRepository extends JpaRepository<Offering, Long> {
 
     List<Offering> findByOwnerIdAndIsActive(Long ownerId, boolean isActive);
 
-    @Query("SELECT AVG(r.rating) FROM Review r JOIN r.booking b WHERE b.offering.id = :offeringId")
-    Double getAverageRatingByOfferingId(@Param("offeringId") Long offeringId);
+    @Query("""
+            SELECT AVG(r.rating) 
+            FROM Review r 
+            JOIN r.booking b 
+            WHERE b.offering.id = :offeringId
+            """)
+    Double findAverageRatingByOfferingId(@Param("offeringId") Long offeringId);
 
-    @Query("SELECT COUNT(r) FROM Review r JOIN r.booking b WHERE b.offering.id = :offeringId")
-    Long getReviewCountByOfferingId(@Param("offeringId") Long offeringId);
+    @Query("""
+            SELECT COUNT(r) 
+            FROM Review r 
+            JOIN r.booking b 
+            WHERE b.offering.id = :offeringId
+            """)
+    Integer countReviewsByOfferingId(@Param("offeringId") Long offeringId);
+
 }

@@ -42,13 +42,13 @@ public class OfferingServiceImpl implements OfferingService {
                 filters.location(),
                 pageable
         );
-        return offerings.map(offeringMapper::toDTO);
+        return offerings.map(this::enrichWithStats);
     }
 
     @Override
     public Page<OfferingResponse> getOfferingsPage(Pageable pageable) {
         Page<Offering> offerings = offeringRepository.findAllServicesPaged(pageable);
-        return offerings.map(offeringMapper::toDTO);
+        return offerings.map(this::enrichWithStats);
     }
 
     private List<OfferingResponse> getOfferingsByUserIdAndIsActive(Long userId, boolean onlyActive) {
@@ -61,7 +61,7 @@ public class OfferingServiceImpl implements OfferingService {
 
         List<Offering> offerings = offeringRepository.findByOwnerIdAndIsActive(userId, onlyActive);
         return offerings.stream()
-                .map(offeringMapper::toDTO)
+                .map(this::enrichWithStats)
                 .toList();
     }
 
@@ -148,7 +148,7 @@ public class OfferingServiceImpl implements OfferingService {
         Offering offering = offeringRepository.findById(offeringId)
                 .orElseThrow(() -> new ResourceNotFoundException("Servicio no encontrado con ID: " + offeringId));
 
-        return offeringMapper.toDTO(offering);
+        return enrichWithStats(offering);
     }
 
     @Override
@@ -164,5 +164,11 @@ public class OfferingServiceImpl implements OfferingService {
 
         offering.setActive(!offering.isActive());
         return offeringMapper.toDTO(offeringRepository.save(offering));
+    }
+
+    private OfferingResponse enrichWithStats(Offering offering) {
+        Double avgRating = offeringRepository.findAverageRatingByOfferingId(offering.getId());
+        Integer totalReviews = offeringRepository.countReviewsByOfferingId(offering.getId());
+        return offeringMapper.toDTOWithStats(offering, avgRating, totalReviews);
     }
 }
