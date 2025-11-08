@@ -35,6 +35,8 @@ public interface OfferingRepository extends JpaRepository<Offering, Long> {
 
     List<Offering> findByOwnerIdAndIsActive(Long ownerId, boolean isActive);
 
+    List<Offering> findByOwnerId(Long ownerId);
+
     @Query("""
             SELECT AVG(r.rating) 
             FROM Review r 

@@ -2,6 +2,7 @@ package com.fran.jobsy.app.service.offering;
 
 import com.fran.jobsy.app.common.AuthenticatedUserProvider;
 import com.fran.jobsy.app.dto.offering.OfferingFilterModel;
+import com.fran.jobsy.app.dto.offering.OfferingMinimalResponse;
 import com.fran.jobsy.app.dto.offering.OfferingRequest;
 import com.fran.jobsy.app.dto.offering.OfferingResponse;
 import com.fran.jobsy.app.entity.Category;
@@ -33,7 +34,7 @@ public class OfferingServiceImpl implements OfferingService {
     private final ImageStorageService imageStorageService;
 
     @Override
-    public Page<OfferingResponse> getOfferingsWithFiltersPaged(OfferingFilterModel filters, Pageable pageable) {
+    public Page<OfferingMinimalResponse> getOfferingsWithFiltersPaged(OfferingFilterModel filters, Pageable pageable) {
         Page<Offering> offerings = offeringRepository.findServicesWithFiltersPaged(
                 filters.categoryId(),
                 filters.minPrice(),
@@ -42,16 +43,16 @@ public class OfferingServiceImpl implements OfferingService {
                 filters.location(),
                 pageable
         );
-        return offerings.map(this::enrichWithStats);
+        return offerings.map(offeringMapper::toMinimalDTO);
     }
 
     @Override
-    public Page<OfferingResponse> getOfferingsPage(Pageable pageable) {
+    public Page<OfferingMinimalResponse> getOfferingsPage(Pageable pageable) {
         Page<Offering> offerings = offeringRepository.findAllServicesPaged(pageable);
-        return offerings.map(this::enrichWithStats);
+        return offerings.map(offeringMapper::toMinimalDTO);
     }
 
-    private List<OfferingResponse> getOfferingsByUserIdAndIsActive(Long userId, boolean onlyActive) {
+    public List<OfferingMinimalResponse> getUserOfferings(Long userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado con ID: " + userId));
 
@@ -59,19 +60,22 @@ public class OfferingServiceImpl implements OfferingService {
             throw new UnauthorizedAccessException("El usuario con ID: " + userId + " no es un proveedor");
         }
 
-        List<Offering> offerings = offeringRepository.findByOwnerIdAndIsActive(userId, onlyActive);
+        List<Offering> offerings = offeringRepository.findByOwnerIdAndIsActive(userId, true);
         return offerings.stream()
-                .map(this::enrichWithStats)
+                .map(offeringMapper::toMinimalDTO)
                 .toList();
     }
 
-    public List<OfferingResponse> getUserOfferings(Long userId) {
-        return getOfferingsByUserIdAndIsActive(userId, true);
-    }
+    public List<OfferingMinimalResponse> getMyOfferings() {
+        User owner = authenticatedUserProvider.getAuthenticatedUser();
 
-    public List<OfferingResponse> getMyOfferings() {
-        Long ownerId = authenticatedUserProvider.getAuthenticatedUserId();
-        return getOfferingsByUserIdAndIsActive(ownerId, false);
+        if (owner.getRole() != Role.PROVIDER) {
+            throw new UnauthorizedAccessException("El usuario autenticado no es un proveedor");
+        }
+
+        return offeringRepository.findByOwnerId(owner.getId()).stream()
+                .map(offeringMapper::toMinimalDTO)
+                .toList();
     }
 
     @Override
@@ -147,6 +151,10 @@ public class OfferingServiceImpl implements OfferingService {
     public OfferingResponse getOffering(Long offeringId) {
         Offering offering = offeringRepository.findById(offeringId)
                 .orElseThrow(() -> new ResourceNotFoundException("Servicio no encontrado con ID: " + offeringId));
+
+        if (!offering.isActive()) {
+            throw new ResourceNotFoundException("Servicio no encontrado con ID: " + offeringId);
+        }
 
         return enrichWithStats(offering);
     }

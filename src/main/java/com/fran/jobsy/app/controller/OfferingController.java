@@ -2,6 +2,7 @@ package com.fran.jobsy.app.controller;
 
 import com.fran.jobsy.app.common.UriBuilder;
 import com.fran.jobsy.app.dto.offering.OfferingFilterModel;
+import com.fran.jobsy.app.dto.offering.OfferingMinimalResponse;
 import com.fran.jobsy.app.dto.offering.OfferingRequest;
 import com.fran.jobsy.app.dto.offering.OfferingResponse;
 import com.fran.jobsy.app.service.offering.OfferingService;
@@ -30,7 +31,7 @@ public class OfferingController {
 
     @GetMapping
     @Operation(summary = "Listar servicios", description = "Devuelve una lista paginada de servicios, con posibilidad de filtrar por categoría, precio, calificación y ubicación.")
-    public ResponseEntity<Page<OfferingResponse>> getOfferings(
+    public ResponseEntity<Page<OfferingMinimalResponse>> getOfferings(
             @RequestParam(required = false) Long categoryId,
             @RequestParam(required = false) Double minPrice,
             @RequestParam(required = false) Double maxPrice,
@@ -54,11 +55,11 @@ public class OfferingController {
                     categoryId, minPrice, maxPrice, minRating, null, null, null, location
             );
 
-            Page<OfferingResponse> result = offeringService.getOfferingsWithFiltersPaged(filters, pageable);
+            Page<OfferingMinimalResponse> result = offeringService.getOfferingsWithFiltersPaged(filters, pageable);
             return ResponseEntity.ok(result);
         }
 
-        Page<OfferingResponse> result = offeringService.getOfferingsPage(pageable);
+        Page<OfferingMinimalResponse> result = offeringService.getOfferingsPage(pageable);
         return ResponseEntity.ok(result);
     }
 
@@ -104,16 +105,16 @@ public class OfferingController {
         return ResponseEntity.ok(offering);
     }
 
-    @GetMapping("/by-user/{id}")
+    @GetMapping("/user/{id}")
     @Operation(summary = "Obtener servicios de usuario", description = "Devuelve la lista de servicios ofrecidos por un usuario público.")
-    public ResponseEntity<List<OfferingResponse>> getUserServices(@PathVariable Long id) {
+    public ResponseEntity<List<OfferingMinimalResponse>> getUserOfferings(@PathVariable Long id) {
         return ResponseEntity.ok(offeringService.getUserOfferings(id));
     }
 
     @GetMapping("/me")
     @Operation(summary = "Obtener mis servicios", description = "Devuelve la lista de servicios ofrecidos por el proveedor autenticado.")
     @PreAuthorize("hasRole('PROVIDER')")
-    public ResponseEntity<List<OfferingResponse>> getMyServices() {
+    public ResponseEntity<List<OfferingMinimalResponse>> getMyOfferings() {
         return ResponseEntity.ok(offeringService.getMyOfferings());
     }
 }
