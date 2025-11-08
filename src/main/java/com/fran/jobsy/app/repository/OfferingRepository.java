@@ -33,7 +33,7 @@ public interface OfferingRepository extends JpaRepository<Offering, Long> {
             Pageable pageable
     );
 
-    List<Offering> findByOwnerId(Long ownerId);
+    List<Offering> findByOwnerIdAndIsActive(Long ownerId, boolean isActive);
 
     @Query("SELECT AVG(r.rating) FROM Review r JOIN r.booking b WHERE b.offering.id = :offeringId")
     Double getAverageRatingByOfferingId(@Param("offeringId") Long offeringId);

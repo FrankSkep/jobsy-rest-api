@@ -51,8 +51,7 @@ public class OfferingServiceImpl implements OfferingService {
         return offerings.map(offeringMapper::toDTO);
     }
 
-    @Override
-    public List<OfferingResponse> getOfferingsByUserId(Long userId) {
+    private List<OfferingResponse> getOfferingsByUserIdAndIsActive(Long userId, boolean onlyActive) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado con ID: " + userId));
 
@@ -60,19 +59,19 @@ public class OfferingServiceImpl implements OfferingService {
             throw new UnauthorizedAccessException("El usuario con ID: " + userId + " no es un proveedor");
         }
 
-        List<Offering> offerings = offeringRepository.findByOwnerId(userId);
+        List<Offering> offerings = offeringRepository.findByOwnerIdAndIsActive(userId, onlyActive);
         return offerings.stream()
                 .map(offeringMapper::toDTO)
                 .toList();
     }
 
+    public List<OfferingResponse> getUserOfferings(Long userId) {
+        return getOfferingsByUserIdAndIsActive(userId, true);
+    }
+
     public List<OfferingResponse> getMyOfferings() {
         Long ownerId = authenticatedUserProvider.getAuthenticatedUserId();
-
-        List<Offering> offerings = offeringRepository.findByOwnerId(ownerId);
-        return offerings.stream()
-                .map(offeringMapper::toDTO)
-                .toList();
+        return getOfferingsByUserIdAndIsActive(ownerId, false);
     }
 
     @Override

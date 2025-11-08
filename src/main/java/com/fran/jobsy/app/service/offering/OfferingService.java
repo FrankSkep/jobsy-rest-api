@@ -13,6 +13,10 @@ public interface OfferingService {
 
     Page<OfferingResponse> getOfferingsPage(Pageable pageable);
 
+    List<OfferingResponse> getUserOfferings(Long userId);
+
+    List<OfferingResponse> getMyOfferings();
+
     OfferingResponse createOffering(OfferingRequest offeringRequest);
 
     OfferingResponse getOffering(Long offeringId);
@@ -20,8 +24,6 @@ public interface OfferingService {
     OfferingResponse updateOffering(Long offeringId, OfferingRequest offeringRequest);
 
     void deleteOffering(Long offeringId);
-
-    List<OfferingResponse> getOfferingsByUserId(Long userId);
 
     OfferingResponse toggleOfferingStatus(Long offeringId);
 }

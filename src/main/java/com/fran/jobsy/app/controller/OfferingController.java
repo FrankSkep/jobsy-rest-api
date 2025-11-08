@@ -78,7 +78,6 @@ public class OfferingController {
         return ResponseEntity.created(location).body(offering);
     }
 
-
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('PROVIDER')")
     @Operation(summary = "Actualizar servicio", description = "Actualiza los detalles de un servicio ofrecido por un proveedor.")
@@ -108,6 +107,13 @@ public class OfferingController {
     @GetMapping("/by-user/{id}")
     @Operation(summary = "Obtener servicios de usuario", description = "Devuelve la lista de servicios ofrecidos por un usuario público.")
     public ResponseEntity<List<OfferingResponse>> getUserServices(@PathVariable Long id) {
-        return ResponseEntity.ok(offeringService.getOfferingsByUserId(id));
+        return ResponseEntity.ok(offeringService.getUserOfferings(id));
+    }
+
+    @GetMapping("/me")
+    @Operation(summary = "Obtener mis servicios", description = "Devuelve la lista de servicios ofrecidos por el proveedor autenticado.")
+    @PreAuthorize("hasRole('PROVIDER')")
+    public ResponseEntity<List<OfferingResponse>> getMyServices() {
+        return ResponseEntity.ok(offeringService.getMyOfferings());
     }
 }
