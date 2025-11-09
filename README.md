@@ -104,14 +104,14 @@ To provide a scalable and secure platform that efficiently connects clients and 
 
 * **Framework:** Spring Boot 3.2.8
 * **Language:** Java 21
-* **Database:** PostgreSQL 16
+* **Database:** PostgreSQL 17.5+
 * **Authentication:** JWT (JSON Web Tokens)
 * **Security:** Spring Security
 * **Persistence:** Spring Data JPA
 * **Mapping:** MapStruct
 * **Documentation:** SpringDoc OpenAPI (Swagger)
 * **File management:** Cloudinary
-* **Email:** Spring Mail
+* **Email:** SendGrid
 * **Validation:** Jakarta Bean Validation
 * **Caching:** Caffeine
 * **Build:** Maven
@@ -125,7 +125,7 @@ To provide a scalable and secure platform that efficiently connects clients and 
 
 * Java 21+
 * Maven 3.6+
-* PostgreSQL 16+
+* PostgreSQL 17.5+
 
 ### Installation Steps
 

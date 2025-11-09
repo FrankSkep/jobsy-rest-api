@@ -91,5 +91,19 @@ public class PasswordResetServiceImpl implements PasswordResetService {
         resetToken.setUsed(true);
         tokenRepository.save(resetToken);
     }
+
+    @Transactional(readOnly = true)
+    public void validateResetToken(String token) {
+        PasswordResetToken resetToken = tokenRepository.findByToken(token)
+                .orElseThrow(() -> new ResourceNotFoundException("Token inválido"));
+
+        if (resetToken.isUsed()) {
+            throw new ConflictException("El token ya ha sido utilizado");
+        }
+
+        if (resetToken.getExpiresAt().isBefore(LocalDateTime.now())) {
+            throw new ConflictException("El token ha expirado");
+        }
+    }
 }
 

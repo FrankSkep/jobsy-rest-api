@@ -103,14 +103,14 @@ Proveer una plataforma **escalable y segura** que conecte de forma eficiente a c
 
 * **Framework:** Spring Boot 3.2.8
 * **Lenguaje:** Java 21
-* **Base de datos:** PostgreSQL 16
+* **Base de datos:** PostgreSQL 17.5
 * **Autenticación:** JWT (JSON Web Tokens)
 * **Seguridad:** Spring Security
 * **Persistencia:** Spring Data JPA
 * **Mapeo:** MapStruct
 * **Documentación:** SpringDoc OpenAPI (Swagger)
 * **Gestión de archivos:** Cloudinary
-* **Correo electrónico:** Spring Mail
+* **Correo electrónico:** SendGrid
 * **Validación:** Jakarta Bean Validation
 * **Cacheo:** Caffeine
 * **Compilación:** Maven
@@ -124,7 +124,7 @@ Proveer una plataforma **escalable y segura** que conecte de forma eficiente a c
 
 * Java 21+
 * Maven 3.6+
-* PostgreSQL 16+
+* PostgreSQL 17.5+
 
 ### Pasos de instalación
 

@@ -29,4 +29,10 @@ public class PasswordResetController {
         passwordResetService.resetPassword(passwordResetRequest.token(), passwordResetRequest.newPassword());
         return ResponseEntity.ok(Map.of("message", "Contraseña actualizada correctamente."));
     }
+
+    @GetMapping("/reset-password/validate-token")
+    public ResponseEntity<Map<String, String>> validateResetToken(@RequestParam String token) {
+        passwordResetService.validateResetToken(token);
+        return ResponseEntity.ok(Map.of("message", "El token es válido."));
+    }
 }
