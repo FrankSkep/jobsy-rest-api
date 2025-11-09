@@ -30,12 +30,12 @@ public class AuthServiceImpl implements AuthService {
         try {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.email(), request.password()));
             UserDetails user = userRepository.findByUsername(request.email())
-                    .orElseThrow(() -> new ResourceNotFoundException("User not found."));
+                    .orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado."));
             String token = jwtService.getToken(user);
             return new TokenResponse(token);
         } catch (
                 Exception e) {
-            throw new AuthenticationException("Incorrect user or password.");
+            throw new AuthenticationException("Usuario o contraseña incorrectos.");
         }
     }
 
@@ -43,7 +43,7 @@ public class AuthServiceImpl implements AuthService {
     public TokenResponse register(RegisterRequest request) {
 
         if (userRepository.existsByUsername(request.email())) {
-            throw new AuthenticationException("User already exists.");
+            throw new AuthenticationException("El correo ya está en uso.");
         }
 
         User user = User.builder()
