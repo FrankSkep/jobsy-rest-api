@@ -18,12 +18,15 @@ public interface OfferingRepository extends JpaRepository<Offering, Long> {
     Page<Offering> findAllServicesPaged(Pageable pageable);
 
     @Query("SELECT DISTINCT s FROM Offering s " +
+            "LEFT JOIN Booking b ON b.offering.id = s.id " +
+            "LEFT JOIN Review r ON r.booking.id = b.id " +
             "WHERE s.isActive = true " +
             "AND (:categoryId IS NULL OR s.category.id = :categoryId) " +
             "AND (:minPrice IS NULL OR s.basePrice >= :minPrice) " +
             "AND (:maxPrice IS NULL OR s.basePrice <= :maxPrice) " +
-            "AND (:minRating IS NULL OR s.owner.avgRatingCache >= :minRating) " +
-            "AND (:location IS NULL OR LOWER(s.owner.addressText) LIKE LOWER(CONCAT('%', :location, '%')))")
+            "AND (:location IS NULL OR LOWER(s.owner.addressText) LIKE LOWER(CONCAT('%', :location, '%'))) " +
+            "GROUP BY s.id " +
+            "HAVING (:minRating IS NULL OR AVG(r.rating) >= :minRating OR AVG(r.rating) IS NULL)")
     Page<Offering> findServicesWithFiltersPaged(
             @Param("categoryId") Long categoryId,
             @Param("minPrice") Double minPrice,
