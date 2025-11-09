@@ -90,8 +90,8 @@ public class OfferingServiceImpl implements OfferingService {
             throw new UnauthorizedAccessException("El proveedor debe tener una ubicación establecida para crear un servicio");
         }
 
-        Category category = categoryRepository.findById(offeringRequest.category().id())
-                .orElseThrow(() -> new ResourceNotFoundException("Categoría no existente: " + offeringRequest.category().name()));
+        Category category = categoryRepository.findById(offeringRequest.categoryId())
+                .orElseThrow(() -> new ResourceNotFoundException("Categoría no existente con ID: " + offeringRequest.categoryId()));
 
         Offering offering = Offering.builder()
                 .owner(owner)
@@ -117,8 +117,8 @@ public class OfferingServiceImpl implements OfferingService {
             throw new UnauthorizedAccessException("El usuario autenticado no es el propietario del servicio");
         }
 
-        Category category = categoryRepository.findById(offeringRequest.category().id())
-                .orElseThrow(() -> new ResourceNotFoundException("Categoría no existente: " + offeringRequest.category().name()));
+        Category category = categoryRepository.findById(offeringRequest.categoryId())
+                .orElseThrow(() -> new ResourceNotFoundException("Categoría no existente con ID: " + offeringRequest.categoryId()));
 
         offering.setCategory(category);
         offering.setTitle(offeringRequest.title());

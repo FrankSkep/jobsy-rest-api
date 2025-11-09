@@ -5,9 +5,8 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
 
 public record OfferingRequest(
-        @NotNull(message = "Category is mandatory")
-        @Valid
-        CategoryDTO category,
+        @NotNull(message = "Category ID is mandatory")
+        Long categoryId,
 
         @NotBlank(message = "Title is mandatory")
         @Size(max = 255, message = "Title must not exceed 255 characters")
