@@ -11,6 +11,10 @@ server:
     mime-types: application/json,text/html,text/plain
     min-response-size: 1024
 
+app:
+  frontend:
+    url: https://jobsy-two.vercel.app
+
 logging:
   level:
     root: INFO

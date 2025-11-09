@@ -8,6 +8,7 @@ import com.fran.jobsy.app.repository.PasswordResetTokenRepository;
 import com.fran.jobsy.app.repository.UserRepository;
 import com.fran.jobsy.app.service.mail.MailService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,7 +24,15 @@ public class PasswordResetServiceImpl implements PasswordResetService {
     private final PasswordResetTokenRepository tokenRepository;
     private final MailService mailService;
     private final PasswordEncoder passwordEncoder;
-    private final static String FRONTEND_RESET_URL = "https://jobsy-two.vercel.app/reset-password";
+
+    @Value("${app.frontend.url}")
+    private String frontendUrl;
+
+    @Value("${app.frontend.reset-password-path}")
+    private String resetPasswordPath;
+
+    @Value("${app.password-reset.token-expiration-minutes}")
+    private int tokenExpirationMinutes;
 
     @Transactional
     public void sendResetLink(String email) {
@@ -38,7 +47,7 @@ public class PasswordResetServiceImpl implements PasswordResetService {
                 });
 
         String token = UUID.randomUUID().toString();
-        LocalDateTime expiresAt = LocalDateTime.now().plusMinutes(15);
+        LocalDateTime expiresAt = LocalDateTime.now().plusMinutes(tokenExpirationMinutes);
 
         PasswordResetToken resetToken = PasswordResetToken.builder()
                 .token(token)
@@ -48,13 +57,13 @@ public class PasswordResetServiceImpl implements PasswordResetService {
                 .build();
         tokenRepository.save(resetToken);
 
-        String link = FRONTEND_RESET_URL + "?token=" + token;
+        String link = frontendUrl + resetPasswordPath + "?token=" + token;
         String subject = "Restablecer contraseña - Jobsy";
         String body = """
                 Hola %s,
                 
                 Recibimos una solicitud para restablecer tu contraseña en Jobsy.
-                Puedes hacerlo haciendo clic en el siguiente enlace (válido por 15 minutos):
+                Puedes hacerlo haciendo clic en el siguiente enlace (válido por %d minutos):
                 
                 %s
                 
@@ -62,7 +71,7 @@ public class PasswordResetServiceImpl implements PasswordResetService {
                 
                 Saludos,
                 Equipo Jobsy
-                """.formatted(user.getFirstname(), link);
+                """.formatted(user.getFirstname(), tokenExpirationMinutes, link);
         mailService.sendEmail(email, subject, body);
     }
 
@@ -90,6 +99,18 @@ public class PasswordResetServiceImpl implements PasswordResetService {
 
         resetToken.setUsed(true);
         tokenRepository.save(resetToken);
+
+        mailService.sendEmail(user.getUsername(), "Contraseña restablecida - Jobsy",
+                """
+                Hola %s,
+                
+                Tu contraseña ha sido restablecida exitosamente.
+                
+                Si no realizaste este cambio, por favor contacta con nuestro soporte.
+                
+                Saludos,
+                Equipo Jobsy
+                """.formatted(user.getFirstname()));
     }
 
     @Transactional(readOnly = true)

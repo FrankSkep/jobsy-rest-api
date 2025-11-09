@@ -42,6 +42,13 @@ server:
   error:
     include-message: always
 
+app:
+  frontend:
+    url: http://localhost:5173
+    reset-password-path: /reset-password
+  password-reset:
+    token-expiration-minutes: 15
+
 jwt:
   secret:
     key: ${JWT_SECRET_KEY}
