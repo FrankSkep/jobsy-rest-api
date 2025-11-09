@@ -28,7 +28,7 @@ public class PasswordResetServiceImpl implements PasswordResetService {
     @Transactional
     public void sendResetLink(String email) {
         User user = userRepository.findByUsername(email)
-                .orElseThrow(() -> new ResourceNotFoundException("Si existe una cuenta asociada a este correo, se ha enviado un enlace para restablecer la contraseña."));
+                .orElseThrow(() -> new ResourceNotFoundException("Si existe una cuenta asociada a este correo, recibirás un enlace para restablecer la contraseña."));
 
         // invalidate existing tokens
         tokenRepository.findByUserAndUsedFalse(user)

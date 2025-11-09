@@ -21,7 +21,7 @@ public class PasswordResetController {
     @PostMapping("/forgot-password")
     public ResponseEntity<Map<String, String>> forgotPassword(@RequestParam String email) {
         passwordResetService.sendResetLink(email);
-        return ResponseEntity.ok(Map.of("message", "Correo de restablecimiento enviado si el usuario existe."));
+        return ResponseEntity.ok(Map.of("message", "Si existe una cuenta asociada a este correo, recibirás un enlace para restablecer la contraseña."));
     }
 
     @PostMapping("/reset-password")
