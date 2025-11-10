@@ -1,7 +1,5 @@
 package com.fran.jobsy.app.dto.offering;
 
-import com.fran.jobsy.app.dto.category.CategoryDTO;
-import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
 
 public record OfferingRequest(

@@ -62,6 +62,13 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     @CacheEvict(value = "categories", allEntries = true)
     public void delete(Long id) {
-        categoryRepository.deleteById(id);
+        Category category = categoryRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("La categoria " + id + " no existe."));
+
+        if (!category.getOfferings().isEmpty()) {
+            throw new ResourceAlreadyExistsException("La categoria " + category.getName() + " no se puede eliminar porque tiene servicios asociados.");
+        }
+
+        categoryRepository.delete(category);
     }
 }

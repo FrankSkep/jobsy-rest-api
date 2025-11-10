@@ -102,15 +102,15 @@ public class PasswordResetServiceImpl implements PasswordResetService {
 
         mailService.sendEmail(user.getUsername(), "Contraseña restablecida - Jobsy",
                 """
-                Hola %s,
-                
-                Tu contraseña ha sido restablecida exitosamente.
-                
-                Si no realizaste este cambio, por favor contacta con nuestro soporte.
-                
-                Saludos,
-                Equipo Jobsy
-                """.formatted(user.getFirstname()));
+                        Hola %s,
+                        
+                        Tu contraseña ha sido restablecida exitosamente.
+                        
+                        Si no realizaste este cambio, por favor contacta con nuestro soporte.
+                        
+                        Saludos,
+                        Equipo Jobsy
+                        """.formatted(user.getFirstname()));
     }
 
     @Transactional(readOnly = true)
