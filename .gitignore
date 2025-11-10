@@ -23,6 +23,7 @@ target/
 *.ipr
 
 *.sh
+*.log
 
 ### NetBeans ###
 /nbproject/private/
