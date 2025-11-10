@@ -40,6 +40,10 @@ public class OfferingPhotoServiceImpl implements OfferingPhotoService {
         Offering offering = offeringRepository.findById(offeringId)
                 .orElseThrow(() -> new ResourceNotFoundException("No se encontró el offering con id: " + offeringId));
 
+        if (offeringPhotoRepository.countByOfferingId(offeringId) >= 6) {
+            throw new FileOperationException("No se pueden agregar más de 6 fotos a un servicio");
+        }
+
         if (!offering.getOwner().getId().equals(userId)) {
             throw new UnauthorizedAccessException("No tienes permiso para agregar fotos a este offering");
         }

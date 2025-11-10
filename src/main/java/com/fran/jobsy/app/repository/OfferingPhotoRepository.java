@@ -20,4 +20,6 @@ public interface OfferingPhotoRepository extends JpaRepository<OfferingPhoto, Lo
     @Modifying
     @Query("DELETE FROM OfferingPhoto op WHERE op.id = :id AND op.offering.id = :offeringId")
     void deleteByIdAndOfferingId(@Param("id") Long id, @Param("offeringId") Long offeringId);
+
+    int countByOfferingId(Long offeringId);
 }
