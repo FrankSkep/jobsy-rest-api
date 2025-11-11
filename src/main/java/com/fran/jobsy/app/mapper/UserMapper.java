@@ -16,6 +16,7 @@ public interface UserMapper {
     UserSummaryResponse toSummaryDTO(User user);
 
     @Mapping(target = "email", source = "username")
+    @Mapping(target = "profileImageUrl", source = "photo.url")
     UserResponse toDTO(User user);
 
     @Mapping(target = "userPhoto", source = "photo")

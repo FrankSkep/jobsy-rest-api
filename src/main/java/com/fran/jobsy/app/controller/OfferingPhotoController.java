@@ -3,6 +3,8 @@ package com.fran.jobsy.app.controller;
 import com.fran.jobsy.app.common.FileValidator;
 import com.fran.jobsy.app.common.UriBuilder;
 import com.fran.jobsy.app.dto.offeringphoto.OfferingPhotoResponse;
+import com.fran.jobsy.app.exception.custom.ConflictException;
+import com.fran.jobsy.app.exception.custom.InvalidFileException;
 import com.fran.jobsy.app.service.offeringphoto.OfferingPhotoService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -23,25 +25,26 @@ public class OfferingPhotoController {
 
     private final OfferingPhotoService offeringPhotoService;
     private final FileValidator fileValidator;
+    private static final int MAX_PHOTOS = 6;
 
     @PostMapping("/{offeringId}/photos")
-    @Operation(summary = "Agregar una foto a un offering", description = "Permite al propietario del offering agregar una foto.")
-    public ResponseEntity<OfferingPhotoResponse> addPhotoToOffering(
-            @PathVariable Long offeringId,
-            @RequestParam("file") MultipartFile photo) {
-        fileValidator.validate(photo);
-        OfferingPhotoResponse response = offeringPhotoService.addPhotoToOffering(offeringId, photo);
-        URI location = UriBuilder.buildCreatedLocation(response.id());
-        return ResponseEntity.created(location).body(response);
-    }
-
-    @PostMapping("/{offeringId}/photos/batch")
-    @Operation(summary = "Agregar múltiples fotos a un offering", description = "Permite al propietario del offering agregar múltiples fotos a la vez.")
+    @Operation(summary = "Agregar fotos a un offering", description = "Permite al propietario agregar una o varias fotos.")
     public ResponseEntity<List<OfferingPhotoResponse>> addPhotosToOffering(
             @PathVariable Long offeringId,
             @RequestParam("files") List<MultipartFile> photos) {
+
+        if (photos == null || photos.isEmpty()) {
+            throw new InvalidFileException("Debe enviar los archivos requeridos.");
+        }
+
+        if (photos.size() > MAX_PHOTOS) {
+            throw new InvalidFileException("No puede enviar más de 5 archivos. (3 fotos propias y 2 INE (AMBOS LADOS)");
+        }
+
         photos.forEach(fileValidator::validate);
+
         List<OfferingPhotoResponse> responses = offeringPhotoService.addPhotosToOffering(offeringId, photos);
+
         return ResponseEntity.status(HttpStatus.CREATED).body(responses);
     }
 

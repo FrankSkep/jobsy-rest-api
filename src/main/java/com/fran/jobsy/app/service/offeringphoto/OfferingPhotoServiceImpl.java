@@ -4,6 +4,7 @@ import com.fran.jobsy.app.common.AuthenticatedUserProvider;
 import com.fran.jobsy.app.dto.offeringphoto.OfferingPhotoResponse;
 import com.fran.jobsy.app.entity.Offering;
 import com.fran.jobsy.app.entity.OfferingPhoto;
+import com.fran.jobsy.app.exception.custom.ConflictException;
 import com.fran.jobsy.app.exception.custom.FileOperationException;
 import com.fran.jobsy.app.exception.custom.ResourceNotFoundException;
 import com.fran.jobsy.app.exception.custom.UnauthorizedAccessException;
@@ -34,54 +35,15 @@ public class OfferingPhotoServiceImpl implements OfferingPhotoService {
 
     @Override
     @Transactional
-    public OfferingPhotoResponse addPhotoToOffering(Long offeringId, MultipartFile file) {
+    public List<OfferingPhotoResponse> addPhotosToOffering(Long offeringId, List<MultipartFile> files) {
         Long userId = authenticatedUserProvider.getAuthenticatedUserId();
 
         Offering offering = offeringRepository.findById(offeringId)
                 .orElseThrow(() -> new ResourceNotFoundException("No se encontró el offering con id: " + offeringId));
 
         if (offeringPhotoRepository.countByOfferingId(offeringId) >= 6) {
-            throw new FileOperationException("No se pueden agregar más de 6 fotos a un servicio");
+            throw new ConflictException("No se pueden agregar más de 6 fotos a un servicio");
         }
-
-        if (!offering.getOwner().getId().equals(userId)) {
-            throw new UnauthorizedAccessException("No tienes permiso para agregar fotos a este offering");
-        }
-
-        String newImageId = null;
-
-        try {
-            ImageUploadResult uploadResult = imageStorageService.upload(file);
-            String imageUrl = uploadResult.url();
-            String publicId = uploadResult.publicId();
-            newImageId = publicId;
-
-            OfferingPhoto offeringPhoto = OfferingPhoto.builder()
-                    .imageId(publicId)
-                    .url(imageUrl)
-                    .offering(offering)
-                    .build();
-
-            OfferingPhoto saved = offeringPhotoRepository.save(offeringPhoto);
-
-            return offeringPhotoMapper.toDTO(saved);
-
-        } catch (
-                Exception e) {
-            if (newImageId != null) {
-                imageStorageService.deleteSafely(newImageId);
-            }
-            throw new FileOperationException("Error al agregar la foto al offering: " + e.getMessage());
-        }
-    }
-
-    @Override
-    @Transactional
-    public List<OfferingPhotoResponse> addPhotosToOffering(Long offeringId, List<MultipartFile> files) {
-        Long userId = authenticatedUserProvider.getAuthenticatedUserId();
-
-        Offering offering = offeringRepository.findById(offeringId)
-                .orElseThrow(() -> new ResourceNotFoundException("No se encontró el offering con id: " + offeringId));
 
         if (!offering.getOwner().getId().equals(userId)) {
             throw new UnauthorizedAccessException("No tienes permiso para agregar fotos a este offering");

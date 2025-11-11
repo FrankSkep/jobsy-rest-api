@@ -12,6 +12,7 @@ public record UserResponse(
         String lastname,
         String country,
         String phone,
-        LocalDateTime createdAt
+        LocalDateTime createdAt,
+        String profileImageUrl
 ) {
 }

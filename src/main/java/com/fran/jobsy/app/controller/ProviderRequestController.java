@@ -25,6 +25,7 @@ public class ProviderRequestController {
 
     private final ProviderRequestService providerRequestService;
     private final FileValidator fileValidator;
+    private static final int MAX_DOCUMENTS = 5;
 
     @GetMapping
     @PreAuthorize("hasAnyRole('SUPER_ADMIN', 'ADMIN')")
@@ -59,7 +60,7 @@ public class ProviderRequestController {
             throw new InvalidFileException("Debe enviar los archivos requeridos.");
         }
 
-        if (documents.size() > 5) {
+        if (documents.size() > MAX_DOCUMENTS) {
             throw new InvalidFileException("No puede enviar más de 5 archivos. (3 fotos propias y 2 INE (AMBOS LADOS)");
         }
 
