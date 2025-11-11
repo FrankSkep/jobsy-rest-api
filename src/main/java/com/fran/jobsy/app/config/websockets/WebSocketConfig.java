@@ -30,7 +30,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
         registry.addEndpoint("/ws")
                 .addInterceptors(jwtHandshakeInterceptor)
                 .setHandshakeHandler(userHandshakeHandler)
-                .setAllowedOrigins("http://localhost:5173", "https://jobsy-app.vercel.app")
+                .setAllowedOrigins("http://localhost:5173", "https://jobsy-app.vercel.app", "https://jobsy.frankskep.com")
                 .withSockJS();
     }
 }
