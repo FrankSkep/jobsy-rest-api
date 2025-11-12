@@ -1,9 +1,7 @@
 package com.fran.jobsy.app.controller;
 
 import com.fran.jobsy.app.common.FileValidator;
-import com.fran.jobsy.app.common.UriBuilder;
 import com.fran.jobsy.app.dto.offeringphoto.OfferingPhotoResponse;
-import com.fran.jobsy.app.exception.custom.ConflictException;
 import com.fran.jobsy.app.exception.custom.InvalidFileException;
 import com.fran.jobsy.app.service.offeringphoto.OfferingPhotoService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -14,7 +12,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -34,11 +31,11 @@ public class OfferingPhotoController {
             @RequestParam("files") List<MultipartFile> photos) {
 
         if (photos == null || photos.isEmpty()) {
-            throw new InvalidFileException("Debe enviar los archivos requeridos.");
+            throw new InvalidFileException("Debe enviar al menos un archivo.");
         }
 
         if (photos.size() > MAX_PHOTOS) {
-            throw new InvalidFileException("No puede enviar más de 5 archivos. (3 fotos propias y 2 INE (AMBOS LADOS)");
+            throw new InvalidFileException("No puede enviar más de 6 archivos en una sola solicitud.");
         }
 
         photos.forEach(fileValidator::validate);

@@ -41,12 +41,16 @@ public class OfferingPhotoServiceImpl implements OfferingPhotoService {
         Offering offering = offeringRepository.findById(offeringId)
                 .orElseThrow(() -> new ResourceNotFoundException("No se encontró el offering con id: " + offeringId));
 
-        if (offeringPhotoRepository.countByOfferingId(offeringId) >= 6) {
-            throw new ConflictException("No se pueden agregar más de 6 fotos a un servicio");
-        }
-
         if (!offering.getOwner().getId().equals(userId)) {
             throw new UnauthorizedAccessException("No tienes permiso para agregar fotos a este offering");
+        }
+
+        long currentPhotoCount = offeringPhotoRepository.countByOfferingId(offeringId);
+        if (currentPhotoCount + files.size() > 6) {
+            throw new ConflictException(
+                    String.format("El offering tiene %d foto(s). Solo puedes agregar %d foto(s) más para no exceder el límite de 6",
+                            currentPhotoCount, 6 - currentPhotoCount)
+            );
         }
 
         List<String> uploadedImageIds = new ArrayList<>();
