@@ -101,7 +101,7 @@ Proveer una plataforma **escalable y segura** que conecte de forma eficiente a c
 
 ## Tecnologías Utilizadas
 
-* **Framework:** Spring Boot 3.2.8
+* **Framework:** Spring Boot 3.5.7
 * **Lenguaje:** Java 21
 * **Base de datos:** PostgreSQL 17.5
 * **Autenticación:** JWT (JSON Web Tokens)
