@@ -9,7 +9,7 @@ public record OfferingResponse(
         String title,
         String description,
         Double basePrice,
-        Integer yearsOfExperience,
+        Double yearsOfExperience,
         boolean isActive,
         Double averageRating,
         Integer totalReviews,

@@ -32,7 +32,7 @@ public class Offering {
 
     private Double basePrice;
 
-    private Integer yearsOfExperience;
+    private Double yearsOfExperience;
 
     @Column(nullable = false)
     private boolean isActive = true;
