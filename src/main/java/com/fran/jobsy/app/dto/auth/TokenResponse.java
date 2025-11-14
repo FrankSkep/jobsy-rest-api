@@ -1,5 +1,7 @@
 package com.fran.jobsy.app.dto.auth;
 
 public record TokenResponse(
-        String token) {
+        String accessToken,
+        String refreshToken
+) {
 }
