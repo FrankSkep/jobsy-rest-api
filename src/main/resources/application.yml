@@ -53,7 +53,7 @@ jwt:
   secret:
     key: ${JWT_SECRET_KEY}
   expiration:
-    time: ${JWT_EXPIRATION_MS:172800000} # Default 24 hours
+    time: ${JWT_EXPIRATION_MS:14400000} # Default 4 hours
   refresh:
     expiration:
       time: ${JWT_REFRESH_EXPIRATION_MS:1296000000} # Default 15 days
