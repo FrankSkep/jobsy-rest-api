@@ -19,5 +19,5 @@ public interface NotificationService {
 
     void sendTestNotificationToAuthUser();
 
-    void notifyUser(User recipient, String title, String message, NotificationType type, boolean sendEmail);
+    void notifyUser(User recipient, String title, String message, NotificationType type);
 }

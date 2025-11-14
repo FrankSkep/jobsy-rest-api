@@ -9,6 +9,7 @@ import com.fran.jobsy.app.exception.custom.ResourceNotFoundException;
 import com.fran.jobsy.app.repository.NotificationRepository;
 import com.fran.jobsy.app.service.mail.MailService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -19,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class NotificationServiceImpl implements NotificationService {
@@ -76,7 +78,7 @@ public class NotificationServiceImpl implements NotificationService {
 
     @Override
     @Transactional
-    public void notifyUser(User recipient, String title, String message, NotificationType type, boolean sendEmail) {
+    public void notifyUser(User recipient, String title, String message, NotificationType type) {
         Notification notification = new Notification();
         notification.setRecipient(recipient);
         notification.setTitle(title);
@@ -84,10 +86,18 @@ public class NotificationServiceImpl implements NotificationService {
         notification.setType(type);
         notificationRepository.save(notification);
 
-        if (sendEmail) {
-            emailService.sendEmail(recipient.getUsername(), title, message);
+        // send email if applicable
+        if (type.isSendEmail()) {
+            try {
+                emailService.sendEmail(recipient.getUsername(), title, message);
+            } catch (
+                    Exception e) {
+                // log the error but do not interrupt the notification flow
+                log.warn("No se pudo enviar el email a {}", recipient.getUsername(), e);
+            }
         }
 
+        // real-time notification via WebSocket
         NotificationResponse dto = new NotificationResponse(
                 notification.getId(),
                 notification.getTitle(),

@@ -81,7 +81,7 @@ public class ProviderRequestServiceImpl implements ProviderRequestService {
 
             notificationService.notifyUser(userRef, "Jobsy | Solicitud de proveedor recibida",
                     "Tu solicitud para ser proveedor ha sido recibida y está pendiente de revisión.",
-                    NotificationType.SYSTEM, true);
+                    NotificationType.PROVIDER_REQUEST_SUBMITTED);
 
         } catch (
                 Exception e) { // Rollback
@@ -135,7 +135,7 @@ public class ProviderRequestServiceImpl implements ProviderRequestService {
 
         notificationService.notifyUser(user, "Jobsy - Solicitud de proveedor aprobada",
                 "¡Felicidades! Tu solicitud para ser proveedor ha sido aprobada. Ya puedes ofrecer tus servicios en la plataforma.",
-                NotificationType.SYSTEM, true);
+                NotificationType.PROVIDER_APPROVED);
 
         return providerRequestMapper.toDTO(providerRequest);
     }
@@ -162,7 +162,7 @@ public class ProviderRequestServiceImpl implements ProviderRequestService {
 
         notificationService.notifyUser(request.getUser(), "Jobsy - Solicitud de proveedor rechazada",
                 "Lamentamos informarte que tu solicitud para ser proveedor fue rechazada. Motivo: " + reason,
-                NotificationType.SYSTEM, true);
+                NotificationType.PROVIDER_REJECTED);
     }
 
     @Override

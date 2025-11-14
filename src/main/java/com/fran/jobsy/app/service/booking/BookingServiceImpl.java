@@ -82,9 +82,7 @@ public class BookingServiceImpl implements BookingService {
                 client,
                 "Reserva solicitada con éxito.",
                 "Su reserva ha sido creada y está pendiente de confirmación.",
-                NotificationType.BOOKING,
-                true
-        );
+                NotificationType.BOOKING_CREATED);
 
         return bookingMapper.toDTO(booking);
     }
@@ -184,12 +182,21 @@ public class BookingServiceImpl implements BookingService {
         booking.setStatusComment(comment);
         bookingRepository.save(booking);
 
+        NotificationType type = switch (status) {
+            case PENDING ->
+                    NotificationType.BOOKING_CREATED;
+            case CONFIRMED ->
+                    NotificationType.BOOKING_CONFIRMED;
+            case CANCELED ->
+                    NotificationType.BOOKING_CANCELLED;
+            case COMPLETED ->
+                    NotificationType.BOOKING_COMPLETED;
+        };
+
         notificationService.notifyUser(
                 recipient,
                 title,
                 comment != null ? defaultMessage + ": " + comment : defaultMessage,
-                NotificationType.BOOKING,
-                true
-        );
+                type);
     }
 }
