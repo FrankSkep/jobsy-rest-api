@@ -5,11 +5,13 @@ import com.fran.jobsy.app.dto.message.MessageResponse;
 import com.fran.jobsy.app.entity.Conversation;
 import com.fran.jobsy.app.entity.Message;
 import com.fran.jobsy.app.entity.User;
+import com.fran.jobsy.app.enums.NotificationType;
 import com.fran.jobsy.app.exception.custom.ResourceNotFoundException;
 import com.fran.jobsy.app.mapper.MessageMapper;
 import com.fran.jobsy.app.repository.ConversationRepository;
 import com.fran.jobsy.app.repository.MessageRepository;
 import com.fran.jobsy.app.repository.UserRepository;
+import com.fran.jobsy.app.service.notification.NotificationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -23,6 +25,7 @@ public class MessageServiceImpl implements MessageService {
     private final MessageRepository messageRepository;
     private final UserRepository userRepository;
     private final MessageMapper messageMapper;
+    private final NotificationService notificationService;
 
     public MessageResponse sendMessage(Long conversationId, MessageRequest req) {
         Conversation conversation = conversationRepository.findById(conversationId)
@@ -35,6 +38,18 @@ public class MessageServiceImpl implements MessageService {
         message.setConversation(conversation);
         message.setSender(sender);
         message.setContent(req.content());
+
+        // determinate the recipient (the other user in the conversation)
+        User recipient = conversation.getUserA().getId().equals(sender.getId())
+                ? conversation.getUserB()
+                : conversation.getUserA();
+
+        // Send notification to the recipient
+        notificationService.sendRealtimeNotification(recipient, "Recibiste un mensaje de " + sender.getFirstname(),
+                message.getContent().length() > 30 ?
+                        message.getContent().substring(0, 30) + "..." :
+                        message.getContent(),
+                NotificationType.MESSAGE_RECEIVED);
 
         Message saved = messageRepository.save(message);
 

@@ -183,14 +183,14 @@ public class BookingServiceImpl implements BookingService {
         bookingRepository.save(booking);
 
         NotificationType type = switch (status) {
-            case PENDING ->
-                    NotificationType.BOOKING_CREATED;
             case CONFIRMED ->
                     NotificationType.BOOKING_CONFIRMED;
             case CANCELED ->
                     NotificationType.BOOKING_CANCELLED;
             case COMPLETED ->
                     NotificationType.BOOKING_COMPLETED;
+            default ->
+                    NotificationType.SYSTEM;
         };
 
         notificationService.notifyUser(

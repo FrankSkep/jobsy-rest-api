@@ -20,4 +20,6 @@ public interface NotificationService {
     void sendTestNotificationToAuthUser();
 
     void notifyUser(User recipient, String title, String message, NotificationType type);
+
+    public void sendRealtimeNotification(User recipient, String title, String message, NotificationType type);
 }

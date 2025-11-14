@@ -8,6 +8,7 @@ import com.fran.jobsy.app.entity.Booking;
 import com.fran.jobsy.app.entity.Review;
 import com.fran.jobsy.app.entity.User;
 import com.fran.jobsy.app.enums.BookingStatus;
+import com.fran.jobsy.app.enums.NotificationType;
 import com.fran.jobsy.app.enums.Role;
 import com.fran.jobsy.app.exception.custom.ConflictException;
 import com.fran.jobsy.app.exception.custom.ResourceNotFoundException;
@@ -16,6 +17,7 @@ import com.fran.jobsy.app.mapper.ReviewMapper;
 import com.fran.jobsy.app.repository.BookingRepository;
 import com.fran.jobsy.app.repository.ReviewRepository;
 import com.fran.jobsy.app.repository.UserRepository;
+import com.fran.jobsy.app.service.notification.NotificationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -30,6 +32,7 @@ public class ReviewServiceImpl implements ReviewService {
     private final AuthenticatedUserProvider authenticatedUserProvider;
     private final ReviewMapper reviewMapper;
     private final UserRepository userRepository;
+    private final NotificationService notificationService;
 
     @Override
     public ReviewResponse createReview(Long bookingId, ReviewRequest reviewRequest) {
@@ -51,6 +54,13 @@ public class ReviewServiceImpl implements ReviewService {
 
         // update provider average rating cache
         updateProviderAvgRating(booking.getProvider());
+
+        notificationService.notifyUser(
+                booking.getProvider(),
+                "Nueva reseña recibida",
+                "Has recibido una nueva reseña para la reserva ID: " + bookingId,
+                NotificationType.REVIEW_RECEIVED
+        );
 
         return reviewMapper.toReviewDTO(savedReview);
     }

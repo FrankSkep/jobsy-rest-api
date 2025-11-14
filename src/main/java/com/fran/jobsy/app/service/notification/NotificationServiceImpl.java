@@ -92,12 +92,33 @@ public class NotificationServiceImpl implements NotificationService {
                 emailService.sendEmail(recipient.getUsername(), title, message);
             } catch (
                     Exception e) {
-                // log the error but do not interrupt the notification flow
                 log.warn("No se pudo enviar el email a {}", recipient.getUsername(), e);
             }
         }
 
         // real-time notification via WebSocket
+        sendRealtimeNotification(recipient, notification);
+    }
+
+    @Override
+    public void sendRealtimeNotification(User recipient, String title, String message, NotificationType type) {
+        NotificationResponse dto = new NotificationResponse(
+                null,
+                title,
+                message,
+                type,
+                false,
+                Instant.now().toString()
+        );
+
+        messagingTemplate.convertAndSendToUser(
+                recipient.getId().toString(),
+                "/queue/notifications",
+                dto
+        );
+    }
+
+    private void sendRealtimeNotification(User recipient, Notification notification) {
         NotificationResponse dto = new NotificationResponse(
                 notification.getId(),
                 notification.getTitle(),
