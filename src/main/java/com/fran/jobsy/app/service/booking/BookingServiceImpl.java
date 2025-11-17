@@ -20,6 +20,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.support.TransactionSynchronization;
+import org.springframework.transaction.support.TransactionSynchronizationManager;
 
 import java.util.List;
 
@@ -78,11 +80,17 @@ public class BookingServiceImpl implements BookingService {
 
         bookingRepository.save(booking);
 
-        notificationService.notifyUser(
-                client,
-                "Reserva solicitada con éxito.",
-                "Su reserva ha sido creada y está pendiente de confirmación.",
-                NotificationType.BOOKING_CREATED);
+        // Notify client after transaction commit
+        TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
+            @Override
+            public void afterCommit() {
+                notificationService.notifyUser(
+                        client,
+                        "Reserva solicitada con éxito.",
+                        "Su reserva ha sido creada y está pendiente de confirmación.",
+                        NotificationType.BOOKING_CREATED);
+            }
+        });
 
         return bookingMapper.toDTO(booking);
     }
