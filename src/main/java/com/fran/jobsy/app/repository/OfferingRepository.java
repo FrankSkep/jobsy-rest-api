@@ -25,6 +25,7 @@ public interface OfferingRepository extends JpaRepository<Offering, Long> {
             "AND (:minPrice IS NULL OR s.basePrice >= :minPrice) " +
             "AND (:maxPrice IS NULL OR s.basePrice <= :maxPrice) " +
             "AND (:location IS NULL OR LOWER(s.owner.addressText) LIKE LOWER(CONCAT('%', :location, '%'))) " +
+            "AND (:title IS NULL OR LOWER(s.title) LIKE LOWER(CONCAT('%', :title, '%'))) " +
             "GROUP BY s.id " +
             "HAVING (:minRating IS NULL OR AVG(r.rating) >= :minRating OR AVG(r.rating) IS NULL)")
     Page<Offering> findServicesWithFiltersPaged(
@@ -33,6 +34,7 @@ public interface OfferingRepository extends JpaRepository<Offering, Long> {
             @Param("maxPrice") Double maxPrice,
             @Param("minRating") Double minRating,
             @Param("location") String location,
+            @Param("title") String title,
             Pageable pageable
     );
 

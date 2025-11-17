@@ -8,6 +8,7 @@ public record OfferingFilterModel(
         Double lat,
         Double lng,
         Double radiusKm,
-        String location
+        String location,
+        String title
 ) {
 }

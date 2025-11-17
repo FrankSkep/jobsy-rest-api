@@ -30,20 +30,21 @@ public class OfferingController {
     private final OfferingService offeringService;
 
     @GetMapping
-    @Operation(summary = "Listar servicios", description = "Devuelve una lista paginada de servicios, con posibilidad de filtrar por categoría, precio, calificación y ubicación.")
+    @Operation(summary = "Listar servicios", description = "Devuelve una lista paginada de servicios, con posibilidad de filtrar por categoría, precio, calificación, ubicación y título.")
     public ResponseEntity<Page<OfferingMinimalResponse>> getOfferings(
             @RequestParam(required = false) Long categoryId,
             @RequestParam(required = false) Double minPrice,
             @RequestParam(required = false) Double maxPrice,
             @RequestParam(required = false) Double minRating,
             @RequestParam(required = false) String location,
+            @RequestParam(required = false) String title,
             @RequestParam(required = false, defaultValue = "0") int page,
             @RequestParam(required = false, defaultValue = "10") int size,
             @RequestParam(required = false, defaultValue = "id") String sortBy,
             @RequestParam(required = false, defaultValue = "asc") String sortDirection) {
 
         boolean hasFilters = categoryId != null || minPrice != null || maxPrice != null ||
-                minRating != null || location != null;
+                minRating != null || location != null || title != null;
 
         Sort sort = sortDirection.equalsIgnoreCase("desc") ?
                 Sort.by(sortBy).descending() : Sort.by(sortBy).ascending();
@@ -52,7 +53,7 @@ public class OfferingController {
 
         if (hasFilters) {
             OfferingFilterModel filters = new OfferingFilterModel(
-                    categoryId, minPrice, maxPrice, minRating, null, null, null, location
+                    categoryId, minPrice, maxPrice, minRating, null, null, null, location, title
             );
 
             Page<OfferingMinimalResponse> result = offeringService.getOfferingsWithFiltersPaged(filters, pageable);

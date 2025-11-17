@@ -41,6 +41,7 @@ public class OfferingServiceImpl implements OfferingService {
                 filters.maxPrice(),
                 filters.minRating(),
                 filters.location(),
+                filters.title(),
                 pageable
         );
         return offerings.map(offeringMapper::toMinimalDTO);
