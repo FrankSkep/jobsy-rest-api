@@ -24,8 +24,8 @@ public interface OfferingRepository extends JpaRepository<Offering, Long> {
             "AND (:categoryId IS NULL OR s.category.id = :categoryId) " +
             "AND (:minPrice IS NULL OR s.basePrice >= :minPrice) " +
             "AND (:maxPrice IS NULL OR s.basePrice <= :maxPrice) " +
-            "AND (:location IS NULL OR LOWER(s.owner.addressText) LIKE LOWER(CONCAT('%', :location, '%'))) " +
-            "AND (:title IS NULL OR LOWER(s.title) LIKE LOWER(CONCAT('%', :title, '%'))) " +
+            "AND (:location IS NULL OR s.owner.addressText ILIKE :location) " +
+            "AND (:title IS NULL OR s.title ILIKE :title) " +
             "GROUP BY s.id " +
             "HAVING (:minRating IS NULL OR AVG(r.rating) >= :minRating OR AVG(r.rating) IS NULL)")
     Page<Offering> findServicesWithFiltersPaged(

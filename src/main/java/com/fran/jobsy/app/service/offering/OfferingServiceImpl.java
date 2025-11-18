@@ -35,13 +35,22 @@ public class OfferingServiceImpl implements OfferingService {
 
     @Override
     public Page<OfferingMinimalResponse> getOfferingsWithFiltersPaged(OfferingFilterModel filters, Pageable pageable) {
+        String locationPattern = filters.location() != null
+                ? "%" + filters.location().toLowerCase() + "%"
+                : null;
+        String titlePattern = filters.title() != null
+                ? "%" + filters.title().toLowerCase() + "%"
+                : null;
+
+        System.out.println("Title pattern: " + titlePattern);
+
         Page<Offering> offerings = offeringRepository.findServicesWithFiltersPaged(
                 filters.categoryId(),
                 filters.minPrice(),
                 filters.maxPrice(),
                 filters.minRating(),
-                filters.location(),
-                filters.title(),
+                locationPattern,
+                titlePattern,
                 pageable
         );
         return offerings.map(offeringMapper::toMinimalDTO);
