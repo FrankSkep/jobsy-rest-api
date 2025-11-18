@@ -42,8 +42,6 @@ public class OfferingServiceImpl implements OfferingService {
                 ? "%" + filters.title().toLowerCase() + "%"
                 : null;
 
-        System.out.println("Title pattern: " + titlePattern);
-
         Page<Offering> offerings = offeringRepository.findServicesWithFiltersPaged(
                 filters.categoryId(),
                 filters.minPrice(),
