@@ -1,15 +1,14 @@
 package com.fran.jobsy.app.mapper;
 
 import com.fran.jobsy.app.dto.offering.UserMinimalResponse;
-import com.fran.jobsy.app.dto.user.UserFullResponse;
-import com.fran.jobsy.app.dto.user.UserPublicResponse;
-import com.fran.jobsy.app.dto.user.UserResponse;
-import com.fran.jobsy.app.dto.user.UserSummaryResponse;
+import com.fran.jobsy.app.dto.user.*;
 import com.fran.jobsy.app.entity.User;
 import com.fran.jobsy.app.repository.ReviewRepository;
 import org.mapstruct.*;
 
-@Mapper(componentModel = "spring", uses = {UserPhotoMapper.class, UserWorkPhotoMapper.class})
+@Mapper(componentModel = "spring",
+        uses = {UserPhotoMapper.class, UserWorkPhotoMapper.class},
+        nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
 public interface UserMapper {
     @Mapping(target = "fullName", expression = "java(user.getFirstname() != null ? user.getFirstname() + \" \" + user.getLastname() : user.getLastname())")
     @Mapping(target = "photoUrl", source = "photo.url")
@@ -30,10 +29,19 @@ public interface UserMapper {
 
     UserMinimalResponse toMinimal(User user);
 
-    @Mapping(target = "username", source = "email")
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "username", ignore = true)
     @Mapping(target = "password", ignore = true)
+    @Mapping(target = "role", ignore = true)
     @Mapping(target = "createdAt", ignore = true)
     @Mapping(target = "authorities", ignore = true)
-    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-    void updateFromDto(UserResponse dto, @MappingTarget User entity);
+    void updateFromDTO(UserPatchRequest dto, @MappingTarget User user);
+
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "username", ignore = true)
+    @Mapping(target = "password", ignore = true)
+    @Mapping(target = "role", ignore = true)
+    @Mapping(target = "createdAt", ignore = true)
+    @Mapping(target = "authorities", ignore = true)
+    void updateFromFullDTO(UserFullPatchRequest dto, @MappingTarget User user);
 }

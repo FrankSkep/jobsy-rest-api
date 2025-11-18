@@ -23,8 +23,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Objects;
-import java.util.function.Consumer;
 
 @Service
 @RequiredArgsConstructor
@@ -68,6 +66,14 @@ public class UserServiceImpl implements UserService {
     @Override
     @EvictAuthenticatedUserCaches
     @Transactional
+    public void updateUser(UserPatchRequest userReq) {
+        User user = getById(authenticatedUserProvider.getAuthenticatedUserId());
+        userMapper.updateFromDTO(userReq, user);
+    }
+
+    @Override
+    @EvictAuthenticatedUserCaches
+    @Transactional
     public void deleteMyAccount() {
         User user = getById(authenticatedUserProvider.getAuthenticatedUserId());
         deleteUserAssets(user);
@@ -77,27 +83,11 @@ public class UserServiceImpl implements UserService {
     @Override
     @EvictAuthenticatedUserCaches
     @Transactional
-    public void updateUser(UserPatchRequest userReq) {
-        User user = getById(authenticatedUserProvider.getAuthenticatedUserId());
-
-        updateIfDifferent(userReq.firstname(), user.getFirstname(), user::setFirstname);
-        updateIfDifferent(userReq.lastname(), user.getLastname(), user::setLastname);
-        updateIfDifferent(userReq.country(), user.getCountry(), user::setCountry);
-        updateIfDifferent(userReq.phone(), user.getPhone(), user::setPhone);
-    }
-
-    @Override
-    @EvictAuthenticatedUserCaches
-    @Transactional
     public void updateUser(UserFullPatchRequest userReq) {
         User user = getById(authenticatedUserProvider.getAuthenticatedUserId());
-
-        updateIfDifferent(userReq.bio(), user.getBio(), user::setBio);
-        updateIfDifferent(userReq.addressText(), user.getAddressText(), user::setAddressText);
-        updateIfDifferent(userReq.lat(), user.getLat(), user::setLat);
-        updateIfDifferent(userReq.lng(), user.getLng(), user::setLng);
-        updateIfDifferent(userReq.serviceRadiusKm(), user.getServiceRadiusKm(), user::setServiceRadiusKm);
+        userMapper.updateFromFullDTO(userReq, user);
     }
+
 
     // --- Admin Operations ---
     @Override
@@ -216,12 +206,6 @@ public class UserServiceImpl implements UserService {
             default ->
                     false;
         };
-    }
-
-    private <T> void updateIfDifferent(T newValue, T currentValue, Consumer<T> setter) {
-        if (newValue != null && !Objects.equals(currentValue, newValue)) {
-            setter.accept(newValue);
-        }
     }
 
     private void deleteUserAssets(User user) {
