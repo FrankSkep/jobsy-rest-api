@@ -65,7 +65,7 @@ public class CategoryServiceImpl implements CategoryService {
         Category category = categoryRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("La categoria " + id + " no existe."));
 
-        if (!category.getOfferings().isEmpty()) {
+        if (categoryRepository.hasOfferings(id)) {
             throw new ResourceAlreadyExistsException("La categoria " + category.getName() + " no se puede eliminar porque tiene servicios asociados.");
         }
 
