@@ -39,7 +39,10 @@ public class UserServiceImpl implements UserService {
     // --- CRUD Operations ---
     @Override
     public List<UserResponse> getAllUsers() {
-        return userRepository.findAllAsUserDTO();
+        return userRepository.findAll()
+                .stream()
+                .map(userMapper::toDTO)
+                .toList();
     }
 
     @Override
