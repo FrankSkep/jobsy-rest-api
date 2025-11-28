@@ -22,4 +22,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     @EntityGraph(attributePaths = {"workPhotos"})
     Optional<User> findById(Long id);
+
+    Optional<User> findBySlug(String slug);
 }

@@ -22,7 +22,7 @@ public interface UserService {
 
     void setPasswordByAdmin(Long userId, String newPassword);
 
-    UserPublicResponse getPublicInfo(Long id);
+    UserPublicResponse getPublicInfo(String id);
 
     UserFullResponse getMyFullInfo();
 

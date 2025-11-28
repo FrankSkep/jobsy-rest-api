@@ -30,10 +30,10 @@ public class UserController {
         return ResponseEntity.ok(userService.getAllUsers());
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/{slug}")
     @Operation(summary = "Obtener usuario por ID", description = "Devuelve la información pública de un usuario por su ID.")
-    public ResponseEntity<UserPublicResponse> getUserById(@PathVariable Long id) {
-        return ResponseEntity.ok(userService.getPublicInfo(id));
+    public ResponseEntity<UserPublicResponse> getUserById(@PathVariable String slug) {
+        return ResponseEntity.ok(userService.getPublicInfo(slug));
     }
 
     @PatchMapping("/{id}/role")
