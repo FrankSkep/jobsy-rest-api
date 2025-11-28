@@ -85,7 +85,7 @@ public class User implements UserDetails {
     private UserPhoto photo;
 
     // Portfolio (multiple work photos)
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private List<UserWorkPhoto> workPhotos;
 
     // As client → their bookings

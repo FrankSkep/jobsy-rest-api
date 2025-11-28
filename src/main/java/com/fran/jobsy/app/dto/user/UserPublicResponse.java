@@ -7,6 +7,7 @@ import java.util.List;
 
 @Builder
 public record UserPublicResponse(
+        Long id,
         String firstname,
         String lastname,
         String phone,

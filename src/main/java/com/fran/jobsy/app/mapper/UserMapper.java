@@ -25,6 +25,7 @@ public interface UserMapper {
     @Mapping(target = "profilePhotoUrl", source = "photo.url")
     @Mapping(target = "averageRating", source = "avgRatingCache")
     @Mapping(target = "totalReviews", expression = "java( Math.toIntExact(reviewRepository.countByProviderId(user.getId())) )")
+    @Mapping(target = "id", source = "id")
     UserPublicResponse toPublic(User user, @Context ReviewRepository reviewRepository);
 
     UserMinimalResponse toMinimal(User user);

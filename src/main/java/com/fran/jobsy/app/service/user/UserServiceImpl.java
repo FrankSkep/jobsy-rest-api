@@ -43,7 +43,6 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    @Cacheable(value = "usersPublic", key = "#id")
     public UserPublicResponse getPublicInfo(String slug) {
         User user = userRepository.findBySlug(slug)
                 .orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado con Slug:" + slug));
