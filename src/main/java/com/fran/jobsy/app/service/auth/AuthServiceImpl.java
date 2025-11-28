@@ -16,6 +16,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -47,6 +48,7 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
+    @Transactional
     public TokenResponse register(RegisterRequest request) {
         if (userRepository.existsByUsername(request.email())) {
             throw new AuthenticationException("El correo ya está en uso.");
@@ -60,6 +62,14 @@ public class AuthServiceImpl implements AuthService {
                 .role(Role.USER)
                 .build();
 
+        userRepository.save(user);
+
+        String slug = (user.getFirstname() + "-" + user.getLastname() + "-" + user.getId())
+                .toLowerCase()
+                .replaceAll("[^a-z0-9]+", "-")
+                .replaceAll("^-|-$", "");
+
+        user.setSlug(slug);
         userRepository.save(user);
 
         String accessToken = jwtService.getToken(user);

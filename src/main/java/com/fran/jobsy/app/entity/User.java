@@ -32,6 +32,9 @@ public class User implements UserDetails {
     @Column(nullable = false)
     private String username; // email
 
+    @Column(name = "slug", nullable = false, unique = true)
+    private String slug;
+
     @Column(nullable = false)
     private String password;
 
