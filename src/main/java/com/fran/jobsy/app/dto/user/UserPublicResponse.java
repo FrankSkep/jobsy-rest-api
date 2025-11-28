@@ -18,6 +18,7 @@ public record UserPublicResponse(
         Double averageRating,
         Integer totalReviews,
         Double serviceRadiusKm,
-        LocalDateTime createdAt
+        LocalDateTime createdAt,
+        String role
 ) {
 }
