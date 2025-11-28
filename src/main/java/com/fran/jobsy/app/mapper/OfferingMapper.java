@@ -23,6 +23,8 @@ public interface OfferingMapper {
     @Mapping(target = "category", source = "category.name")
     @Mapping(target = "photoUrl", expression = "java(getFirstPhotoUrl(offering))")
     @Mapping(target = "isActive", source = "active")
+    @Mapping(target = "lat", source = "owner.lat")
+    @Mapping(target = "lng", source = "owner.lng")
     OfferingMinimalResponse toMinimalDTO(Offering offering);
 
     OfferingSummaryResponse toSummaryDTO(Offering offering);

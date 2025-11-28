@@ -6,6 +6,8 @@ public record OfferingMinimalResponse(
         String category,
         Double basePrice,
         boolean isActive,
-        String photoUrl
+        String photoUrl,
+        Double lat,
+        Double lng
 ) {
 }
