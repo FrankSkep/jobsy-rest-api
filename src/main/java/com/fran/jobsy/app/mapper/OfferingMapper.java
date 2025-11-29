@@ -50,7 +50,8 @@ public interface OfferingMapper {
                 baseResponse.isActive(),
                 avgRating,
                 totalReviews,
-                baseResponse.photoUrls()
+                baseResponse.photoUrls(),
+                offering.getOwner().getSlug()
         );
     }
 

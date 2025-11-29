@@ -13,6 +13,7 @@ public record OfferingResponse(
         boolean isActive,
         Double averageRating,
         Integer totalReviews,
-        List<String> photoUrls
+        List<String> photoUrls,
+        String slug
 ) {
 }
