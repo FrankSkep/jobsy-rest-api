@@ -15,7 +15,12 @@ import java.util.List;
 @Table(
         name = "users",
         uniqueConstraints = {
-                @UniqueConstraint(columnNames = {"username"})
+                @UniqueConstraint(columnNames = {"username"}),
+                @UniqueConstraint(columnNames = {"slug"})
+        },
+        indexes = {
+                @Index(name = "idx_slug", columnList = "slug"),
+                @Index(name = "idx_username", columnList = "username")
         }
 )
 @Builder
@@ -32,7 +37,7 @@ public class User implements UserDetails {
     @Column(nullable = false)
     private String username; // email
 
-    @Column(name = "slug", nullable = false, unique = true)
+    @Column(name = "slug", nullable = false)
     private String slug;
 
     @Column(nullable = false)

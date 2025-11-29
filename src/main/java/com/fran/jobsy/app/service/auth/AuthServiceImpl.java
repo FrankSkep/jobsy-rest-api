@@ -1,5 +1,6 @@
 package com.fran.jobsy.app.service.auth;
 
+import com.aventrix.jnanoid.jnanoid.NanoIdUtils;
 import com.fran.jobsy.app.config.security.jwt.JwtService;
 import com.fran.jobsy.app.dto.auth.LoginRequest;
 import com.fran.jobsy.app.dto.auth.RefreshTokenRequest;
@@ -60,16 +61,9 @@ public class AuthServiceImpl implements AuthService {
                 .firstname(request.firstname())
                 .lastname(request.lastname())
                 .role(Role.USER)
+                .slug(generateUniqueSlug(request.firstname(), request.lastname()))
                 .build();
 
-        userRepository.save(user);
-
-        String slug = (user.getFirstname() + "-" + user.getLastname() + "-" + user.getId())
-                .toLowerCase()
-                .replaceAll("[^a-z0-9]+", "-")
-                .replaceAll("^-|-$", "");
-
-        user.setSlug(slug);
         userRepository.save(user);
 
         String accessToken = jwtService.getToken(user);
@@ -86,5 +80,46 @@ public class AuthServiceImpl implements AuthService {
         String newAccessToken = jwtService.getToken(user);
 
         return new TokenResponse(newAccessToken, refreshToken.getToken());
+    }
+
+    // generate slug with uniqueness check
+    private String generateUniqueSlug(String firstname, String lastname) {
+        String slug = generateSlug(firstname, lastname);
+
+        if (userRepository.existsBySlug(slug)) {
+            // if slug exists, generate a new one with a longer unique ID
+            String baseSlug = (firstname + "-" + lastname)
+                    .toLowerCase()
+                    .replaceAll("[^a-z0-9]+", "-")
+                    .replaceAll("^-+|-+$", "");
+
+            char[] alphabet = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ".toCharArray();
+            String uniqueId = NanoIdUtils.randomNanoId(
+                    NanoIdUtils.DEFAULT_NUMBER_GENERATOR,
+                    alphabet,
+                    10
+            );
+
+            slug = baseSlug + "-" + uniqueId;
+        }
+
+        return slug;
+    }
+
+    // generate slug
+    private String generateSlug(String firstname, String lastname) {
+        String baseSlug = (firstname + "-" + lastname)
+                .toLowerCase()
+                .replaceAll("[^a-z0-9]+", "-")
+                .replaceAll("^-+|-+$", "");
+
+        char[] alphabet = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ".toCharArray();
+        String uniqueId = NanoIdUtils.randomNanoId(
+                NanoIdUtils.DEFAULT_NUMBER_GENERATOR,
+                alphabet,
+                8
+        );
+
+        return baseSlug + "-" + uniqueId;
     }
 }
