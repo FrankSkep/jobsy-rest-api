@@ -27,199 +27,240 @@ import java.util.List;
 public class ProviderAvailabilityServiceImpl implements ProviderAvailabilityService {
 
     private static final int MAX_MONTHS_AHEAD = 6;
-    private static final String NO_WORKING_SCHEDULE_MSG = "El proveedor aun no ha definido su horario de trabajo.";
+    private static final String NO_SCHEDULE = "El proveedor aun no ha definido su horario de trabajo.";
+    private static final String NO_WORK_DAY = "El proveedor no trabaja ese día.";
+    private static final String NO_WORK_HOURS = "El proveedor no trabaja en ese horario.";
+    private static final String ALREADY_BOOKED = "El proveedor ya tiene otra reserva en ese horario.";
+    private static final String NO_FREE_SLOTS = "El proveedor no tiene espacios libres ese día.";
 
     private final UserRepository userRepository;
     private final BookingRepository bookingRepository;
     private final AvailabilitySlotRepository slotRepository;
 
+    // Valida si un proveedor está disponible en un rango de horas específico
     @Override
     public AvailabilityCheckResponse checkAvailability(Long providerId, LocalDateTime startsAt, LocalDateTime endsAt) {
-        validateDateRange(startsAt, endsAt);
-        validateMaxAdvance(startsAt);
+        // 1. Validar fechas
+        validateBookingTime(startsAt, endsAt);
 
-        User provider = findProvider(providerId);
-        if (hasNoWorkingSchedule(provider)) {
-            return new AvailabilityCheckResponse(false, NO_WORKING_SCHEDULE_MSG);
+        // 2. Obtener proveedor y su horario
+        User provider = getProvider(providerId);
+        List<AvailabilitySlot> providerSchedule = slotRepository.findAllByUser(provider);
+
+        if (providerSchedule.isEmpty()) {
+            return unavailable(NO_SCHEDULE);
         }
 
-        List<AvailabilitySlot> slots = slotRepository.findAllByUser(provider);
-        int requestedDay = startsAt.getDayOfWeek().getValue();
-        List<AvailabilitySlot> daySlots = getSlotsForDay(slots, requestedDay);
-
-        if (daySlots.isEmpty()) {
-            return new AvailabilityCheckResponse(false, "El proveedor no trabaja ese día.");
+        // 3. Verificar si trabaja ese día
+        List<AvailabilitySlot> daySchedule = getScheduleForDay(providerSchedule, startsAt);
+        if (daySchedule.isEmpty()) {
+            return unavailable(NO_WORK_DAY);
         }
 
-        if (!isWithinSchedule(daySlots, startsAt.toLocalTime(), endsAt.toLocalTime())) {
-            return new AvailabilityCheckResponse(false, "El proveedor no trabaja en ese horario.");
+        // 4. Verificar si trabaja en ese horario
+        if (!isWithinWorkingHours(daySchedule, startsAt.toLocalTime(), endsAt.toLocalTime())) {
+            return unavailable(NO_WORK_HOURS);
         }
 
-        boolean overlaps = bookingRepository.existsByProviderAndStatusInAndStartsAtLessThanAndEndsAtGreaterThan(
-                provider, List.of(BookingStatus.CONFIRMED), endsAt, startsAt
-        );
-
-        if (overlaps) {
-            return new AvailabilityCheckResponse(false, "El proveedor ya tiene otra reserva en ese horario.");
+        // 5. Verificar si ya tiene reserva
+        if (hasBookingConflict(provider, startsAt, endsAt)) {
+            return unavailable(ALREADY_BOOKED);
         }
 
-        return new AvailabilityCheckResponse(true, "El proveedor está disponible en ese horario.");
+        return available("El proveedor está disponible en ese horario.");
     }
 
+    // Valida si un proveedor tiene disponibilidad en algún momento de un día específico
     @Override
     public AvailabilityCheckResponse checkDayAvailability(Long providerId, LocalDate date) {
-        checkPastDate(date);
-        validateMaxAdvance(date.atStartOfDay());
+        // 1. Validar fecha
+        validateDate(date);
 
-        User provider = findProvider(providerId);
-        if (hasNoWorkingSchedule(provider)) {
-            return new AvailabilityCheckResponse(false, NO_WORKING_SCHEDULE_MSG);
-        }
-        int weekday = date.getDayOfWeek().getValue();
+        // 2. Obtener proveedor y su horario
+        User provider = getProvider(providerId);
+        List<AvailabilitySlot> providerSchedule = slotRepository.findAllByUser(provider);
 
-        List<AvailabilitySlot> slots = getSlotsForDay(slotRepository.findAllByUser(provider), weekday);
-        if (slots.isEmpty()) {
-            return new AvailabilityCheckResponse(false, "El proveedor no trabaja ese día.");
+        if (providerSchedule.isEmpty()) {
+            return unavailable(NO_SCHEDULE);
         }
 
-        List<Booking> bookings = findBookingsForDay(provider, date);
+        // 3. Verificar si trabaja ese día
+        List<AvailabilitySlot> daySchedule = getScheduleForDay(providerSchedule, date);
+        if (daySchedule.isEmpty()) {
+            return unavailable(NO_WORK_DAY);
+        }
 
-        boolean hasFreeSlot = slots.stream()
-                .anyMatch(slot -> hasFreeHourInSlot(slot, date, bookings));
+        // 4. Verificar si tiene al menos 1 hora libre
+        List<Booking> dayBookings = getBookingsForDay(provider, date);
+        boolean hasFreeSlot = daySchedule.stream()
+                .anyMatch(slot -> hasAvailableHour(slot, date, dayBookings));
 
         return hasFreeSlot
-                ? new AvailabilityCheckResponse(true, "El proveedor tiene disponibilidad ese día.")
-                : new AvailabilityCheckResponse(false, "El proveedor no tiene espacios libres ese día.");
+                ? available("El proveedor tiene disponibilidad ese día.")
+                : unavailable(NO_FREE_SLOTS);
     }
 
+    // Obtiene todos los slots horarios disponibles de un proveedor para un día específico
     @Override
     public DailyAvailabilityResponse getAvailabilityForDay(Long providerId, LocalDate date) {
-        checkPastDate(date);
-        validateMaxAdvance(date.atStartOfDay());
+        // 1. Validar fecha
+        validateDate(date);
 
-        User provider = findProvider(providerId);
-        int weekday = date.getDayOfWeek().getValue();
+        // 2. Obtener horario del día
+        User provider = getProvider(providerId);
+        List<AvailabilitySlot> daySchedule = getScheduleForDay(
+                slotRepository.findAllByUser(provider), date);
 
-        List<AvailabilitySlot> slots = getSlotsForDay(slotRepository.findAllByUser(provider), weekday);
-        if (slots.isEmpty()) {
+        if (daySchedule.isEmpty()) {
             return new DailyAvailabilityResponse(date, List.of());
         }
 
-        List<Booking> bookings = findBookingsForDay(provider, date);
-        List<SlotResponse> availableSlots = buildSlotDTOs(slots, date, bookings);
+        // 3. Generar slots de 1 hora con disponibilidad
+        List<Booking> dayBookings = getBookingsForDay(provider, date);
+        List<SlotResponse> hourlySlots = generateHourlySlots(daySchedule, date, dayBookings);
 
-        return new DailyAvailabilityResponse(date, availableSlots);
+        return new DailyAvailabilityResponse(date, hourlySlots);
     }
 
-    // ----- Private Helpers -----
-    private User findProvider(Long providerId) {
-        return userRepository.findById(providerId)
-                .orElseThrow(() -> new ResourceNotFoundException("Proveedor no encontrado."));
-    }
+    // ========== VALIDACIONES ==========
 
-    private void validateDateRange(LocalDateTime startsAt, LocalDateTime endsAt) {
-        if (!startsAt.isBefore(endsAt)) {
+    // Valida que el rango de tiempo sea lógico y dentro del rango permitido
+    private void validateBookingTime(LocalDateTime start, LocalDateTime end) {
+        if (!start.isBefore(end)) {
             throw new IllegalArgumentException("La hora de inicio debe ser anterior a la hora de fin.");
         }
-        checkPastDate(startsAt);
-        checkPastDate(endsAt);
+        validateDate(start);
+        validateDate(end);
     }
 
-    private void validateMaxAdvance(LocalDateTime dateTime) {
+    // Valida que la fecha no sea pasada ni demasiado lejana
+    private void validateDate(LocalDateTime dateTime) {
+        if (dateTime.isBefore(LocalDateTime.now())) {
+            throw new IllegalArgumentException("No puedes elegir una fecha pasada.");
+        }
         if (dateTime.isAfter(LocalDateTime.now().plusMonths(MAX_MONTHS_AHEAD))) {
             throw new IllegalArgumentException("No se puede consultar disponibilidad con tanta anticipación.");
         }
     }
 
-    private List<AvailabilitySlot> getSlotsForDay(List<AvailabilitySlot> slots, int weekday) {
-        return slots.stream()
+    // Convierte un LocalDate a LocalDateTime para validarlo
+    private void validateDate(LocalDate date) {
+        validateDate(date.atStartOfDay());
+    }
+
+    // ========== CONSULTAS ==========
+
+    // Obtiene un proveedor por ID o lanza excepción si no existe
+    private User getProvider(Long providerId) {
+        return userRepository.findById(providerId)
+                .orElseThrow(() -> new ResourceNotFoundException("Proveedor no encontrado."));
+    }
+
+    // Filtra el horario del proveedor por día de la semana usando fecha con hora
+    private List<AvailabilitySlot> getScheduleForDay(List<AvailabilitySlot> schedule, LocalDateTime dateTime) {
+        return getScheduleForDay(schedule, dateTime.getDayOfWeek().getValue());
+    }
+
+    // Filtra el horario del proveedor por día de la semana usando fecha sin hora
+    private List<AvailabilitySlot> getScheduleForDay(List<AvailabilitySlot> schedule, LocalDate date) {
+        return getScheduleForDay(schedule, date.getDayOfWeek().getValue());
+    }
+
+    // Filtra el horario del proveedor según un número de día de la semana
+    private List<AvailabilitySlot> getScheduleForDay(List<AvailabilitySlot> schedule, int weekday) {
+        return schedule.stream()
                 .filter(slot -> slot.getWeekday() != null && slot.getWeekday() == weekday)
                 .toList();
     }
 
-    private boolean isWithinSchedule(List<AvailabilitySlot> daySlots, LocalTime startTime, LocalTime endTime) {
-        LocalTime earliestStart = daySlots.stream()
+    // Obtiene todas las reservas confirmadas de un proveedor en un día
+    private List<Booking> getBookingsForDay(User provider, LocalDate date) {
+        LocalDateTime dayStart = date.atStartOfDay();
+        LocalDateTime dayEnd = date.plusDays(1).atStartOfDay();
+
+        return bookingRepository.findByProviderAndStatusInAndStartsAtLessThanAndEndsAtGreaterThan(
+                provider, List.of(BookingStatus.CONFIRMED), dayEnd, dayStart);
+    }
+
+    // Verifica si un proveedor ya tiene una reserva que se cruce con un horario dado
+    private boolean hasBookingConflict(User provider, LocalDateTime start, LocalDateTime end) {
+        return bookingRepository.existsByProviderAndStatusInAndStartsAtLessThanAndEndsAtGreaterThan(
+                provider, List.of(BookingStatus.CONFIRMED), end, start);
+    }
+
+    // ========== LÓGICA DE DISPONIBILIDAD ==========
+
+    // Verifica si un rango horario está dentro del horario laboral del proveedor
+    private boolean isWithinWorkingHours(List<AvailabilitySlot> daySchedule, LocalTime start, LocalTime end) {
+        LocalTime earliestStart = daySchedule.stream()
                 .map(AvailabilitySlot::getStartTime)
                 .min(LocalTime::compareTo)
                 .orElseThrow();
 
-        LocalTime latestEnd = daySlots.stream()
+        LocalTime latestEnd = daySchedule.stream()
                 .map(AvailabilitySlot::getEndTime)
                 .max(LocalTime::compareTo)
                 .orElseThrow();
 
-        return !startTime.isBefore(earliestStart) && !endTime.isAfter(latestEnd);
+        return !start.isBefore(earliestStart) && !end.isAfter(latestEnd);
     }
 
-    private List<Booking> findBookingsForDay(User provider, LocalDate date) {
-        LocalDateTime startOfDay = date.atStartOfDay();
-        LocalDateTime endOfDay = date.plusDays(1).atStartOfDay();
-
-        return bookingRepository.findByProviderAndStatusInAndStartsAtLessThanAndEndsAtGreaterThan(
-                provider, List.of(BookingStatus.CONFIRMED), endOfDay, startOfDay
-        );
-    }
-
-    private boolean hasFreeHourInSlot(AvailabilitySlot slot, LocalDate date, List<Booking> bookings) {
+    // Verifica si existe al menos una hora libre dentro de un tramo de horario
+    private boolean hasAvailableHour(AvailabilitySlot slot, LocalDate date, List<Booking> bookings) {
         LocalTime current = slot.getStartTime();
-        LocalTime end = slot.getEndTime();
 
-        while (current.isBefore(end)) {
-            LocalDateTime startTime = date.atTime(current);
-            LocalDateTime endTime = date.atTime(current.plusHours(1));
-
-            boolean overlaps = bookings.stream().anyMatch(b ->
-                    b.getStartsAt().isBefore(endTime) && b.getEndsAt().isAfter(startTime)
-            );
-
-            if (!overlaps)
+        while (current.isBefore(slot.getEndTime())) {
+            if (isHourAvailable(date, current, bookings)) {
                 return true;
+            }
             current = current.plusHours(1);
         }
         return false;
     }
 
-    private List<SlotResponse> buildSlotDTOs(List<AvailabilitySlot> slots, LocalDate date, List<Booking> bookings) {
-        List<SlotResponse> availableSlots = new ArrayList<>();
+    // Verifica si una hora específica está libre comparándola contra las reservas existentes
+    private boolean isHourAvailable(LocalDate date, LocalTime hour, List<Booking> bookings) {
+        LocalDateTime slotStart = date.atTime(hour);
+        LocalDateTime slotEnd = date.atTime(hour.plusHours(1));
 
-        for (AvailabilitySlot slot : slots) {
-            LocalTime current = slot.getStartTime();
-            LocalTime end = slot.getEndTime();
+        return bookings.stream().noneMatch(booking ->
+                booking.getStartsAt().isBefore(slotEnd) &&
+                        booking.getEndsAt().isAfter(slotStart));
+    }
 
-            while (current.isBefore(end)) {
-                LocalDateTime startTime = date.atTime(current);
-                LocalDateTime endTime = date.atTime(current.plusHours(1));
+    // Genera los slots de una hora con su respectiva disponibilidad
+    private List<SlotResponse> generateHourlySlots(List<AvailabilitySlot> daySchedule,
+                                                   LocalDate date,
+                                                   List<Booking> bookings) {
+        List<SlotResponse> slots = new ArrayList<>();
 
-                boolean overlaps = bookings.stream().anyMatch(b ->
-                        b.getStartsAt().isBefore(endTime) && b.getEndsAt().isAfter(startTime)
-                );
+        for (AvailabilitySlot scheduleSlot : daySchedule) {
+            LocalTime current = scheduleSlot.getStartTime();
 
-                availableSlots.add(new SlotResponse(
+            while (current.isBefore(scheduleSlot.getEndTime())) {
+                boolean available = isHourAvailable(date, current, bookings);
+
+                slots.add(new SlotResponse(
                         current.toString(),
                         current.plusHours(1).toString(),
-                        !overlaps
-                ));
+                        available));
+
                 current = current.plusHours(1);
             }
         }
 
-        return availableSlots;
+        return slots;
     }
 
-    private void checkPastDate(LocalDateTime dateTime) {
-        if (dateTime.isBefore(LocalDateTime.now())) {
-            throw new IllegalArgumentException("No puedes elegir una fecha pasada.");
-        }
+    // ========== HELPERS ==========
+
+    // Construye una respuesta de disponibilidad positiva
+    private AvailabilityCheckResponse available(String message) {
+        return new AvailabilityCheckResponse(true, message);
     }
 
-    private void checkPastDate(LocalDate date) {
-        if (date.isBefore(LocalDate.now())) {
-            throw new IllegalArgumentException("No puedes elegir una fecha pasada.");
-        }
-    }
-
-    private boolean hasNoWorkingSchedule(User provider) {
-        List<AvailabilitySlot> slots = slotRepository.findAllByUser(provider);
-        return slots.isEmpty();
+    // Construye una respuesta de disponibilidad negativa
+    private AvailabilityCheckResponse unavailable(String message) {
+        return new AvailabilityCheckResponse(false, message);
     }
 }
