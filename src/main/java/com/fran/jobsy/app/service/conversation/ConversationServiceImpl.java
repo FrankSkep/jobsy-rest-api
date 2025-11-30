@@ -10,6 +10,7 @@ import com.fran.jobsy.app.entity.User;
 import com.fran.jobsy.app.repository.ConversationRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -31,6 +32,7 @@ public class ConversationServiceImpl implements ConversationService {
                 });
     }
 
+    @Transactional(readOnly = true)
     public List<ConversationResponse> getMyConversations() {
         Long authUserId = authenticatedUserProvider.getAuthenticatedUserId();
 
