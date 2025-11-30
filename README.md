@@ -102,7 +102,7 @@ To provide a scalable and secure platform that efficiently connects clients and 
 
 ## Technologies
 
-* **Framework:** Spring Boot 3.5.7
+* **Framework:** Spring Boot 4.0
 * **Language:** Java 21
 * **Database:** PostgreSQL 17.5+
 * **Authentication:** JWT (JSON Web Tokens)
