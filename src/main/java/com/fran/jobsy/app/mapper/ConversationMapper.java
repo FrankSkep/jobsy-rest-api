@@ -20,6 +20,7 @@ public interface ConversationMapper {
     @Mapping(target = "otherUserId", expression = "java(getOtherUserId(conversation, currentUserId))")
     @Mapping(target = "otherUserName", expression = "java(getOtherUserName(conversation, currentUserId))")
     @Mapping(target = "otherUserPhotoUrl", expression = "java(getOtherUserPhotoUrl(conversation, currentUserId))")
+    @Mapping(target = "otherUserSlug", expression = "java(getOtherUserSlug(conversation, currentUserId))")
     @Mapping(target = "lastMessage", expression = "java(getLastMessage(conversation))")
     @Mapping(target = "updatedAt", expression = "java(getUpdatedAt(conversation))")
     ConversationResponse toDTO(Conversation conversation, Long currentUserId);
@@ -45,6 +46,14 @@ public interface ConversationMapper {
             return conversation.getUserB().getPhoto() != null ? conversation.getUserB().getPhoto().getUrl() : null;
         } else {
             return conversation.getUserA().getPhoto() != null ? conversation.getUserA().getPhoto().getUrl() : null;
+        }
+    }
+
+    default String getOtherUserSlug(Conversation conversation, Long currentUserId) {
+        if (conversation.getUserA().getId().equals(currentUserId)) {
+            return conversation.getUserB().getSlug();
+        } else {
+            return conversation.getUserA().getSlug();
         }
     }
 

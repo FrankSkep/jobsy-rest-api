@@ -67,6 +67,7 @@ public class ConversationServiceImpl implements ConversationService {
                     other.getId(),
                     other.getFirstname() + " " + other.getLastname(),
                     other.getPhoto() != null ? other.getPhoto().getUrl() : null,
+                    other.getSlug(),
                     lastMessageResponse,
                     lastMsg != null ? lastMsg.getSentAt() : conv.getMessages().isEmpty() ? null : conv.getMessages().get(0).getSentAt()
             );

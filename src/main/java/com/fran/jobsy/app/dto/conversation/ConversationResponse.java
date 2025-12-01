@@ -12,6 +12,7 @@ public record ConversationResponse(
         Long otherUserId,
         String otherUserName,
         String otherUserPhotoUrl,
+        String otherUserSlug,
         MessageResponse lastMessage,
         LocalDateTime updatedAt
 ) {
