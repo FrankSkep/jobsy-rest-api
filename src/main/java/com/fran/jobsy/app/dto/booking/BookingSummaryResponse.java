@@ -12,6 +12,7 @@ public record BookingSummaryResponse(
         LocalDateTime startsAt,
         LocalDateTime endsAt,
         BookingStatus status,
-        Double priceAtBooking
+        Double priceAtBooking,
+        Integer reviewRating  // null si no hay review
 ) {
 }

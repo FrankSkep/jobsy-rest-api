@@ -12,6 +12,7 @@ public interface BookingMapper {
     @Mapping(target = "providerName", source = "provider.firstname")
     @Mapping(target = "clientName", source = "client.firstname")
     @Mapping(target = "offeringTitle", source = "offering.title")
+    @Mapping(target = "reviewRating", source = "review.rating")
     BookingSummaryResponse toSummaryDTO(Booking booking);
 
     @Mapping(target = "bookingStatus", source = "status")
