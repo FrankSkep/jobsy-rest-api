@@ -158,7 +158,7 @@ public class BookingServiceImpl implements BookingService {
     private void handleConfirmed(Booking booking, Long authId, String comment) {
         validateProviderAction(booking, authId, BookingStatus.PENDING, "confirmar la reserva");
         updateBookingStatusAndNotify(booking, BookingStatus.CONFIRMED, comment, booking.getClient(),
-                "Reserva confirmada", "El proveedor acepto tu reserva. Ya puedes chatear con él desde la sección de mensajes.");
+                "Reserva aceptada", "Ya puedes chatear con el proveedor desde la sección de mensajes.");
 
         // Iniciar o obtener la conversación asociada a esta reserva (si no existe)
         conversationService.createIfNotExists(booking);
