@@ -89,6 +89,12 @@ public class BookingServiceImpl implements BookingService {
                         "Reserva solicitada con éxito.",
                         "Su reserva ha sido creada y está pendiente de confirmación.",
                         NotificationType.BOOKING_CREATED);
+                notificationService.notifyUser(
+                        provider, "Nueva reserva pendiente de confirmación.",
+                        "Tienes una nueva reserva pendiente de confirmación de "
+                                + client.getFirstname() + " " + client.getLastname() + ".",
+                        NotificationType.BOOKING_CREATED
+                );
             }
         });
 
