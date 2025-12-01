@@ -41,7 +41,6 @@ public class BookingController {
     }
 
     @PostMapping
-    @PreAuthorize("hasRole('PROVIDER')")
     public ResponseEntity<BookingResponse> createBooking(@RequestBody @Valid BookingRequest bookingRequest) {
         BookingResponse bookingResponse = bookingService.createBooking(bookingRequest);
         URI location = UriBuilder.buildCreatedLocation(bookingResponse.id());
