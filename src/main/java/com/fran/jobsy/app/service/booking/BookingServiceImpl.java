@@ -131,8 +131,10 @@ public class BookingServiceImpl implements BookingService {
                     handleConfirmed(booking, authId, dto.comment());
             case CANCELED ->
                     handleCanceled(booking, authId, dto.comment());
+            case REJECTED ->
+                    handleRejected(booking, authId, dto.comment());
             case COMPLETED ->
-                    handleCompleted(booking, authId, dto.comment());
+                    handleCompleted(booking, authId, dto.comment(), dto.finalPrice());
             default ->
                     throw new ConflictException("Estado de reserva no válido: " + dto.status());
         }
@@ -163,22 +165,33 @@ public class BookingServiceImpl implements BookingService {
     }
 
     private void handleCanceled(Booking booking, Long authId, String comment) {
-        boolean isProvider = booking.getProvider().getId().equals(authId);
-        boolean isClient = booking.getClient().getId().equals(authId);
+        if (!booking.getClient().getId().equals(authId)) {
+            throw new AccessDeniedException("Solo el cliente puede cancelar la reserva.");
+        }
 
-        if (!isProvider && !isClient)
-            throw new AccessDeniedException("No autorizado para cancelar la reserva.");
-        if (booking.getStatus() == BookingStatus.CANCELED || booking.getStatus() == BookingStatus.COMPLETED) {
+        if (booking.getStatus() == BookingStatus.CANCELED || booking.getStatus() == BookingStatus.REJECTED
+                || booking.getStatus() == BookingStatus.COMPLETED) {
             throw new ConflictException("No se puede cancelar una reserva en estado: " + booking.getStatus());
         }
 
-        User recipient = isProvider ? booking.getClient() : booking.getProvider();
-        updateBookingStatusAndNotify(booking, BookingStatus.CANCELED, comment, recipient,
-                "Reserva cancelada", "La reserva fue cancelada");
+        updateBookingStatusAndNotify(booking, BookingStatus.CANCELED, comment, booking.getProvider(),
+                "Reserva cancelada por el cliente", "El cliente ha cancelado la reserva");
     }
 
-    private void handleCompleted(Booking booking, Long authId, String comment) {
+    private void handleRejected(Booking booking, Long authId, String comment) {
+        validateProviderAction(booking, authId, BookingStatus.PENDING, "rechazar la reserva");
+        updateBookingStatusAndNotify(booking, BookingStatus.REJECTED, comment, booking.getClient(),
+                "Reserva rechazada", "El proveedor ha rechazado la reserva");
+    }
+
+    private void handleCompleted(Booking booking, Long authId, String comment, Double finalPrice) {
         validateProviderAction(booking, authId, BookingStatus.CONFIRMED, "marcar la reserva como completada");
+
+        // Si el provider proporciona un precio final, actualizar el priceAtBooking
+        if (finalPrice != null) {
+            booking.setPriceAtBooking(finalPrice);
+        }
+
         updateBookingStatusAndNotify(booking, BookingStatus.COMPLETED, comment, booking.getClient(),
                 "Reserva completada", "La reserva fue completada");
     }
@@ -200,6 +213,8 @@ public class BookingServiceImpl implements BookingService {
             case CONFIRMED ->
                     NotificationType.BOOKING_CONFIRMED;
             case CANCELED ->
+                    NotificationType.BOOKING_CANCELLED;
+            case REJECTED ->
                     NotificationType.BOOKING_CANCELLED;
             case COMPLETED ->
                     NotificationType.BOOKING_COMPLETED;
