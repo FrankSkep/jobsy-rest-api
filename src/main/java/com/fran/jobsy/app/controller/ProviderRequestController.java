@@ -14,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import tools.jackson.databind.ObjectMapper;
 
 import java.util.List;
 
@@ -25,6 +26,7 @@ public class ProviderRequestController {
 
     private final ProviderRequestService providerRequestService;
     private final FileValidator fileValidator;
+    private final ObjectMapper objectMapper;
     private static final int MAX_DOCUMENTS = 5;
 
     @GetMapping
@@ -53,8 +55,16 @@ public class ProviderRequestController {
 
     @PostMapping
     @Operation(summary = "Solicitar ser proveedor", description = "Permite a un usuario postularse como proveedor adjuntando documentos requeridos. Recibe en formData un objeto JSON con los datos del perfil y hasta 5 archivos (3 fotos propias y 2 INE (AMBOS LADOS)).")
-    public ResponseEntity<Void> applyForProvider(@RequestPart("providerProfile") @Valid ProviderApplyRequest providerApplyRequest,
-                                                 @RequestPart("documents") List<MultipartFile> documents) {
+    public ResponseEntity<Void> applyForProvider(
+            @RequestPart("providerProfile") String providerProfileJson,
+            @RequestPart("documents") List<MultipartFile> documents
+    ) {
+        ProviderApplyRequest providerApplyRequest;
+        try {
+            providerApplyRequest = objectMapper.readValue(providerProfileJson, ProviderApplyRequest.class);
+        } catch (Exception e) {
+            throw new RuntimeException("providerProfile inválido: " + e.getMessage());
+        }
 
         if (documents == null || documents.isEmpty()) {
             throw new InvalidFileException("Debe enviar los archivos requeridos.");
